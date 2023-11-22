@@ -31,7 +31,7 @@ void trim(char *str)
 
 int main()
 {
-	char *str = "   he>l >>>>l<<o<<< world >";
+	char *str = "   he>l >lo world >";
 	char *tokens[100];
 	int tokenCount = 0;
 	int j = 0;
@@ -57,16 +57,7 @@ int main()
 				tokens[tokenCount] = malloc(2);
 				tokens[tokenCount][0] = str[i];
 				tokens[tokenCount][1] = '\0';
-
-				// Si deux délimiteurs se suivent, les concaténer dans un seul token
-				if ((str[i] == '<' || str[i] == '>') && str[i + 1] == str[i])
-				{
-					tokens[tokenCount][1] = str[i + 1];
-					tokens[tokenCount][2] = '\0';
-					i++; // Avancer d'un caractère supplémentaire
-				}
-
-				printf("Delimiter: %s\n", tokens[tokenCount]);
+				printf("Delimiter: %c\n", str[i]);
 				tokenCount++;
 			}
 		}
@@ -87,7 +78,7 @@ int main()
 	}
 
 	int i = 0;
-	while (i < tokenCount)
+	while(i < tokenCount)
 	{
 		printf("\n%s", tokens[i]);
 		i++;
