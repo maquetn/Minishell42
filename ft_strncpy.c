@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strncpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abuchet <abuchet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nmaquet <nmaquet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:46:43 by abuchet           #+#    #+#             */
-/*   Updated: 2023/11/14 15:47:00 by abuchet          ###   ########.fr       */
+/*   Updated: 2023/11/24 16:15:31 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-size_t	ft_strncpy(char *dst, const char *src, size_t size)
+int	ft_strncpy(char *dst, const char *src, int size)
 {
-	size_t	len;
+	int	len;
 
 	len = 0;
 	if (size == 0)

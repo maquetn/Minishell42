@@ -1,11 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "minishell.h"
+
 
 // Function to trim leading and trailing spaces from a string
 void trim(char *str)
 {
-	int start = 0, end = strlen(str) - 1;
+	int start = 0, end = ft_strlen(str) - 1;
 
 	// Trim leading spaces
 	while (str[start] == ' ')
@@ -29,21 +28,21 @@ void trim(char *str)
 	str[end - start + 1] = '\0';
 }
 
-int main()
+int token(char *input)
 {
-	char *str = "   he>l >>>>l<<o<<< world >";
 	char *tokens[100];
 	int tokenCount = 0;
+	int i = 0;
 	int j = 0;
 
-	for (int i = 0; str[i]; ++i)
+	while (input[i])
 	{
-		if (str[i] == '|' || str[i] == '>' || str[i] == '<' || str[i] == ' ')
+		if (input[i] == '|' || input[i] == '>' || input[i] == '<' || input[i] == ' ')
 		{
 			if (j > 0)
 			{
 				tokens[tokenCount] = malloc(j + 1);
-				strncpy(tokens[tokenCount], str + i - j, j);
+				ft_strncpy(tokens[tokenCount], input + i - j, j);
 				tokens[tokenCount][j] = '\0';
 				trim(tokens[tokenCount]);
 				printf("Token: %s\n", tokens[tokenCount]);
@@ -52,16 +51,16 @@ int main()
 			}
 
 			// Nouveau token pour le délimiteur ou l'espace
-			if (str[i] != ' ')
+			if (input[i] != ' ')
 			{
 				tokens[tokenCount] = malloc(2);
-				tokens[tokenCount][0] = str[i];
+				tokens[tokenCount][0] = input[i];
 				tokens[tokenCount][1] = '\0';
 
 				// Si deux délimiteurs se suivent, les concaténer dans un seul token
-				if ((str[i] == '<' || str[i] == '>') && str[i + 1] == str[i])
+				if ((input[i] == '<' || input[i] == '>') && input[i + 1] == input[i])
 				{
-					tokens[tokenCount][1] = str[i + 1];
+					tokens[tokenCount][1] = input[i + 1];
 					tokens[tokenCount][2] = '\0';
 					i++; // Avancer d'un caractère supplémentaire
 				}
@@ -71,31 +70,26 @@ int main()
 			}
 		}
 		else
-		{
 			j++;
-		}
+		i++;
 	}
 
 	if (j > 0)
 	{
 		tokens[tokenCount] = malloc(j + 1);
-		strncpy(tokens[tokenCount], str + strlen(str) - j, j);
+		ft_strncpy(tokens[tokenCount], input + ft_strlen(input) - j, j);
 		tokens[tokenCount][j] = '\0';
 		trim(tokens[tokenCount]);
 		printf("Token: %s\n", tokens[tokenCount]);
 		tokenCount++;
 	}
 
-	int i = 0;
+	i = 0;
 	while (i < tokenCount)
 	{
-		printf("\n%s", tokens[i]);
-		i++;
-	}
-	for (int i = 0; i < tokenCount; ++i)
-	{
 		free(tokens[i]);
+		++i;
 	}
-
-	return 0;
+	return (0);
 }
+

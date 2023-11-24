@@ -6,23 +6,40 @@
 /*   By: nmaquet <nmaquet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:21:16 by abuchet           #+#    #+#             */
-/*   Updated: 2023/11/22 14:26:18 by nmaquet          ###   ########.fr       */
+/*   Updated: 2023/11/24 16:32:37 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 #define MINISHELL_H
 
-#include <unistd.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
 #include <string.h>
+#include <termios.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
-char	**ft_split(char const *s, char c);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
-size_t	ft_strlen(const char *str);
-char	*ft_strchr(const char *str, int c);
-size_t	ft_strlcpy(char *dest, const char *src, size_t size);
-char	*ft_strdup(const char *s);
+typedef struct s_token
+{
+	int	i;
+} 	t_token;
+
+int	ft_strlen(const char *str);
+int	ft_strncpy(char *dst, const char *src, int size);
+
+void trim(char *str);
+int token(char *input);
+
+
+void	restore_terminal(struct termios *original_termios);
+void sig_handler(int signum);
+
+
+
 
 #endif
