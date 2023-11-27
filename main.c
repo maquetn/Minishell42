@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmaquet <nmaquet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 13:39:04 by nmaquet           #+#    #+#             */
-/*   Updated: 2023/11/24 16:07:47 by nmaquet          ###   ########.fr       */
+/*   Updated: 2023/11/27 16:29:29 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,10 @@ void sig_handler(int signum)
 
 	struct termios	original_termios;
 
-	tcgetattr(STDIN_FILENO, &original_termios);
 	original_termios.c_lflag &= ~ ECHOCTL;
 	rl_replace_line ("", 0);
 	rl_on_new_line();
 	rl_redisplay ();
-	restore_terminal(&original_termios);
 	printf("\n\033[0;32m 🐚 Minishell > \033[0;37m");
 	status = 1;
 }

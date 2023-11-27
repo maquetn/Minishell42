@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:21:16 by abuchet           #+#    #+#             */
-/*   Updated: 2023/11/24 16:32:37 by nmaquet          ###   ########.fr       */
+/*   Updated: 2023/11/27 16:40:15 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,44 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+int	g_status = 0;
+
+typedef enum
+{
+	INPUT,
+	OUTPUT,
+	HEREDOC,
+	APPEND,
+	PIPE,
+	CMD
+} t_oken_type;
+
 typedef struct s_token
 {
-	int	i;
-} 	t_token;
+  t_oken_type type;
+  char  *content;
+  struct s_token *next;
+  struct s_token *prev;
+} t_token;
+
+// typedef struct s_imple_cmd
+// {
+//   char **args //cmd + args
+//   int input; //default STDIN else pipeout, fd
+//   int output; //default STDOUT else pipein, fd
+//   struct s_imple_cmd *next;
+//   struct s_imple_cmd *prev;
+
+// //etc
+// }
+
+typedef struct s_minishell
+{
+	char	**env;
+	//int		error;
+	//s_token *first_token;
+	
+} t_minishell;
 
 int	ft_strlen(const char *str);
 int	ft_strncpy(char *dst, const char *src, int size);

@@ -8,12 +8,10 @@ SRCS = ft_split.c \
 OBJ_DIR = obj
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 
-READLINE_PATH := /Users/$(USER)/homebrew/opt/readline
-
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -I$(READLINE_PATH)/include
+CFLAGS = -Wall -Wextra -Werror -I /Users/nmaquet/.brew/opt/readline/include
 
-LDFLAGS = -lreadline -dL$(READLINE_PATH)/lib
+LDFLAGS = -lreadline -lhistory -L /$(HOME)/.brew/opt/readline/lib
 
 RM = rm -rf
 
@@ -26,7 +24,7 @@ ${OBJ_DIR}/%.o: %.c
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS)
-	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $(NAME)
 
 clean:
 	@$(RM) $(OBJ_DIR)
