@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 13:39:04 by nmaquet           #+#    #+#             */
-/*   Updated: 2023/11/27 16:29:29 by nmaquet          ###   ########.fr       */
+/*   Updated: 2023/11/27 20:17:51 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,12 @@ void sig_handler(int signum)
 
 	struct termios	original_termios;
 
+	tcgetattr(STDIN_FILENO, &original_termios);
 	original_termios.c_lflag &= ~ ECHOCTL;
 	rl_replace_line ("", 0);
 	rl_on_new_line();
 	rl_redisplay ();
+	tcsetattr(STDIN_FILENO, TCSANOW, &original_termios);
 	printf("\n\033[0;32m 🐚 Minishell > \033[0;37m");
 	status = 1;
 }
@@ -55,7 +57,7 @@ int main(void)
 			input = readline(prompt);
 		if (input != NULL)
 			token(input);
-		if (input == NULL)
+		if (input == NULL || strcmp(input, "exit") == 0)
 		{
 			printf("\n       \e[0;35m\e[46m                                                             \033[0;37m");
 			printf("\n       \e[0;35m\e[46m   +++++++++++++++++++++++++++++++++++++++++++++++++++++++   \033[0;37m");

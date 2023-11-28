@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:21:16 by abuchet           #+#    #+#             */
-/*   Updated: 2023/11/27 16:40:15 by nmaquet          ###   ########.fr       */
+/*   Updated: 2023/11/27 20:09:03 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-int	g_status = 0;
 
 typedef enum
 {
@@ -71,7 +70,7 @@ int token(char *input);
 
 
 void	restore_terminal(struct termios *original_termios);
-void sig_handler(int signum);
+void	sig_handler(int signum);
 
 
 
