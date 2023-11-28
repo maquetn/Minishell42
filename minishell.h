@@ -36,6 +36,8 @@ typedef struct s_token
 //   char **args; //cmd + args
 //   int input; //default STDIN else pipeout, fd
 //   int output; //default STDOUT else pipein, fd
+//		char 	*path
+//		char	*cmd
 //   struct s_imple_cmd *next;
 //   struct s_imple_cmd *prev;
 // //etc

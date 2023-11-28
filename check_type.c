@@ -12,14 +12,17 @@ void check_type(t_token **tokens, int arg)
     }
     else if (strcmp(tokens[arg]->content, ">>") == 0)
     {
-        tokens[arg]->type = HEREDOC;
+        tokens[arg]->type = APPEND;
     }
     else if (strcmp(tokens[arg]->content, "<<") == 0)
     {
-        tokens[arg]->type = APPEND;
+        tokens[arg]->type = HEREDOC;
     }
     else
     {
         tokens[arg]->type = CMD;
+		if (getcwd(tokens[arg]->content, strlen(tokens[arg]->content)) != NULL)
+			getcwd(tokens[arg]->content, strlen(tokens[arg]->content));
+		printf("%s	", tokens[arg]->content);
     }
 }
