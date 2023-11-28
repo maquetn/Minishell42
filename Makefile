@@ -3,13 +3,14 @@ NAME = minishell
 SRCS = ft_split.c \
        ft_strncpy.c \
        token.c \
+	   check_type.c \
        main.c
 
 OBJ_DIR = obj
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -I /Users/nmaquet/.brew/opt/readline/include
+CFLAGS = -Wall -Wextra -Werror -g -I /Users/nmaquet/.brew/opt/readline/include
 
 LDFLAGS = -lreadline -lhistory -L /$(HOME)/.brew/opt/readline/lib
 
