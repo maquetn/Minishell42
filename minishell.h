@@ -58,6 +58,6 @@ int token(char *input);
 void	restore_terminal(struct termios *original_termios);
 void	sig_handler(int signum);
 
-void check_type(t_token **tokens, int content);
+void check_type(t_token **tokens, int arg);
 
 #endif

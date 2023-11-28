@@ -1,25 +1,25 @@
 #include <minishell.h>
 
-void check_type(t_token **tokens, int content)
+void check_type(t_token **tokens, int arg)
 {
-    if (strcmp(tokens[content]->content, ">") == 0)
+    if (strcmp(tokens[arg]->content, ">") == 0)
     {
-        tokens[content]->type = OUTPUT;
+        tokens[arg]->type = OUTPUT;
     }
-    else if (strcmp(tokens[content]->content, "<") == 0)
+    else if (strcmp(tokens[arg]->content, "<") == 0)
     {
-        tokens[content]->type = INPUT;
+        tokens[arg]->type = INPUT;
     }
-    else if (strcmp(tokens[content]->content, ">>") == 0)
+    else if (strcmp(tokens[arg]->content, ">>") == 0)
     {
-        tokens[content]->type = HEREDOC;
+        tokens[arg]->type = HEREDOC;
     }
-    else if (strcmp(tokens[content]->content, "<<") == 0)
+    else if (strcmp(tokens[arg]->content, "<<") == 0)
     {
-        tokens[content]->type = APPEND;
+        tokens[arg]->type = APPEND;
     }
     else
     {
-        tokens[content]->type = CMD;
+        tokens[arg]->type = CMD;
     }
 }
