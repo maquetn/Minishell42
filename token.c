@@ -40,56 +40,56 @@ int token(char *input)
 
     //expand_path_in_tokens(&input);
     while (input[i]) 
+{
+    if (input[i] == '|' || input[i] == '>' || input[i] == '<' || input[i] == ' ' || input[i] == '\0') 
     {
-        if (input[i] == '|' || input[i] == '>' || input[i] == '<' || input[i] == ' ' || input[i] == '\0') 
+        if (j > 0) 
         {
-            if (j > 0) 
+            tokens[arg] = (t_token *)malloc(sizeof(t_token));
+            tokens[arg]->content = strndup(input + i - j, j);
+            trim(tokens[arg]->content);
+            check_type(tokens, arg);
+            printf("Token: %s\n", tokens[arg]->content);
+            if (tokens[arg]->type == CMD) 
             {
-                tokens[arg] = (t_token *)malloc(sizeof(t_token));
-                tokens[arg]->content = strndup(input + i - j, j);
-                trim(tokens[arg]->content);
-                check_type(tokens, arg);
-                if (tokens[arg]->type == CMD) 
-                {
-                    char* expanded_cmd_path = expand_path(tokens[arg]->content);
-                    free(tokens[arg]->content);
-                    tokens[arg]->content = expanded_cmd_path;
-                }
-
-              printf("Token: %s\n", tokens[arg]->content);
-                arg++;
-                j = 0;
+                char* expanded_cmd_path = expand_path(tokens[arg]->content);
+                free(tokens[arg]->content);
+                tokens[arg]->content = strdup(expanded_cmd_path);
+                free(expanded_cmd_path);
             }
-
-            if (input[i] != ' ') 
-            {
-                tokens[arg] = (t_token *)malloc(sizeof(t_token));
-                if ((input[i] == '<' || input[i] == '>') && input[i + 1] == input[i]) 
-                {
-                    tokens[arg]->content = malloc(3);
-                    tokens[arg]->content[0] = input[i];
-                    tokens[arg]->content[1] = input[i + 1];
-                    tokens[arg]->content[2] = '\0';
-                    i++;
-                } 
-                else 
-                {
-                    tokens[arg]->content = malloc(2);
-                    tokens[arg]->content[0] = input[i];
-                    tokens[arg]->content[1] = '\0';
-                }
-                check_type(tokens, arg);
-                printf("Delimiter: %s\n", tokens[arg]->content);
-                arg++;
-            }
-        } 
-        else 
-        {
-            j++;
+            arg++;
+            j = 0;
         }
 
-        i++;
+        if (input[i] != ' ') 
+        {
+            tokens[arg] = (t_token *)malloc(sizeof(t_token));
+            if ((input[i] == '<' || input[i] == '>') && input[i + 1] == input[i]) 
+            {
+                tokens[arg]->content = malloc(3);
+                tokens[arg]->content[0] = input[i];
+                tokens[arg]->content[1] = input[i + 1];
+                tokens[arg]->content[2] = '\0';
+                i++;
+            } 
+            else 
+            {
+                tokens[arg]->content = malloc(2);
+                tokens[arg]->content[0] = input[i];
+                tokens[arg]->content[1] = '\0';
+            }
+            check_type(tokens, arg);
+            printf("Delimiter: %s\n", tokens[arg]->content);
+            arg++;
+        }
+    } 
+    else 
+    {
+        j++;
     }
+
+    i++;
+}
 
     if (j > 0) 
     {
@@ -97,11 +97,13 @@ int token(char *input)
         tokens[arg]->content = strndup(input + i - j, j);
         trim(tokens[arg]->content);
         check_type(tokens, arg);
+
         if (tokens[arg]->type == CMD) 
         {
             char* expanded_cmd_path = expand_path(tokens[arg]->content);
             free(tokens[arg]->content);
-            tokens[arg]->content = expanded_cmd_path;
+            tokens[arg]->content = strdup(expanded_cmd_path);
+            free(expanded_cmd_path);
         }
         printf("Token: %s\n", tokens[arg]->content);
         arg++;
