@@ -4,6 +4,8 @@ SRCS = ft_split.c \
        ft_strncpy.c \
        token.c \
 	   check_type.c \
+	   path.c \
+	   pwd.c \
        main.c
 
 OBJ_DIR = obj

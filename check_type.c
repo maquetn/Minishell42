@@ -18,6 +18,10 @@ void check_type(t_token **tokens, int arg)
     {
         tokens[arg]->type = HEREDOC;
     }
+    else if (strcmp(tokens[arg]->content, "|") == 0)
+    {
+        tokens[arg]->type = PIPE;
+    }
     else
     {
         tokens[arg]->type = CMD;

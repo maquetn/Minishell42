@@ -11,6 +11,9 @@
 #include <readline/history.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <limits.h>
+#include <string.h>
+
 
 typedef enum
 {
@@ -56,10 +59,16 @@ int	ft_strncpy(char *dst, const char *src, int size);
 
 void trim(char *str);
 int token(char *input);
+void expand_path_in_tokens(char **input);
 
 void	restore_terminal(struct termios *original_termios);
 void	sig_handler(int signum);
 
 void check_type(t_token **tokens, int arg);
+
+
+char* expand_path(char *input);
+
+char* get_current_directory();
 
 #endif
