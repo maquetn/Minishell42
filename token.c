@@ -35,10 +35,10 @@ int token(char *input)
     int i = 0;
     int j = 0;
 
-    char* current_directory = get_current_directory();
-    expand_path_in_tokens(&current_directory);
+    //char* current_directory = get_current_directory();
+    //expand_path_in_tokens(&current_directory);
 
-    expand_path_in_tokens(&input);
+    //expand_path_in_tokens(&input);
     while (input[i]) 
     {
         if (input[i] == '|' || input[i] == '>' || input[i] == '<' || input[i] == ' ' || input[i] == '\0') 
@@ -55,8 +55,8 @@ int token(char *input)
                     free(tokens[arg]->content);
                     tokens[arg]->content = expanded_cmd_path;
                 }
-                printf("%d\t", tokens[arg]->type);
-                printf("Token: %s\n", tokens[arg]->content);
+
+              printf("Token: %s\n", tokens[arg]->content);
                 arg++;
                 j = 0;
             }
@@ -79,7 +79,6 @@ int token(char *input)
                     tokens[arg]->content[1] = '\0';
                 }
                 check_type(tokens, arg);
-                printf("%d\t", tokens[arg]->type);
                 printf("Delimiter: %s\n", tokens[arg]->content);
                 arg++;
             }
@@ -104,12 +103,11 @@ int token(char *input)
             free(tokens[arg]->content);
             tokens[arg]->content = expanded_cmd_path;
         }
-        printf("%d\t", tokens[arg]->type);
         printf("Token: %s\n", tokens[arg]->content);
         arg++;
     }
 
-    free(current_directory);
+    //free(current_directory);
 
     for (int i = 0; i < arg; ++i) 
     {
