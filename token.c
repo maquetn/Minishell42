@@ -91,10 +91,7 @@ int token(char *input)
 
 		if (tokens[arg]->type == CMD) 
 		{
-			/*char* expanded_cmd_path = expand_path(tokens[arg]->content);
-			free(tokens[arg]->content);
-			tokens[arg]->content = strdup(expanded_cmd_path);
-			free(expanded_cmd_path);*/
+			exec_builtin(tokens[arg]->content);
 		}
 		//printf("Token: %s\n", tokens[arg]->content);
 		arg++;

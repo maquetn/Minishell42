@@ -5,6 +5,7 @@ SRCS = ft_split.c \
        token.c \
 	   check_type.c \
 	   path.c \
+	   builtin.c \
 	   pwd.c \
        main.c
 
