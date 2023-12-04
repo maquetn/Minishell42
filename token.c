@@ -91,7 +91,7 @@ int token(char *input)
 
 		if (tokens[arg]->type == CMD) 
 		{
-			exec_builtin(tokens[arg]->content);
+			exec_builtin(tokens[arg]->content, *tokens, arg);
 		}
 		//printf("Token: %s\n", tokens[arg]->content);
 		arg++;

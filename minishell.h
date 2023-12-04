@@ -71,6 +71,6 @@ char* expand_path(char *input);
 
 char* get_current_directory();
 
-int exec_builtin(char *token_content);
+int exec_builtin(char *token_content, t_token *tokens, int arg);
 
 #endif
