@@ -74,6 +74,6 @@ char* get_current_directory();
 int exec_builtin(char *token_content, t_token *tokens, int arg);
 
 char *get_path();
-void try_executing(char *command, char *path, char *token_content);
+int try_executing(char *command, char *path);
 
 #endif
