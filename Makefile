@@ -7,6 +7,7 @@ SRCS = ft_split.c \
 	   path.c \
 	   builtin.c \
 	   pwd.c \
+	   test.c \
        main.c
 
 OBJ_DIR = obj

@@ -43,10 +43,7 @@ int token(char *input)
 			//printf("Token: %s\n", tokens[arg]->content);
 			if (tokens[arg]->type == CMD) 
 			{
-				//char* expanded_cmd_path = expand_path(tokens[arg]->content);
-			   // free(tokens[arg]->content);
-				//tokens[arg]->content = strdup(expanded_cmd_path);
-			   // free(expanded_cmd_path);
+				try_executing(tokens[arg]->content, get_path(), tokens[arg]->content);
 			}
 			arg++;
 			j = 0;
@@ -92,6 +89,7 @@ int token(char *input)
 		if (tokens[arg]->type == CMD) 
 		{
 			exec_builtin(tokens[arg]->content, *tokens, arg);
+			try_executing(tokens[arg]->content, get_path(), tokens[arg]->content);
 		}
 		//printf("Token: %s\n", tokens[arg]->content);
 		arg++;
