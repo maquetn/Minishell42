@@ -1,5 +1,5 @@
 #include "minishell.h"
-char* get_current_directory()
+char* ft_pwd()
 {
     char* cwd = malloc(PATH_MAX);
     if (cwd == NULL)

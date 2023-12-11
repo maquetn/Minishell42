@@ -11,10 +11,9 @@ void	restore_terminal(struct termios *original_termios)
 	}
 }
 
-// Signal handler function for SIGINT (Ctrl+C)
 void sig_handler(int signum)
 {
-	(void)signum; // To avoid the unused parameter warning
+	(void)signum;
 
 	struct termios	original_termios;
 
@@ -56,6 +55,7 @@ int main(int ac, char **av, char **env)
 			printf("\n       \e[0;35m\e[46m   +                                                     +   \033[0;37m");
 			printf("\n       \e[0;35m\e[46m   +++++++++++++++++++++++++++++++++++++++++++++++++++++++   \033[0;37m");
 			printf("\n       \e[0;35m\e[46m                                                             \033[0;37m\n");
+
 			break;
 		}
 		if (input != 0)

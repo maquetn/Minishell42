@@ -58,7 +58,7 @@ int	ft_strlen(const char *str);
 int	ft_strncpy(char *dst, const char *src, int size);
 
 void trim(char *str);
-int token(char *input);
+void token(char *input);
 void expand_path_in_tokens(char **input);
 
 void	restore_terminal(struct termios *original_termios);
@@ -71,9 +71,18 @@ char* expand_path(char *input);
 
 char* get_current_directory();
 
-int exec_builtin(char *token_content, t_token *tokens, int arg);
+void exec_builtin(t_token **tokens, int i);
+
 
 char *get_path();
 int try_executing(char *command, char *path);
+
+int ft_exit();
+
+
+
+void ft_echo(t_token **tokens, int index);
+char* ft_pwd();
+int ft_cd(t_token *tokens);
 
 #endif
