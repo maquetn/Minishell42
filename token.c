@@ -1,11 +1,5 @@
 #include "minishell.h"
 
-void expand_path_in_tokens(char **input)
-{
-    char *expanded_path = expand_path(*input);
-    *input = expanded_path;
-}
-
 void trim(char *str)
 {
     int start = 0, end = ft_strlen(str) - 1;

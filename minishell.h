@@ -33,19 +33,6 @@ typedef struct s_token
   //struct s_token *prev;
 } t_token;
 
-
-// typedef struct s_imple_cmd
-// {
-//   char **args; //cmd + args
-//   int input; //default STDIN else pipeout, fd
-//   int output; //default STDOUT else pipein, fd
-//		char 	*path
-//		char	*cmd
-//   struct s_imple_cmd *next;
-//   struct s_imple_cmd *prev;
-// //etc
-// }
-
 typedef struct s_minishell
 {
 	char	**env;
@@ -59,15 +46,11 @@ int	ft_strncpy(char *dst, const char *src, int size);
 
 void trim(char *str);
 void token(char *input);
-void expand_path_in_tokens(char **input);
 
 void	restore_terminal(struct termios *original_termios);
 void	sig_handler(int signum);
 
 void check_type(t_token **tokens, int arg);
-
-
-char* expand_path(char *input);
 
 char* get_current_directory();
 

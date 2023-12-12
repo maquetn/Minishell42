@@ -1,4 +1,5 @@
 #include "minishell.h"
+
 char* ft_pwd()
 {
     char* cwd = malloc(PATH_MAX);

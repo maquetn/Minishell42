@@ -3,14 +3,12 @@ NAME = minishell
 SRCS = ft_split.c \
        ft_strncpy.c \
        token.c \
-	   check_type.c \
-	   path.c \
-	   builtin.c \
-	   pwd.c \
-	   test.c \
-	   echo.c \
-	   ft_cd.c \
-	   exit.c \
+       check_type.c \
+       builtins/builtin.c \
+       builtins/pwd.c \
+       builtins/echo.c \
+       builtins/ft_cd.c \
+       builtins/exit.c \
        main.c
 
 OBJ_DIR = obj
@@ -27,6 +25,7 @@ all: $(OBJ_DIR) $(NAME)
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(OBJ_DIR)/builtins
 
 ${OBJ_DIR}/%.o: %.c
 	@$(CC) $(CFLAGS) -c $< -o $@
