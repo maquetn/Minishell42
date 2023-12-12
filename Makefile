@@ -9,6 +9,7 @@ SRCS = ft_split.c \
        builtins/echo.c \
        builtins/ft_cd.c \
        builtins/exit.c \
+       builtins/ft_ls.c \
        main.c
 
 OBJ_DIR = obj

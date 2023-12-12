@@ -11,6 +11,8 @@ void exec_builtin(t_token **tokens, int i)
             ft_cd(tokens[j + 1]);
         else if (strcmp(tokens[j]->content, "pwd") == 0)
             printf("%s\n", ft_pwd());
+        else if (strcmp(tokens[j]->content, "ls") == 0)
+            ls(ft_pwd());
         else if (strcmp(tokens[j]->content, "export") == 0)
             printf("export function\n"); // replace with ft_export
         else if (strcmp(tokens[j]->content, "unset") == 0)

@@ -13,6 +13,7 @@
 #include <sys/wait.h>
 #include <limits.h>
 #include <string.h>
+#include <dirent.h>
 
 
 typedef enum
@@ -67,5 +68,6 @@ int ft_exit();
 void ft_echo(t_token **tokens, int index);
 char* ft_pwd();
 int ft_cd(t_token *tokens);
+void ls(const char *directory_path);
 
 #endif
