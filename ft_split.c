@@ -6,7 +6,7 @@ int	ft_strlen(const char *str)
 
 	if (!str)
 		return (0);
-	c = 0;
+	c = 1;
 	while (str[c] != '\0')
 		c++;
 	return (c);
