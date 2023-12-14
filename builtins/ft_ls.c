@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void ls(const char *directory_path)
+void ft_ls(const char *directory_path)
 {
     DIR *dir;
     struct dirent *entry;

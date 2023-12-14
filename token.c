@@ -1,134 +1,166 @@
 #include "minishell.h"
 
-void trim(char *str)
+void	free_tabl(char **tabl)
 {
-    int start = 0, end = ft_strlen(str) - 1;
+	int	i;
 
-    while (str[start] == ' ')
-        start++;
-    while (end > start && str[end] == ' ')
-        end--;
-    for (int i = 0; i <= end - start; ++i)
-        str[i] = str[start + i];
-    str[end - start + 1] = '\0';
+	i = 0;
+	while (tabl[i])
+	{
+		free(tabl[i]);
+		i++;
+	}
+	free(tabl);
 }
-
-void token(char *input)
+char    *ft_strndup(char *str, int start, int end)
 {
-    t_token *tokens[100] = {NULL};
-    int arg = 0;
-    int i = 0;
-    int j = 0;
+    int len;
+    char    *dup;
+    int     i;
 
-    while (input[i])
+    len = end - start + 1;
+    i = 0;
+    dup = malloc(sizeof(char) * (len + 1));
+    while (i < len)
     {
-        if (input[i] == '|' || input[i] == '>' || input[i] == '<' || input[i] == ' ' || input[i] == '\0')
-        {
-            if (j > 0)
-            {
-                tokens[arg] = (t_token *)malloc(sizeof(t_token));
-                if (tokens[arg] == NULL)
-                {
-                    perror("malloc failed");
-                    ft_exit(EXIT_FAILURE);
-                }
-
-                tokens[arg]->content = (char *)malloc(j + 1);
-                if (tokens[arg]->content == NULL)
-                {
-                    perror("malloc failed");
-                    ft_exit(EXIT_FAILURE);
-                }
-
-                strncpy(tokens[arg]->content, input + i - j, j);
-                tokens[arg]->content[j] = '\0';
-
-                trim(tokens[arg]->content);
-                check_type(tokens, arg);
-
-                arg++;
-                j = 0;
-            }
-
-            if (input[i] != ' ')
-            {
-                tokens[arg] = (t_token *)malloc(sizeof(t_token));
-                if (tokens[arg] == NULL)
-                {
-                    perror("malloc failed");
-                    ft_exit(EXIT_FAILURE);
-                }
-
-                if ((input[i] == '<' || input[i] == '>') && input[i + 1] == input[i])
-                {
-                    tokens[arg]->content = malloc(3);
-                    if (tokens[arg]->content == NULL)
-                    {
-                        perror("malloc failed");
-                        ft_exit(EXIT_FAILURE);
-                    }
-
-                    tokens[arg]->content[0] = input[i];
-                    tokens[arg]->content[1] = input[i + 1];
-                    tokens[arg]->content[2] = '\0';
-                    i++;
-                }
-                else
-                {
-                    tokens[arg]->content = malloc(2);
-                    if (tokens[arg]->content == NULL)
-                    {
-                        perror("malloc failed");
-                        ft_exit(EXIT_FAILURE);
-                    }
-
-                    tokens[arg]->content[0] = input[i];
-                    tokens[arg]->content[1] = '\0';
-                }
-                check_type(tokens, arg);
-                arg++;
-            }
-        }
-        else
-        {
-            j++;
-        }
-
+        dup[i] = str[start + i];
         i++;
     }
+    dup[len] = '\0';
+    return (dup);
+}
 
-    if (j > 0)
-    {
-        tokens[arg] = (t_token *)malloc(sizeof(t_token));
-        if (tokens[arg] == NULL)
-        {
-            perror("malloc failed");
-            ft_exit(EXIT_FAILURE);
-        }
-
-        tokens[arg]->content = strdup(input + i - j);
-        if (tokens[arg]->content == NULL)
-        {
-            perror("strdup failed");
-            ft_exit(EXIT_FAILURE);
-        }
-
-        trim(tokens[arg]->content);
-        check_type(tokens, arg);
-        if (tokens[arg]->type == CMD)
-            exec_builtin(tokens, arg);
-        arg++;
-    }
+int check_spc_chr(t_token **head, char *str)
+{
+    int i;
+    int             position;
+    int             spc;
 
     i = 0;
-    while (tokens[i] != NULL)
+    position = 0;
+    spc = 0;
+    while (str[i])
     {
-        //printf("Token %d: %s\n", i, tokens[i]->content);
-        free(tokens[i]->content);
-        tokens[i]->content = NULL;
-        free(tokens[i]);
-        tokens[i] = NULL;
-
+        if (str[i] == '>' && str[i + 1] == '>')
+        {
+            if (i >= 1 && str[i - 1] != '<')
+                add_token(head, STR, ft_strndup(str, position, i - 1));
+            add_token(head, APPEND, ">>");
+            position = i + 2;
+            spc = 1;
+            i++;
+        }
+        else if (str[i] == '>')
+        {
+            if (i >= 1 && str[i - 1] != '<')
+                add_token(head, STR, ft_strndup(str, position, i - 1));
+            add_token(head, OUTPUT, ">");
+            position = i + 1;
+            spc = 1;
+        }
+        else if (str[i] == '<' && str[i + 1] == '<')
+        {
+            if (i >= 1 && str[i - 1] != '>')
+                add_token(head, STR, ft_strndup(str, position, i - 1));
+            add_token(head, HEREDOC, "<<");
+            position = i + 2;
+            spc = 1;
+            i++;
+        }
+        else if (str[i] == '<')
+        {
+            if (i >= 1 && str[i - 1] != '>')
+                add_token(head, STR, ft_strndup(str, position, i - 1));
+            add_token(head, INPUT, "<");
+            position = i + 1;
+            spc = 1;
+        }
         i++;
     }
+    if (spc == 1 && str[position + 1])
+    {
+        //printf("times\n");
+        //printf("position : %d char %d = %c et len str : %d\n", position, position, str[position], ft_strlen(str));
+        add_token(head, STR, ft_strndup(str, position, (ft_strlen(str))));
+    }
+    return (spc);
 }
+
+void add_token(t_token **head, t_token_type type, char *content)
+{
+    t_token *new_token = malloc(sizeof(t_token));
+    if (new_token == NULL)
+	{
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
+
+    new_token->type = type;
+    new_token->content = strdup(content); // Duplicate the content
+    new_token->next = NULL;
+    new_token->prev = NULL;
+
+    if (*head == NULL) 
+        *head = new_token;
+	else 
+	{
+        t_token *current = *head;
+        while (current->next != NULL) 
+			current = current->next;
+		current->next = new_token;
+        new_token->prev = current;
+    }
+}
+
+void    print_tokens(t_token *head)
+{
+    while (head)
+    {
+        printf("type : %u content : %s\n", head->type, head->content);
+        head = head->next;
+    }
+}
+
+void token(char *input, t_minishell *data)
+{
+    t_token *head = NULL;
+	char	**splited_str;
+	char	*content;
+	int		i;
+    t_token_type type;
+
+    i = 0;
+	splited_str = ft_split(input, ' ');
+    while (splited_str[i]) 
+	{
+        content = strdup(splited_str[i]); // Duplicate the token content
+
+        if (strcmp(content, "<") == 0)
+            type = INPUT;
+        else if (strcmp(content, ">") == 0)
+            type = OUTPUT;
+        else if (strcmp(content, ">>") == 0)
+            type = APPEND;
+        else if (strcmp(content, "<<") == 0)
+            type = HEREDOC;
+        else if (strcmp(content, "|") == 0)
+            type = PIPE;
+        else if (check_spc_chr(&head, content))
+        {
+            free(content);
+            i++;
+            continue;
+        }
+        else
+            type = STR;
+        //printf("howmany\n");
+		add_token(&head, type, content);
+		free(content);
+		i++;
+    }
+	data->first_token = head;
+    //print_tokens(head);
+    //je dois test de print les tokens ici
+	free_tabl(splited_str);
+}
+

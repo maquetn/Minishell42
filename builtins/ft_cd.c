@@ -1,10 +1,10 @@
 #include "minishell.h"
 
-int ft_cd(t_token *tokens)
+int ft_cd(char *token)
 {
     char cwd[PATH_MAX];
 
-    if (tokens == NULL || tokens->content == NULL)
+    if (token == NULL || token[0] == '\0')
     {
         char *home_dir = getenv("HOME");
 
@@ -25,28 +25,33 @@ int ft_cd(t_token *tokens)
             return 0;
         }
     }
-    else if (strcmp(tokens->content, "..") == 0)
+    else if (strcmp(token, "..") == 0)
+{
+    char cwd[PATH_MAX];
+
+    if (getcwd(cwd, sizeof(cwd)) == NULL)
     {
-        if (getcwd(cwd, sizeof(cwd)) == NULL)
-        {
-            perror("getcwd");
-            return 0;
-        }
-
-        if (strcmp(cwd, "/") == 0)
-        {
-            printf("Already at the root directory.\n");
-            return 1;
-        }
-
-        if (chdir("..") == 0)
-            return 1;
-        else
-        {
-            perror("cd");
-            return 0;
-        }
+        perror("getcwd");
+        return 0;
     }
+
+    printf("Before cd: %s\n", cwd);
+
+    if (strcmp(cwd, "/") == 0)
+    {
+        printf("Already at the root directory.\n");
+        return 1;
+    }
+
+    if (chdir("..") == 0)
+        return 1;
+    else
+    {
+        perror("cd");
+        return 0;
+    }
+}
+
     else
     {
         if (getcwd(cwd, sizeof(cwd)) == NULL)
@@ -55,7 +60,7 @@ int ft_cd(t_token *tokens)
             return 0;
         }
 
-        if (chdir(tokens->content) == 0)
+        if (chdir(token) == 0)
         {
             char *target_path = getcwd(NULL, 0);
 

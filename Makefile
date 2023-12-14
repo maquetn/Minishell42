@@ -1,16 +1,15 @@
 NAME = minishell
 
-SRCS = ft_split.c \
-       ft_strncpy.c \
-       token.c \
-       check_type.c \
-       builtins/builtin.c \
-       builtins/pwd.c \
-       builtins/echo.c \
-       builtins/ft_cd.c \
-       builtins/exit.c \
-       builtins/ft_ls.c \
-       main.c
+SRCS = token.c \
+	   ast.c \
+	   utils.c \
+       main.c \
+	   exec.c \
+	   builtins/ft_cd.c \
+	   builtins/ft_echo.c \
+	   builtins/ft_exit.c \
+	   builtins/ft_pwd.c \
+	   builtins/ft_ls.c
 
 OBJ_DIR = obj
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
@@ -22,11 +21,16 @@ LDFLAGS = -lreadline -lhistory -L /Users/$(USER)/.brew/opt/readline/lib
 
 RM = rm -rf
 
-all: $(OBJ_DIR) $(NAME)
+# Extracting subdirectories from SRCS
+SUBDIRS = $(sort $(dir $(SRCS)))
 
-$(OBJ_DIR):
-	@mkdir -p $(OBJ_DIR)
-	@mkdir -p $(OBJ_DIR)/builtins
+# Create the directory structure in OBJ_DIR
+OBJ_SUBDIRS = $(addprefix $(OBJ_DIR)/, $(SUBDIRS))
+
+all: $(OBJ_SUBDIRS) $(NAME)
+
+$(OBJ_SUBDIRS):
+	@mkdir -p $@
 
 ${OBJ_DIR}/%.o: %.c
 	@$(CC) $(CFLAGS) -c $< -o $@
