@@ -33,7 +33,7 @@ int ft_cd(t_token *tokens)
             return 0;
         }
 
-        if (strcmp(cwd, "/Users") == 0)
+        if (strcmp(cwd, "/") == 0)
         {
             printf("Already at the root directory.\n");
             return 1;
