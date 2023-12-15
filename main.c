@@ -15,18 +15,21 @@ void	restore_terminal(struct termios *original_termios)
 // Signal handler function for SIGINT (Ctrl+C)
 void sig_handler(int signum)
 {
-	(void)signum; // To avoid the unused parameter warning
+    (void)signum; // To avoid the unused parameter warning
 
-	struct termios	original_termios;
+    struct termios original_termios;
 
-	tcgetattr(STDIN_FILENO, &original_termios);
-	original_termios.c_lflag &= ~ ECHOCTL;
-	rl_replace_line ("", 0);
-	rl_on_new_line();
-	rl_redisplay ();
-	tcsetattr(STDIN_FILENO, TCSANOW, &original_termios);
-	printf("\n\033[0;32m 🐚 Minishell > \033[0;37m");
-	status = 1;
+    tcgetattr(STDIN_FILENO, &original_termios);
+    original_termios.c_lflag &= ~ECHOCTL;
+
+    rl_replace_line("", 0);
+    rl_on_new_line();
+    rl_redisplay();
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &original_termios);
+
+    printf("\n\033[0;32m 🐚 Minishell > \033[0;37m");
+    status = 1;
 }
 
 char	**copy_env(char **env)
@@ -69,7 +72,6 @@ void	print_nodes(t_minishell *data)
 			printf("args %d : %s\n", i, data->node->args[i]);
 			i++;
 		}
-		printf("test\n");
 		data->node = data->node->next;
 	}
 }
@@ -91,21 +93,22 @@ void	free_simple_cmd(t_simple_cmd *cmd)
 		//printf("end of cmd free \n");
 	}
 }
-
-int	check_parse(char *str)
+/*
+int check_parse(char *str)
 {
-	//faudra rendre cette fct absolument impermeable pour que la suite marche
-	int	i;
-	
-	i = ft_strlen(str);
-	if (str[i - 1] == '>' || str[i - 1] == '<' || str[i - 1] == '.')
-	{
-		printf("syntax error near unexpected token `a gerer'\n");
-		return (1);
-	}
-	else
-		return (0);
-}
+    // faudra rendre cette fct absolument impermeable pour que la suite marche
+    int i;
+
+    i = ft_strlen(str);
+    if (i > 0 && (str[i - 1] == '>' || str[i - 1] == '<' || str[i - 1] == '.'))
+    {
+        printf("syntax error near unexpected token `a gerer'\n");
+        return (1);
+    }
+    else
+        return (0);
+}*/
+
 
 int main(int ac, char **av, char **env)
 {
@@ -123,6 +126,8 @@ int main(int ac, char **av, char **env)
 
 	while (1)
 	{
+		if (status == 1)
+			break;
 		if (status != 1)
 			input = readline(prompt);
 		if (input == NULL || strcmp(input, "exit") == 0)
@@ -136,28 +141,32 @@ int main(int ac, char **av, char **env)
 			free(input);
 			break;
 		}
-		if (input != 0)
-			add_history(input);
-		if (check_parse(input))
-			input = NULL;
+		if (input != NULL)
+       		add_history(input);
+		/*if (check_parse(input))
+		{
+			free(input);  // Free input if there is a syntax error
+			continue;     // Skip further processing for this input
+		}*/
 		if (input != NULL)
 			token(input, &data);
 		if (data.first_token)
-			planting(&data);
+			planting(&data);// ICI TA MERE LA CATIN
+
 		// if (input != NULL)	
 		//  	print_nodes(&data);
 		if (data.node)
 			execute_simple_cmd(data.node);
 
-		// if (input != NULL)	
-		//  	print_nodes(&data);
+		if (input != NULL)	
+		 	print_nodes(&data);
 
-		free(input);
+		if (input != NULL)
+			free(input);
 		free_simple_cmd(data.node);
-		//printf("got there ? \n");
 		status = 0;
 	}
-	free_tabl(data.env);
+	//free_tabl(data.env);
 	//system("leaks minishell");
 	return 0;
 }

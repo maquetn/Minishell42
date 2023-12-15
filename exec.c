@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 09:48:00 by mdor              #+#    #+#             */
-/*   Updated: 2023/12/14 12:13:52 by nmaquet          ###   ########.fr       */
+/*   Updated: 2023/12/15 15:48:08 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void execute_simple_cmd(t_simple_cmd *cmd)
         redirect_input(cmd);
         redirect_output(cmd);
         redirect_previous_output(cmd, pipe_fd);
-        exec_builtin(cmd);
+        //exec_builtin(cmd);
     }
 
     else 

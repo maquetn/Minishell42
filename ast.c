@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdor <marvin@42.fr>                        +#+  +:+       +#+        */
+/*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 09:39:04 by mdor              #+#    #+#             */
-/*   Updated: 2023/12/08 09:39:06 by mdor             ###   ########.fr       */
+/*   Updated: 2023/12/15 15:09:36 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,24 +64,27 @@ char	*get_path(char *cmd, char **env)
 	return (strdup(cmd));
 }
 
-void	free_tokens(t_token *token)
+void free_tokens(t_token **token)
 {
-	t_token *temp;
-	t_token	*next_token;
+    t_token *temp;
+    t_token *next_token;
 
-	temp = token;
-	while (temp)
-	{
-		//printf("token content %s\n", temp->content);
-		free(temp->content);
-		//printf("token content %s\n", token->content);
-		next_token = temp->next;
-		temp->prev = NULL;
-		free(temp);
-		temp = next_token;
-		//printf("freed one token\n");
-	}
+    temp = *token;
+    while (temp)
+    {
+        printf("Freeing token: %p, content: %s\n", (void *)temp, temp->content);
+
+        free(temp->content);
+
+        next_token = temp->next;
+        temp->prev = NULL;
+        free(temp);
+
+        temp = next_token;
+    }
+    *token = NULL; // Update the pointer to NULL after freeing
 }
+
 
 void	init_simple_cmd(t_simple_cmd *cmd)
 {
@@ -123,11 +126,12 @@ t_simple_cmd	*recursive_parsing(t_minishell *data)
 void	planting(t_minishell *data)
 {
 	t_token	*first_token;
-
-	first_token = data->first_token;
-	data->node = recursive_parsing(data);
-	free_tokens(first_token);
 	
+	first_token = data->first_token;
+	printf("%s\n", first_token->content);
+	data->node = recursive_parsing(data);
+	printf("%s\n", first_token->content);
+	free_tokens(&first_token);
 }
 
 void	count_args_and_malloc(t_simple_cmd *cmd, t_token *token)
@@ -136,6 +140,7 @@ void	count_args_and_malloc(t_simple_cmd *cmd, t_token *token)
 	int		i;
 
 	temporary = token;
+	//printf("Content: %s \n", temporary->content);
 	i = 0;
 	while(temporary)
 	{

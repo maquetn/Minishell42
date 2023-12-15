@@ -15,7 +15,7 @@ OBJ_DIR = obj
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g -I /Users/$(USER)/.brew/opt/readline/include
+CFLAGS = -Wall -Wextra -Werror -g -I /Users/$(USER)/.brew/opt/readline/include #-fsanitize=address -g
 
 LDFLAGS = -lreadline -lhistory -L /Users/$(USER)/.brew/opt/readline/lib
 
