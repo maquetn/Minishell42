@@ -64,12 +64,12 @@ void	print_nodes(t_minishell *data)
 	while (data->node)
 	{
 		int i = 0;
-		printf("output : %s\n", data->node->output);
-		printf("input : %s\n", data->node->input);
-		printf("path : %s\n", data->node->path_to_cmd);
+		//printf("output : %s\n", data->node->output);
+		//printf("input : %s\n", data->node->input);
+		//printf("path : %s\n", data->node->path_to_cmd);
 		while (data->node->args[i])
 		{
-			printf("args %d : %s\n", i, data->node->args[i]);
+			//printf("args %d : %s\n", i, data->node->args[i]);
 			i++;
 		}
 		data->node = data->node->next;
@@ -145,16 +145,14 @@ int main(int ac, char **av, char **env)
        		add_history(input);
 		/*if (check_parse(input))
 		{
-			free(input);  // Free input if there is a syntax error
-			continue;     // Skip further processing for this input
+			free(input);
+			continue;
 		}*/
 		if (input != NULL)
 			token(input, &data);
 		if (data.first_token)
-			planting(&data);// ICI TA MERE LA CATIN
+			planting(&data);
 
-		// if (input != NULL)	
-		//  	print_nodes(&data);
 		if (data.node)
 			execute_simple_cmd(data.node);
 
