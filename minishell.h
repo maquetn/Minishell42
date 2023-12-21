@@ -85,7 +85,7 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token);
 char	*ft_strdup(const char *s1);
 void	planting(t_minishell *data);
 void	free_tabl(char **tabl);
-void execute_simple_cmd(t_simple_cmd *cmd);
+void execute_simple_cmd(t_simple_cmd *cmd, int *prev_pipe_fd);
 void add_token(t_token **head, t_token_type type, char *content, int i);
 void	print_nodes(t_minishell *data);
 

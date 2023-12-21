@@ -159,7 +159,7 @@ int main(int ac, char **av, char **env)
 		if (data.first_token)
 			planting(&data);
 		if (data.node)
-			execute_simple_cmd(data.node);
+			execute_simple_cmd(data.node, NULL);
 		//print_nodes(&data);
 		free(input);
 		free_simple_cmd(data.node);
