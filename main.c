@@ -1,7 +1,6 @@
 #include "minishell.h"
 //rajouter un check syntax error entre token et parsing ??
-
-int status = 0;
+int g_exit_code = 0;
 
 void	restore_terminal(struct termios *original_termios)
 {
@@ -29,7 +28,7 @@ void sig_handler(int signum)
     tcsetattr(STDIN_FILENO, TCSANOW, &original_termios);
 
     printf("\n\033[0;32m 🐚 Minishell > \033[0;37m");
-    status = 1;
+    g_exit_code = 1;
 }
 
 char	**copy_env(char **env)
@@ -127,9 +126,9 @@ int main(int ac, char **av, char **env)
 
 	while (1)
 	{
-		if (status == 1)
+		if (g_exit_code == 1)
 			break;
-		if (status != 1)
+		if (g_exit_code != 1)
 			input = readline(prompt);
 		if (input == NULL || strcmp(input, "exit") == 0)
 		{
@@ -163,7 +162,6 @@ int main(int ac, char **av, char **env)
 		//print_nodes(&data);
 		free(input);
 		free_simple_cmd(data.node);
-		status = 0;
 	}
 	free_tabl(data.env);
 	//system("leaks minishell");

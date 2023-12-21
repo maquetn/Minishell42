@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 09:48:00 by mdor              #+#    #+#             */
-/*   Updated: 2023/12/21 14:03:40 by nmaquet          ###   ########.fr       */
+/*   Updated: 2023/12/21 14:47:41 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void execute_command(t_simple_cmd *cmd)
     else if (strcmp(cmd->args[0], "cd") == 0)
         ft_cd(cmd->args[1]);
     else if (strcmp(cmd->args[0], "pwd") == 0)
-        printf("%s\n", ft_pwd());
+        ft_pwd();
     else if (strcmp(cmd->args[0], "export") == 0)
         printf("export function\n");
     else if (strcmp(cmd->args[0], "unset") == 0)
@@ -85,13 +85,13 @@ void execute_command(t_simple_cmd *cmd)
         ft_exit(0);
     else if(execve(cmd->path_to_cmd, cmd->args, NULL) == -1)
     {
-        printf("%s\n", strerror(errno));
-        //etre sur de bien liberer les cmd avant de d'exit
-        ft_exit(EXIT_FAILURE);
-    }
-    else
+        //printf("%s\n", strerror(errno));
         printf("%s: command not found\n", cmd->args[0]);
-
+        if (strcmp(cmd->args[0], "$?") == 0)
+            printf("%d\n", g_exit_code);
+        //etre sur de bien liberer les cmd avant de d'exit
+        ft_exit(127);
+    }
 }
 
 void execute_simple_cmd(t_simple_cmd *cmd) 
@@ -106,8 +106,8 @@ void execute_simple_cmd(t_simple_cmd *cmd)
         perror("pipe");
         ft_exit(EXIT_FAILURE);
     }
-    child_pid = fork(); 
-    //child_pid = 0;
+    //child_pid = fork(); 
+    child_pid = 0;
     if (child_pid == -1) 
     {
         perror("fork");

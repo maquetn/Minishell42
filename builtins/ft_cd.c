@@ -4,6 +4,8 @@ int ft_cd(char *token)
 {
     char cwd[PATH_MAX];
 
+    printf("Token: %s\n", token);
+
     if (token == NULL || token[0] == '\0')
     {
         char *home_dir = getenv("HOME");
@@ -21,36 +23,12 @@ int ft_cd(char *token)
         }
         else
         {
-            perror("cd");
+            perror("chdir");
+            fprintf(stderr, "Error changing to home directory: %s\n", home_dir);
             return 0;
         }
     }
     else if (strcmp(token, "..") == 0)
-{
-    char cwd[PATH_MAX];
-
-    if (getcwd(cwd, sizeof(cwd)) == NULL)
-    {
-        perror("getcwd");
-        return 0;
-    }
-
-    if (strcmp(cwd, "/") == 0)
-    {
-        printf("Already at the root directory.\n");
-        return 1;
-    }
-
-    if (chdir("..") == 0)
-        return 1;
-    else
-    {
-        perror("cd");
-        return 0;
-    }
-}
-
-    else
     {
         if (getcwd(cwd, sizeof(cwd)) == NULL)
         {
@@ -58,26 +36,41 @@ int ft_cd(char *token)
             return 0;
         }
 
-        if (chdir(token) == 0)
+        if (strcmp(cwd, "/") == 0)
         {
-            char *target_path = getcwd(NULL, 0);
+            printf("Already at the root directory.\n");
+            return 1;
+        }
 
-            if (target_path == NULL)
-            {
-                perror("getcwd");
-                chdir(cwd);
-                return 0;
-            }
-
-            printf("Changed to: %s\n", target_path);
-            chdir(cwd);
-            free(target_path);
-
+        if (chdir("..") == 0)
+        {
+            printf("Changed to parent directory.\n");
             return 1;
         }
         else
         {
-            perror("cd");
+            perror("chdir");
+            fprintf(stderr, "Error changing to parent directory.\n");
+            return 0;
+        }
+    }
+    else
+    {
+        if (chdir(token) == 0)
+        {
+            if (getcwd(cwd, sizeof(cwd)) == NULL)
+            {
+                perror("getcwd");
+                return 0;
+            }
+
+            printf("Changed to: %s\n", cwd);
+            return 1;
+        }
+        else
+        {
+            perror("chdir");
+            fprintf(stderr, "Error changing to directory: %s\n", token);
             return 0;
         }
     }

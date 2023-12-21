@@ -1,6 +1,7 @@
 #include "minishell.h"
 
-int ft_exit(int exit_code)
+int ft_exit(int i)
 {
-    exit(exit_code); //replace by exit code
+    g_exit_code = i;
+    exit(g_exit_code); //replace by exit code
 }

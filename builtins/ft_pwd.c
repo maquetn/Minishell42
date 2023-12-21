@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-char* ft_pwd()
+char *ft_pwd()
 {
-    char* cwd = malloc(PATH_MAX);
+    char *cwd = malloc(PATH_MAX);
     if (cwd == NULL)
     {
         perror("malloc");
@@ -16,12 +16,8 @@ char* ft_pwd()
         ft_exit(EXIT_FAILURE);
     }
 
-    // Check if the current directory is the root directory
-    if (strcmp(cwd, "/") == 0)
-    {
-        free(cwd);
-        return strdup("/");
-    }
+    printf("%s\n", cwd);
+    free(cwd);
 
-    return cwd;
+    return NULL;
 }
