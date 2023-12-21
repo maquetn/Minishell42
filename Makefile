@@ -3,13 +3,14 @@ NAME = minishell
 SRCS = token.c \
 	   ast.c \
 	   utils.c \
-       main.c \
+	   main.c \
 	   exec.c \
 	   builtins/ft_cd.c \
 	   builtins/ft_echo.c \
 	   builtins/ft_exit.c \
 	   builtins/ft_pwd.c \
-	   builtins/ft_ls.c
+	   builtins/ft_ls.c \
+	   builtins/ft_env.c
 
 OBJ_DIR = obj
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))

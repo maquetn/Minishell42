@@ -14,21 +14,21 @@ void	restore_terminal(struct termios *original_termios)
 // Signal handler function for SIGINT (Ctrl+C)
 void sig_handler(int signum)
 {
-    (void)signum; // To avoid the unused parameter warning
+	(void)signum; // To avoid the unused parameter warning
 
-    struct termios original_termios;
+	struct termios original_termios;
 
-    tcgetattr(STDIN_FILENO, &original_termios);
-    original_termios.c_lflag &= ~ECHOCTL;
+	tcgetattr(STDIN_FILENO, &original_termios);
+	original_termios.c_lflag &= ~ECHOCTL;
 
-    rl_replace_line("", 0);
-    rl_on_new_line();
-    rl_redisplay();
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
 
-    tcsetattr(STDIN_FILENO, TCSANOW, &original_termios);
+	tcsetattr(STDIN_FILENO, TCSANOW, &original_termios);
 
-    printf("\n\033[0;32m 🐚 Minishell > \033[0;37m");
-    g_exit_code = 1;
+	printf("\n\033[0;32m 🐚 Minishell > \033[0;37m");
+	g_exit_code = 1;
 }
 
 char	**copy_env(char **env)
@@ -96,17 +96,17 @@ void	free_simple_cmd(t_simple_cmd *cmd)
 /*
 int check_parse(char *str)
 {
-    // faudra rendre cette fct absolument impermeable pour que la suite marche
-    int i;
+	// faudra rendre cette fct absolument impermeable pour que la suite marche
+	int i;
 
-    i = ft_strlen(str);
-    if (i > 0 && (str[i - 1] == '>' || str[i - 1] == '<' || str[i - 1] == '.'))
-    {
-        printf("syntax error near unexpected token `a gerer'\n");
-        return (1);
-    }
-    else
-        return (0);
+	i = ft_strlen(str);
+	if (i > 0 && (str[i - 1] == '>' || str[i - 1] == '<' || str[i - 1] == '.'))
+	{
+		printf("syntax error near unexpected token `a gerer'\n");
+		return (1);
+	}
+	else
+		return (0);
 }*/
 
 
@@ -146,8 +146,14 @@ int main(int ac, char **av, char **env)
 			free(input);
 			continue;
 		}
-		if (input != NULL)
-       		add_history(input);
+
+		add_history(input);
+/*
+		if (strcmp(input, "env") == 0)
+		{
+			ft_env(&data);
+		}
+		*/
 		/*if (check_parse(input))
 		{
 			free(input);
@@ -158,10 +164,11 @@ int main(int ac, char **av, char **env)
 		if (data.first_token)
 			planting(&data);
 		if (data.node)
-			execute_simple_cmd(data.node);
+			execute_simple_cmd(data.node, &data);
 		//print_nodes(&data);
 		free(input);
 		free_simple_cmd(data.node);
+		
 	}
 	free_tabl(data.env);
 	//system("leaks minishell");

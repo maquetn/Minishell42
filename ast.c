@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ast.c                                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/08 09:39:04 by mdor              #+#    #+#             */
-/*   Updated: 2023/12/21 12:24:21 by nmaquet          ###   ########.fr       */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   ast.c											  :+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: nmaquet <nmaquet@student.42.fr>			+#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2023/12/08 09:39:04 by mdor			  #+#	#+#			 */
+/*   Updated: 2023/12/21 16:06:36 by nmaquet		  ###   ########.fr	   */
+/*																			*/
 /* ************************************************************************** */
 
 
@@ -66,22 +66,22 @@ char	*get_path(char *cmd, char **env)
 
 void free_tokens(t_token *token)
 {
-    t_token *temp;
-    t_token *next_token;
+	t_token *temp;
+	t_token *next_token;
 
-    temp = token;
-    while (temp)
-    {
-        //printf("Freeing token: %p, content: %s\n", (void *)temp, temp->content);
+	temp = token;
+	while (temp)
+	{
+		//printf("Freeing token: %p, content: %s\n", (void *)temp, temp->content);
 
-        free(temp->content);
+		free(temp->content);
 
-        next_token = temp->next;
-        temp->prev = NULL;
-        free(temp);
+		next_token = temp->next;
+		temp->prev = NULL;
+		free(temp);
 
-        temp = next_token;
-    }
+		temp = next_token;
+	}
 }
 
 
@@ -92,7 +92,7 @@ void	init_simple_cmd(t_simple_cmd *cmd)
 	cmd->input = NULL;
 	cmd->output = NULL;
 	cmd->prev = NULL;
-    cmd->next = NULL;
+	cmd->next = NULL;
 }
 
 t_simple_cmd	*get_cmd(t_token *token, t_minishell *data)
@@ -167,6 +167,7 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 	if (!cmd)
 		EXIT_FAILURE;
 	init_simple_cmd(cmd);
+
 	count_args_and_malloc(cmd, token);
 	while(token)
 	{
