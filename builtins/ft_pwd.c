@@ -16,5 +16,12 @@ char* ft_pwd()
         exit(EXIT_FAILURE);
     }
 
+    // Check if the current directory is the root directory
+    if (strcmp(cwd, "/") == 0)
+    {
+        free(cwd);
+        return strdup("/");
+    }
+
     return cwd;
 }

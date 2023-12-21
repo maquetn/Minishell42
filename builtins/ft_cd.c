@@ -35,8 +35,6 @@ int ft_cd(char *token)
         return 0;
     }
 
-    printf("Before cd: %s\n", cwd);
-
     if (strcmp(cwd, "/") == 0)
     {
         printf("Already at the root directory.\n");

@@ -90,7 +90,6 @@ void	free_simple_cmd(t_simple_cmd *cmd)
 		next = temp->next;
 		free(temp);
 		temp = next;
-		//printf("end of cmd free \n");
 	}
 }
 /*
