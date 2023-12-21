@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 09:39:04 by mdor              #+#    #+#             */
-/*   Updated: 2023/12/16 13:03:03 by nmaquet          ###   ########.fr       */
+/*   Updated: 2023/12/21 12:24:21 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,12 @@ char	*get_path(char *cmd, char **env)
 	return (strdup(cmd));
 }
 
-void free_tokens(t_token **token)
+void free_tokens(t_token *token)
 {
     t_token *temp;
     t_token *next_token;
 
-    temp = *token;
+    temp = token;
     while (temp)
     {
         //printf("Freeing token: %p, content: %s\n", (void *)temp, temp->content);
@@ -82,7 +82,6 @@ void free_tokens(t_token **token)
 
         temp = next_token;
     }
-    *token = NULL; // Update the pointer to NULL after freeing
 }
 
 
@@ -109,19 +108,13 @@ t_simple_cmd	*recursive_parsing(t_minishell *data)
 	t_simple_cmd	*prev;
 	t_simple_cmd	*next = NULL;
 
-	if (data->first_token == NULL)
-		return NULL;
-
 	prev = get_cmd(data->first_token, data);
 
 	if (data->first_token)
 	{
 		next = recursive_parsing(data);
-		if (next != NULL)
-		{
-			prev->next = next;
-			next->prev = prev;
-		}
+		prev->next = next;
+		next->prev = prev;
 	}
 
 	return prev;
@@ -135,7 +128,7 @@ void	planting(t_minishell *data)
 	//printf("%s\n", first_token->content);
 	data->node = recursive_parsing(data);
 	//printf("%s\n", first_token->content);
-	free_tokens(&first_token);
+	free_tokens(first_token);
 }
 
 void	count_args_and_malloc(t_simple_cmd *cmd, t_token *token)
@@ -187,7 +180,7 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 		else if (token->type == INPUT)
 		{
 			if (token->next != NULL)
-				cmd->input = token->next->content;
+				cmd->input = ft_strdup(token->next->content);
 			if (token->next != NULL && token->next->type != OUTPUT && token->next->type != INPUT)
 				token = token->next->next;
 			else
@@ -196,7 +189,7 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 		else if (token->type == OUTPUT)
 		{
 			if (token->next != NULL)
-				cmd->output = token->next->content;
+				cmd->output = ft_strdup(token->next->content);
 			if (token->next != NULL && token->next->type != OUTPUT && token->next->type != INPUT)
 				token = token->next->next;
 			else
@@ -205,16 +198,12 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 		else
 		{
 			if (i == 0)
-			{
-				exec_builtin(cmd);
-				if (cmd == NULL) // Added check
-					break;
-			}
+				cmd->path_to_cmd = get_path(token->content, data->env);
+
 			cmd->args[i] = ft_strdup(token->content);
 			i++;
 			token = token->next;
 		}
-		
 	}
 	cmd->args[i] = NULL;
 	data->first_token = token;

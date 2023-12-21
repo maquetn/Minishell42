@@ -44,8 +44,8 @@ int check_spc_chr(t_token **head, char *str)
         if (str[i] == '>' && str[i + 1] == '>')
         {
             if (i >= 1 && str[i - 1] != '<')
-                add_token(head, STR, ft_strndup(str, position, i - 1));
-            add_token(head, APPEND, ">>");
+                add_token(head, STR, ft_strndup(str, position, i - 1), 1);
+            add_token(head, APPEND, ">>", 0);
             position = i + 2;
             spc = 1;
             i++;
@@ -53,16 +53,16 @@ int check_spc_chr(t_token **head, char *str)
         else if (str[i] == '>')
         {
             if (i >= 1 && str[i - 1] != '<')
-                add_token(head, STR, ft_strndup(str, position, i - 1));
-            add_token(head, OUTPUT, ">");
+                add_token(head, STR, ft_strndup(str, position, i - 1), 1);
+            add_token(head, OUTPUT, ">", 0);
             position = i + 1;
             spc = 1;
         }
         else if (str[i] == '<' && str[i + 1] == '<')
         {
             if (i >= 1 && str[i - 1] != '>')
-                add_token(head, STR, ft_strndup(str, position, i - 1));
-            add_token(head, HEREDOC, "<<");
+                add_token(head, STR, ft_strndup(str, position, i - 1), 1);
+            add_token(head, HEREDOC, "<<", 0);
             position = i + 2;
             spc = 1;
             i++;
@@ -70,23 +70,31 @@ int check_spc_chr(t_token **head, char *str)
         else if (str[i] == '<')
         {
             if (i >= 1 && str[i - 1] != '>')
-                add_token(head, STR, ft_strndup(str, position, i - 1));
-            add_token(head, INPUT, "<");
+                add_token(head, STR, ft_strndup(str, position, i - 1), 1);
+            add_token(head, INPUT, "<", 0);
+            position = i + 1;
+            spc = 1;
+        }
+		else if (str[i] == '|')
+        {
+            if (i >= 1)
+                add_token(head, STR, ft_strndup(str, position, i - 1), 1);
+            add_token(head, PIPE, "|", 0);
             position = i + 1;
             spc = 1;
         }
         i++;
     }
-    if (spc == 1 && str[position + 1])
+    if (spc == 1 && str[position])
     {
         //printf("times\n");
         //printf("position : %d char %d = %c et len str : %d\n", position, position, str[position], ft_strlen(str));
-        add_token(head, STR, ft_strndup(str, position, (ft_strlen(str))));
+        add_token(head, STR, ft_strndup(str, position, (ft_strlen(str))), 1);
     }
     return (spc);
 }
 
-void add_token(t_token **head, t_token_type type, char *content)
+void add_token(t_token **head, t_token_type type, char *content, int i)
 {
     t_token *new_token = malloc(sizeof(t_token));
     if (new_token == NULL)
@@ -110,6 +118,8 @@ void add_token(t_token **head, t_token_type type, char *content)
 		current->next = new_token;
         new_token->prev = current;
     }
+    if (i == 1)
+        free(content);
 }
 
 void    print_tokens(t_token *head)
@@ -154,7 +164,7 @@ void token(char *input, t_minishell *data)
         else
             type = STR;
         //printf("howmany\n");
-		add_token(&head, type, content);
+		add_token(&head, type, content, 0);
 		free(content);
 		i++;
     }

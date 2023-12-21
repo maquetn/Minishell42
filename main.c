@@ -86,6 +86,8 @@ void	free_simple_cmd(t_simple_cmd *cmd)
 	{
 		free_tabl(temp->args);
 		free(temp->path_to_cmd);
+		free(temp->input);
+		free(temp->output);
 		temp->prev = NULL;
 		next = temp->next;
 		free(temp);
@@ -147,23 +149,18 @@ int main(int ac, char **av, char **env)
 			free(input);
 			continue;
 		}*/
-		if (input != NULL)
-			token(input, &data);
+
+		token(input, &data);
 		if (data.first_token)
 			planting(&data);
-
 		if (data.node)
 			execute_simple_cmd(data.node);
-
-		if (input != NULL)	
-		 	print_nodes(&data);
-
-		if (input != NULL)
-			free(input);
+		//print_nodes(&data);
+		free(input);
 		free_simple_cmd(data.node);
 		status = 0;
 	}
-	//free_tabl(data.env);
+	free_tabl(data.env);
 	//system("leaks minishell");
 	return 0;
 }
