@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 09:48:00 by mdor              #+#    #+#             */
-/*   Updated: 2023/12/21 12:36:32 by nmaquet          ###   ########.fr       */
+/*   Updated: 2023/12/21 13:11:07 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void redirect_input(t_simple_cmd *cmd, int *p_fd)
         if (input_fd == -1) 
         {
             perror("open");
-            exit(EXIT_FAILURE);
+            ft_exit(EXIT_FAILURE);
         }
         dup2(input_fd, STDIN_FILENO);
         close(input_fd);
@@ -46,7 +46,7 @@ void redirect_output(t_simple_cmd *cmd, int *p_fd)
         if (output_fd == -1) 
         {
             perror("open");
-            exit(EXIT_FAILURE);
+            ft_exit(EXIT_FAILURE);
         }
         dup2(output_fd, STDOUT_FILENO);
         close(output_fd);
@@ -87,7 +87,7 @@ void execute_command(t_simple_cmd *cmd)
     {
         printf("%s\n", strerror(errno));
         //etre sur de bien liberer les cmd avant de d'exit
-        exit(EXIT_FAILURE);
+        ft_exit(EXIT_FAILURE);
     }
 }
 
@@ -101,14 +101,14 @@ void execute_simple_cmd(t_simple_cmd *cmd)
     if (pipe(pipe_fd) == -1) 
     {
         perror("pipe");
-        exit(EXIT_FAILURE);
+        ft_exit(EXIT_FAILURE);
     }
     child_pid = fork(); 
     //child_pid = 0;
     if (child_pid == -1) 
     {
         perror("fork");
-        exit(EXIT_FAILURE);
+        ft_exit(EXIT_FAILURE);
     }
     if (child_pid == 0) 
     {

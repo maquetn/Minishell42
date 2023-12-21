@@ -10,7 +10,7 @@ void ft_ls(const char *directory_path)
     if (dir == NULL)
     {
         perror("opendir");
-        exit(EXIT_FAILURE);
+        ft_exit(EXIT_FAILURE);
     }
 
     while ((entry = readdir(dir)) != NULL)

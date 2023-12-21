@@ -100,7 +100,7 @@ void add_token(t_token **head, t_token_type type, char *content, int i)
     if (new_token == NULL)
 	{
         perror("malloc");
-        exit(EXIT_FAILURE);
+        ft_exit(EXIT_FAILURE);
     }
 
     new_token->type = type;
