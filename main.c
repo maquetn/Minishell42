@@ -142,6 +142,11 @@ int main(int ac, char **av, char **env)
 			free(input);
 			break;
 		}
+		if (input[0] == '\0')
+		{
+			free(input);
+			continue;
+		}
 		if (input != NULL)
        		add_history(input);
 		/*if (check_parse(input))
