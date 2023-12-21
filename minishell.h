@@ -94,7 +94,7 @@ void	print_nodes(t_minishell *data);
 
 void exec_builtin(t_simple_cmd *cmd);
 void ft_echo(char **args, int index);
-int ft_exit();
+int ft_exit(int exit_code);
 int ft_cd(char *token);
 void ft_ls(const char *directory_path);
 char* ft_pwd();

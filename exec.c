@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 09:48:00 by mdor              #+#    #+#             */
-/*   Updated: 2023/12/21 13:11:07 by nmaquet          ###   ########.fr       */
+/*   Updated: 2023/12/21 13:24:46 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,13 +82,16 @@ void execute_command(t_simple_cmd *cmd)
     else if (strcmp(cmd->args[0], "env") == 0)
         printf("env function\n");
     else if (strcmp(cmd->args[0], "exit") == 0)
-        ft_exit();
+        ft_exit(0);
     else if(execve(cmd->path_to_cmd, cmd->args, NULL) == -1)
     {
         printf("%s\n", strerror(errno));
         //etre sur de bien liberer les cmd avant de d'exit
         ft_exit(EXIT_FAILURE);
     }
+    else
+        printf("%s: command not found\n", cmd->args[0]);
+
 }
 
 void execute_simple_cmd(t_simple_cmd *cmd) 
