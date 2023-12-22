@@ -60,6 +60,12 @@ typedef struct s_minishell
 	
 } t_minishell;
 
+// typedef struct	s_env
+// {
+// 	char			*value;
+// 	struct s_env	*next;
+// }				t_env;
+
 int	ft_strlen(const char *str);
 int	ft_strncpy(char *dst, const char *src, int size);
 
@@ -96,10 +102,11 @@ void	print_nodes(t_minishell *data);
 
 void exec_builtin(t_simple_cmd *cmd);
 void ft_echo(char **args, int index);
-int ft_exit(int g_exit_code);
+int ft_exit(int i, char **args);
 int ft_cd(char *token);
 void ft_ls(const char *directory_path);
 char* ft_pwd();
 void	ft_env();
+
 
 #endif

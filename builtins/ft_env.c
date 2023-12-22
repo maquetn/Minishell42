@@ -8,8 +8,6 @@ void ft_env(t_minishell *data)
 		return;
 	}
 
-	printf("Environment:\n");
-
 	int i = 0;
 	while (data->env[i] != NULL)
 	{

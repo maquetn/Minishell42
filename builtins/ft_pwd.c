@@ -6,14 +6,14 @@ char *ft_pwd()
 	if (cwd == NULL)
 	{
 		perror("malloc");
-		ft_exit(EXIT_FAILURE);
+		ft_exit(EXIT_FAILURE, NULL);
 	}
 
 	if (getcwd(cwd, PATH_MAX) == NULL)
 	{
 		perror("getcwd");
 		free(cwd);
-		ft_exit(EXIT_FAILURE);
+		ft_exit(EXIT_FAILURE, NULL);
 	}
 
 	printf("%s\n", cwd);

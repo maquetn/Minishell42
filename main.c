@@ -7,7 +7,7 @@ void	restore_terminal(struct termios *original_termios)
 	if (tcsetattr(STDIN_FILENO, TCSANOW, original_termios) == -1)
 	{
 		perror("tcsetattr");
-		ft_exit(EXIT_FAILURE);
+		ft_exit(EXIT_FAILURE, NULL);
 	}
 }
 

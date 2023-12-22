@@ -26,7 +26,7 @@ void redirect_input(t_simple_cmd *cmd, int *p_fd)
 		if (input_fd == -1)
 		{
 			perror("open");
-			ft_exit(EXIT_FAILURE);
+			ft_exit(EXIT_FAILURE, NULL);
 		}
 		dup2(input_fd, STDIN_FILENO);
 		close(input_fd);
@@ -46,7 +46,7 @@ void redirect_output(t_simple_cmd *cmd, int *p_fd)
 		if (output_fd == -1)
 		{
 			perror("open");
-			ft_exit(EXIT_FAILURE);
+			ft_exit(EXIT_FAILURE, NULL);
 		}
 		dup2(output_fd, STDOUT_FILENO);
 		close(output_fd);
@@ -84,13 +84,13 @@ void execute_command(t_simple_cmd *cmd, t_minishell *data)
 	else if (strcmp(cmd->args[0], "env") == 0)
 		ft_env(data);
 	else if (strcmp(cmd->args[0], "exit") == 0)
-		ft_exit(0);
+		ft_exit(0, cmd->args);
 	else if(execve(cmd->path_to_cmd, cmd->args, NULL) == -1)
 	{
 		//printf("%s\n", strerror(errno));
 		printf("%s: command not found\n", cmd->args[0]);
 		//etre sur de bien liberer les cmd avant de d'exit
-		ft_exit(127);
+		ft_exit(127, NULL);
 	}
 }
 
@@ -104,14 +104,14 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data)
 	if (pipe(pipe_fd) == -1) 
 	{
 		perror("pipe");
-		ft_exit(EXIT_FAILURE);
+		ft_exit(EXIT_FAILURE, NULL);
 	}
 	child_pid = fork(); 
 	//child_pid = 0;
 	if (child_pid == -1) 
 	{
 		perror("fork");
-		ft_exit(EXIT_FAILURE);
+		ft_exit(EXIT_FAILURE, NULL);
 	}
 	if (child_pid == 0) 
 	{

@@ -1,7 +1,16 @@
-#include <minishell.h>
+/*#include <minishell.h>
 
-void ft_export()
+int ft_export()
 {
-	
 
+    //si export sans rien apres
+    if (!args[1])
+    {
+
+    }
+    else
+    {
+
+    }
 }
+*/
