@@ -109,4 +109,8 @@ char* ft_pwd();
 void	ft_env();
 
 
+
+
+void execute_command(t_simple_cmd *cmd, t_minishell *data);
+
 #endif

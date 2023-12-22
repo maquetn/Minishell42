@@ -67,32 +67,65 @@ void redirect_previous_output(t_simple_cmd *cmd, int pipe_fd[2])
 	}
 }
 
+int execute_builtins(t_simple_cmd *cmd, t_minishell *data)
+{
+    if (strcmp(cmd->args[0], "$?") == 0)
+		printf("%d\n", g_exit_code);
+    //dans lideal il faudrait que les builtins renvoient 1 si SUCCESS
+    if (strcmp(cmd->args[0], "echo") == 0)
+    {
+        ft_echo(cmd->args, 1);
+        return (1);
+    }
+    else if (strcmp(cmd->args[0], "cd") == 0)
+    {
+        ft_cd(cmd->args[1]);
+        return (1);
+    }
+    else if (strcmp(cmd->args[0], "pwd") == 0)
+    {
+        printf("%s\n", ft_pwd());
+        return (1);
+    }
+    else if (strcmp(cmd->args[0], "export") == 0)
+    {
+        printf("export function\n");
+        return (1);
+    }
+    else if (strcmp(cmd->args[0], "unset") == 0)
+    {
+        printf("unset function\n");
+        return (1);
+    }
+    else if (strcmp(cmd->args[0], "env") == 0)
+    {
+        ft_env(data);
+        return (1);
+    }
+    else if (strcmp(cmd->args[0], "exit") == 0)
+    {
+        ft_exit(0, cmd->args);
+        return (1);
+    }
+    else
+        return (0);
+}
+
 void execute_command(t_simple_cmd *cmd, t_minishell *data) 
 {
-	if (strcmp(cmd->args[0], "$?") == 0)
-		printf("%d\n", g_exit_code);
-	if (strcmp(cmd->args[0], "echo") == 0)
-		ft_echo(cmd->args, 1);
-	else if (strcmp(cmd->args[0], "cd") == 0)
-		ft_cd(cmd->args[1]);
-	else if (strcmp(cmd->args[0], "pwd") == 0)
-		ft_pwd();
-	else if (strcmp(cmd->args[0], "export") == 0)
-		printf("export function\n");
-	else if (strcmp(cmd->args[0], "unset") == 0)
-		printf("unset function\n");
-	else if (strcmp(cmd->args[0], "env") == 0)
-		ft_env(data);
-	else if (strcmp(cmd->args[0], "exit") == 0)
-		ft_exit(0, cmd->args);
-	else if(execve(cmd->path_to_cmd, cmd->args, NULL) == -1)
-	{
-		//printf("%s\n", strerror(errno));
-		printf("%s: command not found\n", cmd->args[0]);
-		//etre sur de bien liberer les cmd avant de d'exit
-		ft_exit(127, NULL);
-	}
+    if (execute_builtins(cmd, data) == 1)
+    {
+        exit(EXIT_SUCCESS);
+    }
+    else if(execve(cmd->path_to_cmd, cmd->args, NULL) == -1)
+    {
+        printf("%s\n", strerror(errno));
+        //etre sur de bien liberer les cmd avant de d'exit
+        //ft_exit(127, NULL);
+        exit(EXIT_FAILURE);
+    }
 }
+
 
 void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data) 
 {
