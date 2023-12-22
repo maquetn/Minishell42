@@ -6,7 +6,7 @@ int ft_cd(char *token)
 
 	printf("Token: %s\n", token);
 
-	if (token == NULL || token[0] == '\0')
+	if (token == NULL || token[0] == '\0' || token[0] == '~')
 	{
 		char *home_dir = getenv("HOME");
 
@@ -25,6 +25,28 @@ int ft_cd(char *token)
 		{
 			perror("chdir");
 			fprintf(stderr, "Error changing to home directory: %s\n", home_dir);
+			return 0;
+		}
+	}
+	else if (token[0] == '-')
+	{
+		char *oldpwd = getenv("OLDPWD");
+
+		if (oldpwd == NULL)
+		{
+			fprintf(stderr, "oldpwd directory not found.\n");
+			return 0;
+		}
+
+		if (chdir(oldpwd) == 0)
+		{
+			printf("Changed to oldpwd directory: %s\n", oldpwd);
+			return 1;
+		}
+		else
+		{
+			perror("chdir");
+			fprintf(stderr, "Error changing to oldpwd directory: %s\n", oldpwd);
 			return 0;
 		}
 	}
