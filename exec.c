@@ -79,7 +79,7 @@ int execute_builtins(t_simple_cmd *cmd, t_minishell *data)
     }
     else if (strcmp(cmd->args[0], "cd") == 0)
     {
-        ft_cd(cmd->args[1]);
+        //ft_cd(cmd->args[1]);
         return (1);
     }
     else if (strcmp(cmd->args[0], "pwd") == 0)
@@ -140,6 +140,15 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data)
  
 	if (cmd == NULL) 
 		return;
+
+	if (strcmp(cmd->args[0], "cd") == 0)
+    {
+        // Handle cd directly in the parent process
+        if (ft_cd(cmd->args[1]))
+            printf("Changed to: %s\n", cmd->args[1]);
+        else
+            fprintf(stderr, "Error changing directory: %s\n", cmd->args[1]);
+	}
 	if (pipe(pipe_fd) == -1) 
 	{
 		perror("pipe");
