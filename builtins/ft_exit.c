@@ -11,6 +11,6 @@ int ft_exit(int i, char **args)
 	if ((atoi(args[1]) == 0))
 		printf("exit: test: numeric argument required");
 		//exit quand meme*/
-	printf("%d", g_exit_code);
+	//printf("%d", g_exit_code);
 	exit(g_exit_code); //replace by exit code
 }

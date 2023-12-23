@@ -69,8 +69,6 @@ void redirect_previous_output(t_simple_cmd *cmd, int pipe_fd[2])
 
 int execute_builtins(t_simple_cmd *cmd, t_minishell *data)
 {
-    if (strcmp(cmd->args[0], "$?") == 0)
-		printf("%d\n", g_exit_code);
     //dans lideal il faudrait que les builtins renvoient 1 si SUCCESS
     if (strcmp(cmd->args[0], "echo") == 0)
     {
@@ -121,7 +119,7 @@ void execute_command(t_simple_cmd *cmd, t_minishell *data)
     if (access(cmd->path_to_cmd, X_OK) == -1)
     {
         fprintf(stderr, "minishell: %s: command not found\n", cmd->path_to_cmd);
-        exit(EXIT_FAILURE);
+        ft_exit(127, cmd->args);
     }
 
     if (execve(cmd->path_to_cmd, cmd->args, NULL) == -1)
@@ -140,7 +138,6 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data)
  
 	if (cmd == NULL) 
 		return;
-
 	if (strcmp(cmd->args[0], "cd") == 0)
     {
         // Handle cd directly in the parent process

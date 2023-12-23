@@ -104,7 +104,6 @@ void exec_builtin(t_simple_cmd *cmd);
 void ft_echo(char **args, int index);
 int ft_exit(int i, char **args);
 int ft_cd(char *token);
-void ft_ls(const char *directory_path);
 char* ft_pwd();
 void	ft_env();
 

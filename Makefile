@@ -9,7 +9,6 @@ SRCS = token.c \
 	   builtins/ft_echo.c \
 	   builtins/ft_exit.c \
 	   builtins/ft_pwd.c \
-	   builtins/ft_ls.c \
 	   builtins/ft_env.c
 
 OBJ_DIR = obj
