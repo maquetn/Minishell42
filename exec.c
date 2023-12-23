@@ -84,7 +84,7 @@ int execute_builtins(t_simple_cmd *cmd, t_minishell *data)
     }
     else if (strcmp(cmd->args[0], "pwd") == 0)
     {
-        printf("%s\n", ft_pwd());
+        ft_pwd();
         return (1);
     }
     else if (strcmp(cmd->args[0], "export") == 0)
@@ -111,20 +111,26 @@ int execute_builtins(t_simple_cmd *cmd, t_minishell *data)
         return (0);
 }
 
-void execute_command(t_simple_cmd *cmd, t_minishell *data) 
+void execute_command(t_simple_cmd *cmd, t_minishell *data)
 {
     if (execute_builtins(cmd, data) == 1)
     {
         exit(EXIT_SUCCESS);
     }
-    else if(execve(cmd->path_to_cmd, cmd->args, NULL) == -1)
+
+    if (access(cmd->path_to_cmd, X_OK) == -1)
     {
-        printf("%s\n", strerror(errno));
-        //etre sur de bien liberer les cmd avant de d'exit
-        //ft_exit(127, NULL);
+        fprintf(stderr, "minishell: %s: command not found\n", cmd->path_to_cmd);
+        exit(EXIT_FAILURE);
+    }
+
+    if (execve(cmd->path_to_cmd, cmd->args, NULL) == -1)
+    {
+        perror("execve");
         exit(EXIT_FAILURE);
     }
 }
+
 
 
 void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data) 
