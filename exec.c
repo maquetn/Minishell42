@@ -86,10 +86,16 @@ int execute_builtins(t_simple_cmd *cmd, t_minishell *data)
         return (1);
     }
     else if (strcmp(cmd->args[0], "export") == 0)
-    {
-        printf("export function\n");
-        return (1);
-    }
+	{
+		if (cmd->args[1] != NULL)
+		{
+
+			ft_export((Environment*)data->env, cmd->args[1], cmd->args[2]);
+		}
+		else
+			printf("Handle export without arguments\n");
+		return (1);
+	}
     else if (strcmp(cmd->args[0], "unset") == 0)
     {
         printf("unset function\n");

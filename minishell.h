@@ -107,9 +107,21 @@ int ft_cd(char *token);
 char* ft_pwd();
 void	ft_env();
 
-
-
-
 void execute_command(t_simple_cmd *cmd, t_minishell *data);
+
+
+typedef struct s_env_var
+{
+    char *name;
+    char *value;
+} EnvVar;
+
+typedef struct s_environment
+{
+    EnvVar *vars;
+    size_t size;
+} Environment;
+
+int ft_export(Environment *env, const char *name, const char *value);
 
 #endif
