@@ -23,7 +23,8 @@ int ft_export(Environment *env, const char *name, const char *value)
 
     // Check if the name includes an equal sign
     const char *equal_sign = strchr(name, '=');
-    if (equal_sign != NULL) {
+    if (equal_sign != NULL)
+    {
         // Split the name and value
         size_t name_length = equal_sign - name;
         new_var.name = strndup(name, name_length);

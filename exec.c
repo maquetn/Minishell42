@@ -75,25 +75,20 @@ int execute_builtins(t_simple_cmd *cmd, t_minishell *data)
         ft_echo(cmd->args, 1);
         return (1);
     }
-    else if (strcmp(cmd->args[0], "cd") == 0)
-    {
-        //ft_cd(cmd->args[1]);
-        return (1);
-    }
     else if (strcmp(cmd->args[0], "pwd") == 0)
-    {
+    { 
         ft_pwd();
         return (1);
     }
     else if (strcmp(cmd->args[0], "export") == 0)
 	{
-		if (cmd->args[1] != NULL)
-		{
+		// if (cmd->args[1] != NULL)
+		// {
 
-			ft_export((Environment*)data->env, cmd->args[1], cmd->args[2]);
-		}
-		else
-			printf("Handle export without arguments\n");
+		// 	ft_export((Environment*)data->env, cmd->args[1], cmd->args[2]);
+		// }
+		// else
+		// 	printf("Handle export without arguments\n");
 		return (1);
 	}
     else if (strcmp(cmd->args[0], "unset") == 0)
@@ -144,6 +139,7 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data)
  
 	if (cmd == NULL) 
 		return;
+		/**/
 	if (strcmp(cmd->args[0], "cd") == 0)
     {
         // Handle cd directly in the parent process
@@ -151,7 +147,17 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data)
             printf("Changed to: %s\n", cmd->args[1]);
         else
             fprintf(stderr, "Error changing directory: %s\n", cmd->args[1]);
-	}
+	}/*
+	else if (strcmp(cmd->args[0], "export") == 0)
+	{
+		if (cmd->args[1] != NULL)
+		{
+
+			ft_export((Environment*)data->env, cmd->args[1], cmd->args[2]);
+		}
+		else
+			printf("Handle export without arguments\n");
+	}*/
 	if (pipe(pipe_fd) == -1) 
 	{
 		perror("pipe");
