@@ -109,6 +109,19 @@ int check_parse(char *str)
 		return (0);
 }*/
 
+void expand_tokens(t_token *head, char **env) {
+    t_token *current = head;
+
+    while (current != NULL) {
+        if (current->type == STR) {
+            char *expanded_content = expand_env_variables(current->content, env);
+            free(current->content);
+            current->content = expanded_content;
+        }
+
+        current = current->next;
+    }
+}
 
 int main(int ac, char **av, char **env)
 {
@@ -162,7 +175,10 @@ int main(int ac, char **av, char **env)
 
 		token(input, &data);
 		if (data.first_token)
+		{
+			expand_tokens(data.first_token, data.env);
 			planting(&data);
+		}
 		if (data.node)
 			execute_simple_cmd(data.node, &data);
 		//print_nodes(&data);

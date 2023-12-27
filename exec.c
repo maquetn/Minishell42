@@ -123,7 +123,7 @@ void execute_command(t_simple_cmd *cmd, t_minishell *data)
         ft_exit(127, cmd->args);
     }
 
-    if (execve(cmd->path_to_cmd, cmd->args, NULL) == -1)
+    if (execve(cmd->path_to_cmd, cmd->args, data->env) == -1)
     {
         perror("execve");
         exit(EXIT_FAILURE);

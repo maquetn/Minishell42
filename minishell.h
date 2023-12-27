@@ -124,4 +124,7 @@ typedef struct s_environment
 
 int ft_export(Environment *env, const char *name, const char *value);
 
+
+char *expand_env_variables(char *str, char **env);
+
 #endif

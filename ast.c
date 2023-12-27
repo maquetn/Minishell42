@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 14:58:42 by nmaquet           #+#    #+#             */
-/*   Updated: 2023/12/23 14:58:45 by nmaquet          ###   ########.fr       */
+/*   Updated: 2023/12/27 14:41:52 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,32 +37,121 @@ char	*get_env(char *name, char **env)
 	return (NULL);
 }
 
-char	*get_path(char *cmd, char **env)
+char *get_env_value(char *env_var, char **env)
 {
-	char	*executable;
-	int		i;
-	char	**paths;
-	char	*potential_path;
-
-	i = -1;
-	paths = ft_split(get_env("PATH", env), ':');
-	if (!paths)
-		EXIT_FAILURE;
-	while (paths[++i])
+    int i = 0;
+    while (env[i] != NULL)
 	{
-		potential_path = ft_strjoin(paths[i], "/");
-		executable = ft_strjoin(potential_path, cmd);
-		free(potential_path);
-		if (access(executable, F_OK | X_OK) == 0)
-			{
-				free_tabl(paths);
-				return(executable);
-			}
-		free(executable);
-	}
-	free_tabl(paths);
-	return (strdup(cmd));
+        if (strncmp(env[i], env_var, strlen(env_var)) == 0 && env[i][strlen(env_var)] == '=')
+		{
+            return env[i] + strlen(env_var) + 1;
+        }
+        i++;
+    }
+    return NULL;
 }
+
+char *expand_env_variables(char *str, char **env)
+{
+    char *result = strdup(str);
+    if (result == NULL) {
+        perror("strdup");
+        exit(EXIT_FAILURE);
+    }
+
+    char *start = result;
+    while ((start = strchr(start, '$')) != NULL)
+	{
+        char *end = strchr(start + 1, ' ');
+        if (end == NULL)
+		{
+            end = start + strlen(start);
+        }
+        char *env_var = strndup(start + 1, end - start - 1);
+        char *env_value = get_env_value(env_var, env);
+        size_t prefix_len = start - result;
+        size_t suffix_len = strlen(end);
+        if (env_value != NULL)
+		{
+            size_t expanded_len = prefix_len + strlen(env_value) + suffix_len;
+            char *expanded = malloc(expanded_len + 1);
+            if (expanded == NULL)
+			{
+                perror("malloc");
+                exit(EXIT_FAILURE);
+            }
+
+            strncpy(expanded, result, prefix_len);
+            strcpy(expanded + prefix_len, env_value);
+            strcpy(expanded + prefix_len + strlen(env_value), end);
+
+            free(result);
+            result = expanded;
+            start = expanded + prefix_len + strlen(env_value);
+        }
+		else
+		{
+            size_t expanded_len = prefix_len + strlen(env_var) + suffix_len;
+            char *expanded = malloc(expanded_len + 1);
+            if (expanded == NULL)
+			{
+                perror("malloc");
+                exit(EXIT_FAILURE);
+            }
+
+            strncpy(expanded, result, prefix_len);
+            strcpy(expanded + prefix_len, env_var);
+            strcpy(expanded + prefix_len + strlen(env_var), end);
+
+            free(result);
+            result = expanded;
+            start = expanded + prefix_len + strlen(env_var);
+        }
+
+        free(env_var);
+    }
+    return result;
+}
+
+
+
+
+
+
+
+char *get_path(char *cmd, char **env)
+{
+    char *expanded_cmd = expand_env_variables(cmd, env);
+    
+    char *executable;
+    int i;
+    char **paths;
+    char *potential_path;
+
+    i = -1;
+    paths = ft_split(get_env("PATH", env), ':');
+    if (!paths)
+        EXIT_FAILURE;
+
+    while (paths[++i]) {
+        potential_path = ft_strjoin(paths[i], "/");
+        executable = ft_strjoin(potential_path, expanded_cmd);
+        free(potential_path);
+
+        if (access(executable, F_OK | X_OK) == 0) {
+            free(expanded_cmd);
+            free_tabl(paths);
+            return executable;
+        }
+
+        free(executable);
+    }
+
+    free(expanded_cmd);
+    free_tabl(paths);
+    return strdup(cmd);
+}
+
 
 void free_tokens(t_token *token)
 {
