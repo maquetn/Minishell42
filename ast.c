@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 14:58:42 by nmaquet           #+#    #+#             */
-/*   Updated: 2023/12/27 14:41:52 by nmaquet          ###   ########.fr       */
+/*   Updated: 2023/12/27 15:37:23 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,20 +63,18 @@ char *expand_env_variables(char *str, char **env)
     while ((start = strchr(start, '$')) != NULL)
 	{
         char *end = strchr(start + 1, ' ');
-        if (end == NULL)
-		{
+        if (end == NULL) {
             end = start + strlen(start);
         }
         char *env_var = strndup(start + 1, end - start - 1);
         char *env_value = get_env_value(env_var, env);
         size_t prefix_len = start - result;
         size_t suffix_len = strlen(end);
-        if (env_value != NULL)
-		{
+
+        if (env_value != NULL) {
             size_t expanded_len = prefix_len + strlen(env_value) + suffix_len;
             char *expanded = malloc(expanded_len + 1);
-            if (expanded == NULL)
-			{
+            if (expanded == NULL) {
                 perror("malloc");
                 exit(EXIT_FAILURE);
             }
@@ -88,36 +86,21 @@ char *expand_env_variables(char *str, char **env)
             free(result);
             result = expanded;
             start = expanded + prefix_len + strlen(env_value);
-        }
-		else
-		{
-            size_t expanded_len = prefix_len + strlen(env_var) + suffix_len;
-            char *expanded = malloc(expanded_len + 1);
-            if (expanded == NULL)
-			{
-                perror("malloc");
+        } else {
+            size_t skip_len = 1; // Skip the '$' sign
+            memmove(start, start + skip_len, strlen(start + skip_len) + 1);
+            result = realloc(result, strlen(result) - skip_len + 1);
+            if (result == NULL) {
+                perror("realloc");
                 exit(EXIT_FAILURE);
             }
-
-            strncpy(expanded, result, prefix_len);
-            strcpy(expanded + prefix_len, env_var);
-            strcpy(expanded + prefix_len + strlen(env_var), end);
-
-            free(result);
-            result = expanded;
-            start = expanded + prefix_len + strlen(env_var);
         }
 
         free(env_var);
     }
+    // Debug print
     return result;
 }
-
-
-
-
-
-
 
 char *get_path(char *cmd, char **env)
 {
@@ -133,25 +116,24 @@ char *get_path(char *cmd, char **env)
     if (!paths)
         EXIT_FAILURE;
 
-    while (paths[++i]) {
+    while (paths[++i])
+	{
         potential_path = ft_strjoin(paths[i], "/");
         executable = ft_strjoin(potential_path, expanded_cmd);
         free(potential_path);
 
-        if (access(executable, F_OK | X_OK) == 0) {
+        if (access(executable, F_OK | X_OK) == 0)
+		{
             free(expanded_cmd);
             free_tabl(paths);
             return executable;
         }
-
         free(executable);
     }
-
     free(expanded_cmd);
     free_tabl(paths);
     return strdup(cmd);
 }
-
 
 void free_tokens(t_token *token)
 {
@@ -161,14 +143,10 @@ void free_tokens(t_token *token)
 	temp = token;
 	while (temp)
 	{
-		//printf("Freeing token: %p, content: %s\n", (void *)temp, temp->content);
-
 		free(temp->content);
-
 		next_token = temp->next;
 		temp->prev = NULL;
 		free(temp);
-
 		temp = next_token;
 	}
 }
@@ -214,9 +192,7 @@ void	planting(t_minishell *data)
 	t_token	*first_token;
 	
 	first_token = data->first_token;
-	//printf("%s\n", first_token->content);
 	data->node = recursive_parsing(data);
-	//printf("%s\n", first_token->content);
 	free_tokens(first_token);
 }
 
@@ -226,7 +202,6 @@ void	count_args_and_malloc(t_simple_cmd *cmd, t_token *token)
 	int		i;
 
 	temporary = token;
-	//printf("Content: %s \n", temporary->content);
 	i = 0;
 	while(temporary)
 	{
@@ -250,7 +225,6 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 	t_simple_cmd	*cmd;
 	int				i;
 
-	//printf("first token of cmd : %s\n", token->content);
 	i = 0;
 	cmd = malloc(sizeof(t_simple_cmd));
 	if (!cmd)
@@ -264,7 +238,6 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 		{
 			//ici aussi je vais devoir faire des trucs
 			token = token->next;
-			//printf("token after pipe : %s\n", token->content);
 			break ;
 		}
 		else if (token->type == INPUT)
@@ -297,6 +270,5 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 	}
 	cmd->args[i] = NULL;
 	data->first_token = token;
-	//printf("end of create cmd\n");
 	return (cmd);
 }

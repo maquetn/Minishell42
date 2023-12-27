@@ -134,57 +134,57 @@ void execute_command(t_simple_cmd *cmd, t_minishell *data)
 
 void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data) 
 {
-	int pipe_fd[2];
-	pid_t child_pid;
- 
-	if (cmd == NULL) 
-		return;
-		/**/
-	if (strcmp(cmd->args[0], "cd") == 0)
+    int pipe_fd[2];
+    pid_t child_pid;
+
+    if (cmd == NULL) 
+        return;
+
+    if (strcmp(cmd->args[0], "cd") == 0)
     {
-        // Handle cd directly in the parent process
         if (ft_cd(cmd->args[1]))
             printf("Changed to: %s\n", cmd->args[1]);
         else
             fprintf(stderr, "Error changing directory: %s\n", cmd->args[1]);
-	}/*
-	else if (strcmp(cmd->args[0], "export") == 0)
-	{
-		if (cmd->args[1] != NULL)
-		{
-
-			ft_export((Environment*)data->env, cmd->args[1], cmd->args[2]);
-		}
-		else
-			printf("Handle export without arguments\n");
-	}*/
-	if (pipe(pipe_fd) == -1) 
-	{
-		perror("pipe");
-		ft_exit(EXIT_FAILURE, NULL);
-	}
-	child_pid = fork(); 
-	//child_pid = 0;
-	if (child_pid == -1) 
-	{
-		perror("fork");
-		ft_exit(EXIT_FAILURE, NULL);
-	}
-	if (child_pid == 0) 
-	{
-		//close_pipe(pipe_fd);
-		redirect_input(cmd, pipe_fd);
-		redirect_output(cmd, pipe_fd);
-		//redirect_previous_output(cmd, pipe_fd);
-		execute_command(cmd, data);
-	}
-	else 
-	{
-		close(pipe_fd[1]);
-		waitpid(child_pid, NULL, 0);
-		if (cmd->next != NULL) 
-		{
-			execute_simple_cmd(cmd->next, data);
-		}
-	}
+    }
+    else if (strcmp(cmd->args[0], "export") == 0)
+    {
+        // Execute the export builtin directly in the parent process
+        // You may need to modify the ft_export function accordingly
+        // ft_export((Environment*)data->env, cmd->args[1], cmd->args[2]);
+        printf("Executing export in parent process\n");
+    }
+    else
+    {
+        // For non-builtin commands, proceed with creating a child process
+        if (pipe(pipe_fd) == -1) 
+        {
+            perror("pipe");
+            ft_exit(EXIT_FAILURE, NULL);
+        }
+        child_pid = fork(); 
+        if (child_pid == -1) 
+        {
+            perror("fork");
+            ft_exit(EXIT_FAILURE, NULL);
+        }
+        if (child_pid == 0) 
+        {
+            // In the child process, close the pipe and redirect I/O
+            close(pipe_fd[0]);
+            redirect_input(cmd, pipe_fd);
+            redirect_output(cmd, pipe_fd);
+            execute_command(cmd, data);
+        }
+        else 
+        {
+            // In the parent process, close the pipe and wait for the child
+            close(pipe_fd[1]);
+            waitpid(child_pid, NULL, 0);
+            if (cmd->next != NULL) 
+            {
+                execute_simple_cmd(cmd->next, data);
+            }
+        }
+    }
 }

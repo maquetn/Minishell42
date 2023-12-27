@@ -1,5 +1,5 @@
 #include "minishell.h"
-//rajouter un check syntax error entre token et parsing ??
+
 int g_exit_code = 0;
 
 void	restore_terminal(struct termios *original_termios)
@@ -11,10 +11,9 @@ void	restore_terminal(struct termios *original_termios)
 	}
 }
 
-// Signal handler function for SIGINT (Ctrl+C)
 void sig_handler(int signum)
 {
-	(void)signum; // To avoid the unused parameter warning
+	(void)signum;
 
 	struct termios original_termios;
 
@@ -63,14 +62,9 @@ void	print_nodes(t_minishell *data)
 	while (data->node)
 	{
 		int i = 0;
-		//printf("output : %s\n", data->node->output);
-		//printf("input : %s\n", data->node->input);
-		//printf("path : %s\n", data->node->path_to_cmd);
+
 		while (data->node->args[i])
-		{
-			//printf("args %d : %s\n", i, data->node->args[i]);
 			i++;
-		}
 		data->node = data->node->next;
 	}
 }
@@ -93,32 +87,40 @@ void	free_simple_cmd(t_simple_cmd *cmd)
 		temp = next;
 	}
 }
-/*
-int check_parse(char *str)
+
+void expand_tokens(t_token **head, char **env)
 {
-	// faudra rendre cette fct absolument impermeable pour que la suite marche
-	int i;
-
-	i = ft_strlen(str);
-	if (i > 0 && (str[i - 1] == '>' || str[i - 1] == '<' || str[i - 1] == '.'))
-	{
-		printf("syntax error near unexpected token `a gerer'\n");
-		return (1);
-	}
-	else
-		return (0);
-}*/
-
-void expand_tokens(t_token *head, char **env) {
-    t_token *current = head;
+    t_token *current = *head;
+    t_token *prev = NULL;
 
     while (current != NULL) {
-        if (current->type == STR) {
+        if (current->type == STR && strchr(current->content, '$') != NULL)
+		{
             char *expanded_content = expand_env_variables(current->content, env);
-            free(current->content);
+			//printf("%s", expanded_content);
+            /*if (strcmp(expanded_content, current->content) != 0)
+			{
+                if (prev == NULL)
+				{
+                    *head = current->next;
+                    free_tokens(current);
+                    current = *head;
+                    continue;
+                }
+				else
+				{
+                    prev->next = current->next;
+                    free_tokens(current);
+                    current = prev->next;
+                    continue;
+                }
+            }*/
+
+            //free(current->content);
             current->content = expanded_content;
         }
 
+        prev = current;
         current = current->next;
     }
 }
@@ -161,22 +163,10 @@ int main(int ac, char **av, char **env)
 		}
 
 		add_history(input);
-/*
-		if (strcmp(input, "env") == 0)
-		{
-			ft_env(&data);
-		}
-		*/
-		/*if (check_parse(input))
-		{
-			free(input);
-			continue;
-		}*/
-
 		token(input, &data);
 		if (data.first_token)
 		{
-			expand_tokens(data.first_token, data.env);
+			expand_tokens(&data.first_token, data.env);
 			planting(&data);
 		}
 		if (data.node)
