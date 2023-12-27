@@ -9,7 +9,7 @@ void ft_echo(char **args, int index)
 	{
 		if (args[index][0] == '-')
 		{
-			i = 1;  // Start from the second character
+			i = 1;
 			while (args[index][i] == 'n')
 				i++;
 

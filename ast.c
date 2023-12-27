@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 14:58:42 by nmaquet           #+#    #+#             */
-/*   Updated: 2023/12/27 15:37:23 by nmaquet          ###   ########.fr       */
+/*   Updated: 2023/12/27 15:44:23 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,16 +54,18 @@ char *get_env_value(char *env_var, char **env)
 char *expand_env_variables(char *str, char **env)
 {
     char *result = strdup(str);
-    if (result == NULL) {
+    if (result == NULL)
+    {
         perror("strdup");
         exit(EXIT_FAILURE);
     }
 
     char *start = result;
     while ((start = strchr(start, '$')) != NULL)
-	{
+    {
         char *end = strchr(start + 1, ' ');
-        if (end == NULL) {
+        if (end == NULL)
+        {
             end = start + strlen(start);
         }
         char *env_var = strndup(start + 1, end - start - 1);
@@ -71,10 +73,12 @@ char *expand_env_variables(char *str, char **env)
         size_t prefix_len = start - result;
         size_t suffix_len = strlen(end);
 
-        if (env_value != NULL) {
+        if (env_value != NULL)
+        {
             size_t expanded_len = prefix_len + strlen(env_value) + suffix_len;
             char *expanded = malloc(expanded_len + 1);
-            if (expanded == NULL) {
+            if (expanded == NULL)
+            {
                 perror("malloc");
                 exit(EXIT_FAILURE);
             }
@@ -86,11 +90,15 @@ char *expand_env_variables(char *str, char **env)
             free(result);
             result = expanded;
             start = expanded + prefix_len + strlen(env_value);
-        } else {
-            size_t skip_len = 1; // Skip the '$' sign
-            memmove(start, start + skip_len, strlen(start + skip_len) + 1);
-            result = realloc(result, strlen(result) - skip_len + 1);
-            if (result == NULL) {
+        }
+        else
+        {
+            // Env var doenst exist
+            *start = '\0';
+            start += 1;
+            result = realloc(result, strlen(result) + 1);
+            if (result == NULL)
+            {
                 perror("realloc");
                 exit(EXIT_FAILURE);
             }
@@ -98,9 +106,9 @@ char *expand_env_variables(char *str, char **env)
 
         free(env_var);
     }
-    // Debug print
     return result;
 }
+
 
 char *get_path(char *cmd, char **env)
 {
