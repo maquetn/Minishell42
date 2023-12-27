@@ -131,46 +131,65 @@ void	print_tokens(t_token *head)
 	}
 }
 
+void remove_double_quotes(char **str)
+{
+    int len = strlen(*str);
+    int j = 0;
+
+    for (int i = 0; i < len; ++i)
+    {
+        if ((*str)[i] != '\"')
+        {
+            (*str)[j] = (*str)[i];
+            j++;
+        }
+    }
+
+    (*str)[j] = '\0';
+}
+
+
 void token(char *input, t_minishell *data)
 {
-	t_token *head = NULL;
-	char	**splited_str;
-	char	*content;
-	int		i;
-	t_token_type type;
+    t_token *head = NULL;
+    char **splited_str;
+    char *content;
+    int i;
+    t_token_type type;
 
-	i = 0;
-	splited_str = ft_split(input, ' ');
-	while (splited_str[i]) 
-	{
-		content = strdup(splited_str[i]); // Duplicate the token content
+    i = 0;
+    splited_str = ft_split(input, ' ');
+    while (splited_str[i])
+    {
+        content = strdup(splited_str[i]); // Duplicate the token content
 
-		if (strcmp(content, "<") == 0)
-			type = INPUT;
-		else if (strcmp(content, ">") == 0)
-			type = OUTPUT;
-		else if (strcmp(content, ">>") == 0)
-			type = APPEND;
-		else if (strcmp(content, "<<") == 0)
-			type = HEREDOC;
-		else if (strcmp(content, "|") == 0)
-			type = PIPE;
-		else if (check_spc_chr(&head, content))
-		{
-			free(content);
-			i++;
-			continue;
-		}
-		else
-			type = STR;
-		//printf("howmany\n");
-		add_token(&head, type, content, 0);
-		free(content);
-		i++;
-	}
-	data->first_token = head;
-	//print_tokens(head);
-	//je dois test de print les tokens ici
-	free_tabl(splited_str);
+        if (strcmp(content, "<") == 0)
+            type = INPUT;
+        else if (strcmp(content, ">") == 0)
+            type = OUTPUT;
+        else if (strcmp(content, ">>") == 0)
+            type = APPEND;
+        else if (strcmp(content, "<<") == 0)
+            type = HEREDOC;
+        else if (strcmp(content, "|") == 0)
+            type = PIPE;
+        else if (check_spc_chr(&head, content))
+        {
+            free(content);
+            i++;
+            continue;
+        }
+        else
+            type = STR;
+
+        // Remove double quotes if present
+        remove_double_quotes(&content);
+
+        add_token(&head, type, content, 0);
+        free(content);
+        i++;
+    }
+    data->first_token = head;
+    free_tabl(splited_str);
 }
 

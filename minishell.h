@@ -60,12 +60,6 @@ typedef struct s_minishell
 	
 } t_minishell;
 
-// typedef struct	s_env
-// {
-// 	char			*value;
-// 	struct s_env	*next;
-// }				t_env;
-
 int	ft_strlen(const char *str);
 int	ft_strncpy(char *dst, const char *src, int size);
 
