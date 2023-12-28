@@ -131,22 +131,34 @@ void	print_tokens(t_token *head)
 	}
 }
 
-void remove_double_quotes(char **str)
+void remove_quotes(char **str)
 {
     int len = strlen(*str);
     int j = 0;
+    int in_quotes = 0;
 
     for (int i = 0; i < len; ++i)
     {
-        if ((*str)[i] != '\"')
+        if ((*str)[i] == '\"' || (*str)[i] == '\'')
         {
-            (*str)[j] = (*str)[i];
-            j++;
+            if (in_quotes && (*str)[i] == in_quotes)
+                in_quotes = 0;
+            else
+                in_quotes = (*str)[i];
+        }
+        else
+        {
+            if (!in_quotes || (*str)[i] != in_quotes)
+            {
+                (*str)[j] = (*str)[i];
+                j++;
+            }
         }
     }
 
     (*str)[j] = '\0';
 }
+
 
 
 void token(char *input, t_minishell *data)
@@ -183,7 +195,7 @@ void token(char *input, t_minishell *data)
             type = STR;
 
         // Remove double quotes if present
-        remove_double_quotes(&content);
+        remove_quotes(&content);
 
         add_token(&head, type, content, 0);
         free(content);
