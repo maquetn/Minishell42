@@ -149,14 +149,12 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data)
     }
     else if (strcmp(cmd->args[0], "export") == 0)
     {
-        // Execute the export builtin directly in the parent process
-        // You may need to modify the ft_export function accordingly
-        // ft_export((Environment*)data->env, cmd->args[1], cmd->args[2]);
-        printf("Executing export in parent process\n");
+
+        printf("ft_export\n");
     }
     else
     {
-        // For non-builtin commands, proceed with creating a child process
+        // non-builtin cmd, creating a child process
         if (pipe(pipe_fd) == -1) 
         {
             perror("pipe");
@@ -170,7 +168,6 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data)
         }
         if (child_pid == 0) 
         {
-            // In the child process, close the pipe and redirect I/O
             close(pipe_fd[0]);
             redirect_input(cmd, pipe_fd);
             redirect_output(cmd, pipe_fd);
@@ -178,7 +175,6 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data)
         }
         else 
         {
-            // In the parent process, close the pipe and wait for the child
             close(pipe_fd[1]);
             waitpid(child_pid, NULL, 0);
             if (cmd->next != NULL) 

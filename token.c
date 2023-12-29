@@ -104,7 +104,7 @@ void add_token(t_token **head, t_token_type type, char *content, int i)
 	}
 
 	new_token->type = type;
-	new_token->content = strdup(content); // Duplicate the content
+	new_token->content = strdup(content);
 	new_token->next = NULL;
 	new_token->prev = NULL;
 
@@ -194,7 +194,6 @@ void token(char *input, t_minishell *data)
         else
             type = STR;
 
-        // Remove double quotes if present
         remove_quotes(&content);
 
         add_token(&head, type, content, 0);

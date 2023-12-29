@@ -43,8 +43,8 @@ typedef struct s_imple_cmd
 {
   char			**args; //cmd + args
   char			*path_to_cmd;
-  char			*input; //default STDIN else pipeout, fd
-  char			*output; //default STDOUT else pipein, fd
+  char			*input;
+  char			*output;
   t_simple_cmd	*prev;
   t_simple_cmd	*next;
 

@@ -93,30 +93,11 @@ void expand_tokens(t_token **head, char **env)
     t_token *current = *head;
     t_token *prev = NULL;
 
-    while (current != NULL) {
+    while (current != NULL)
+	{
         if (current->type == STR && strchr(current->content, '$') != NULL)
 		{
             char *expanded_content = expand_env_variables(current->content, env);
-			//printf("%s", expanded_content);
-            /*if (strcmp(expanded_content, current->content) != 0)
-			{
-                if (prev == NULL)
-				{
-                    *head = current->next;
-                    free_tokens(current);
-                    current = *head;
-                    continue;
-                }
-				else
-				{
-                    prev->next = current->next;
-                    free_tokens(current);
-                    current = prev->next;
-                    continue;
-                }
-            }*/
-
-            //free(current->content);
             current->content = expanded_content;
         }
 
