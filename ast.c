@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 14:58:42 by nmaquet           #+#    #+#             */
-/*   Updated: 2023/12/27 16:33:33 by nmaquet          ###   ########.fr       */
+/*   Updated: 2023/12/29 11:22:02 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char *expand_env_variables(char *str, char **env)
     char *start = result;
     while ((start = strchr(start, '$')) != NULL)
     {
-        char *end = strchr(start + 1, ' ');
+        char *end = strchr(start + 1, '$');
         if (end == NULL)
         {
             end = start + strlen(start);
@@ -93,7 +93,7 @@ char *expand_env_variables(char *str, char **env)
         }
         else
         {
-            // Env var doenst exist
+            // Env var doesn't exist
             *start = '\0';
             start += 1;
             result = realloc(result, strlen(result) + 1);
@@ -108,6 +108,7 @@ char *expand_env_variables(char *str, char **env)
     }
     return result;
 }
+
 
 
 char *get_path(char *cmd, char **env)
