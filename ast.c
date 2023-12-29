@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 14:58:42 by nmaquet           #+#    #+#             */
-/*   Updated: 2023/12/29 11:32:40 by nmaquet          ###   ########.fr       */
+/*   Updated: 2023/12/29 14:39:35 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,9 +108,6 @@ char *expand_env_variables(char *str, char **env)
     }
     return result;
 }
-
-
-
 
 char *get_path(char *cmd, char **env)
 {
