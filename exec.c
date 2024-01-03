@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mdor <mdor@student.s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 09:48:00 by mdor              #+#    #+#             */
-/*   Updated: 2023/12/21 13:56:00 by nmaquet          ###   ########.fr       */
+/*   Updated: 2023/12/30 14:01:05 by mdor             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,13 @@ void redirect_input(t_simple_cmd *cmd, int *p_fd)
 
 void redirect_output(t_simple_cmd *cmd, int *p_fd) 
 {
+	int output_fd;
     if (cmd->output != NULL) 
     {
-        int output_fd = open(cmd->output, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+		if (cmd->append_mode == 0)
+        	output_fd = open(cmd->output, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+		else if (cmd->append_mode == 1)
+			output_fd = open(cmd->output, O_WRONLY | O_CREAT | O_APPEND, 0666);
         if (output_fd == -1) 
         {
             perror("open");

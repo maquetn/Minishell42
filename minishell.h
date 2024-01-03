@@ -43,6 +43,8 @@ typedef struct s_imple_cmd
   char			*path_to_cmd;
   char			*input; //default STDIN else pipeout, fd
   char			*output; //default STDOUT else pipein, fd
+  int			append_mode;
+  char			*heredoc_eof;
   t_simple_cmd	*prev;
   t_simple_cmd	*next;
 
@@ -88,6 +90,10 @@ void	free_tabl(char **tabl);
 void execute_simple_cmd(t_simple_cmd *cmd, int *prev_pipe_fd);
 void add_token(t_token **head, t_token_type type, char *content, int i);
 void	print_nodes(t_minishell *data);
+char	*ft_itoa(int n);
+int	ft_isalpha(int c);
+int	ft_isalnum(int c);
+char	*get_env(char *name, char **env);
 
 
 // BUILTINS
@@ -98,5 +104,12 @@ int ft_exit();
 int ft_cd(char *token);
 void ft_ls(const char *directory_path);
 char* ft_pwd();
+
+// CHATGPT
+
+void tokenize(char *input, t_minishell *shell);
+char *translate_dollar_sign(char *token, char **env);
+int find_token_end(const char *str, int start);
+int handle_quotes(const char *str, int i, char quote_type);
 
 #endif

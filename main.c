@@ -64,12 +64,12 @@ void	print_nodes(t_minishell *data)
 	while (data->node)
 	{
 		int i = 0;
-		//printf("output : %s\n", data->node->output);
-		//printf("input : %s\n", data->node->input);
-		//printf("path : %s\n", data->node->path_to_cmd);
+		printf("output : %s\n", data->node->output);
+		printf("input : %s\n", data->node->input);
+		printf("path : %s\n", data->node->path_to_cmd);
 		while (data->node->args[i])
 		{
-			//printf("args %d : %s\n", i, data->node->args[i]);
+			printf("args %d : %s\n", i, data->node->args[i]);
 			i++;
 		}
 		data->node = data->node->next;
@@ -88,6 +88,7 @@ void	free_simple_cmd(t_simple_cmd *cmd)
 		free(temp->path_to_cmd);
 		free(temp->input);
 		free(temp->output);
+		free(temp->heredoc_eof);
 		temp->prev = NULL;
 		next = temp->next;
 		free(temp);
@@ -109,6 +110,36 @@ int check_parse(char *str)
     else
         return (0);
 }*/
+
+int	check_if_quotes_are_closed_or_forbidden(char *str)
+{
+	int	i;
+	int	single;
+	int	double_quotes;
+
+	i = 0;
+	single = 0;
+	double_quotes = 0;
+	while(str[i])
+	{
+		if (str[i] == '|' && str[i + 1] == '|')
+			return (0);
+		else if (str[i] == '"' && double_quotes == 1)
+			double_quotes = 0;
+		else if (str[i] == '\'' && single == 1)
+			single = 0;
+		else if (str[i] == ';' || str[i] == '\\')
+			return (0);
+		else if (str[i] == '"')
+			double_quotes = 1;
+		else if (str[i] == '\'')
+			single = 1;
+		i++;
+	}
+	if (single != 0 || double_quotes != 0)
+		return (0);
+	return (1);
+}
 
 
 int main(int ac, char **av, char **env)
@@ -154,10 +185,17 @@ int main(int ac, char **av, char **env)
 			free(input);
 			continue;
 		}*/
-
+		if (check_if_quotes_are_closed_or_forbidden(input) == 0)
+		{
+			printf("We should not manage that in minishell\n");
+			free(input);
+			continue;
+		}
 		token(input, &data);
+		//printf("test\n");
 		if (data.first_token)
 			planting(&data);
+		//printf("test\n");
 		if (data.node)
 			execute_simple_cmd(data.node, NULL);
 		//print_nodes(&data);
@@ -167,5 +205,5 @@ int main(int ac, char **av, char **env)
 	}
 	free_tabl(data.env);
 	//system("leaks minishell");
-	return 0;
+	return (0);
 }

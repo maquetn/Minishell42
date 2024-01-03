@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mdor <mdor@student.s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 09:39:04 by mdor              #+#    #+#             */
-/*   Updated: 2023/12/21 12:24:21 by nmaquet          ###   ########.fr       */
+/*   Updated: 2023/12/30 13:55:38 by mdor             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ void	init_simple_cmd(t_simple_cmd *cmd)
 	cmd->output = NULL;
 	cmd->prev = NULL;
     cmd->next = NULL;
+	cmd->heredoc_eof = NULL;
+	cmd->append_mode = 0;
 }
 
 t_simple_cmd	*get_cmd(t_token *token, t_minishell *data)
@@ -109,7 +111,6 @@ t_simple_cmd	*recursive_parsing(t_minishell *data)
 	t_simple_cmd	*next = NULL;
 
 	prev = get_cmd(data->first_token, data);
-
 	if (data->first_token)
 	{
 		next = recursive_parsing(data);
@@ -141,6 +142,7 @@ void	count_args_and_malloc(t_simple_cmd *cmd, t_token *token)
 	i = 0;
 	while(temporary)
 	{
+		//printf("while\n");
 		if (temporary->type == PIPE)
 			break;
 		if (temporary->type == STR || temporary->type == HEREDOC
@@ -148,7 +150,9 @@ void	count_args_and_malloc(t_simple_cmd *cmd, t_token *token)
 			i++;
 		else if ((temporary->type == INPUT || temporary->type == OUTPUT) && temporary->next->type == STR)
 			i--;
+		//printf("haha\n");
 		temporary = temporary->next;
+		//printf("?\n");
 	}
 	//printf("malloc arg size %d\n", i); //ok je dois capter le prob de mémoire ici
 	cmd->args = malloc(sizeof(char *) * (i + 1));
@@ -172,10 +176,23 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 	{
 		if (token->type == PIPE)
 		{
-			//ici aussi je vais devoir faire des trucs
 			token = token->next;
-			//printf("token after pipe : %s\n", token->content);
 			break ;
+		}
+		else if (token->type == HEREDOC)
+		{
+			if (token->next != NULL)
+				cmd->heredoc_eof = ft_strdup(token->next->content);
+		}
+		else if (token->type == APPEND)
+		{
+			if (token->next != NULL)
+				cmd->output = ft_strdup(token->next->content);
+			if (token->next != NULL && token->next->type != OUTPUT && token->next->type != INPUT)
+				token = token->next->next;
+			else
+				token = token->next;
+			cmd->append_mode = 1;
 		}
 		else if (token->type == INPUT)
 		{
@@ -207,6 +224,5 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 	}
 	cmd->args[i] = NULL;
 	data->first_token = token;
-	//printf("end of create cmd\n");
 	return (cmd);
 }
