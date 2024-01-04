@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdor <mdor@student.s19.be>                 +#+  +:+       +#+        */
+/*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 09:48:00 by mdor              #+#    #+#             */
-/*   Updated: 2023/12/30 14:01:05 by mdor             ###   ########.fr       */
+/*   Updated: 2024/01/04 16:47:04 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,10 @@ void execute_simple_cmd(t_simple_cmd *cmd, int *prev_pipe_fd)
     {
         perror("pipe");
         exit(EXIT_FAILURE);
+    }
+    if (strcmp(cmd->args[0], "export") == 0)
+    {
+        //ft_export(data->env);
     }
     child_pid = fork(); 
     if (child_pid == -1) 
