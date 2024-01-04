@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 09:48:00 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/04 16:59:36 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/04 17:05:42 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void redirect_output(t_simple_cmd *cmd, int *p_fd)
 //     }
 // }
 
-int execute_builtins(t_simple_cmd *cmd)
+int execute_builtins(t_simple_cmd *cmd, t_minishell *data)
 {
     //dans lideal il faudrait que les builtins renvoient 1 si SUCCESS
     if (strcmp(cmd->args[0], "echo") == 0)
@@ -106,7 +106,7 @@ int execute_builtins(t_simple_cmd *cmd)
     }
     else if (strcmp(cmd->args[0], "env") == 0)
     {
-        ft_env();
+        ft_env(data);
         return (1);
     }
     else if (strcmp(cmd->args[0], "exit") == 0)
@@ -118,9 +118,9 @@ int execute_builtins(t_simple_cmd *cmd)
         return (0);
 }
 
-void execute_command(t_simple_cmd *cmd) 
+void execute_command(t_simple_cmd *cmd, t_minishell *data) 
 {
-    if (execute_builtins(cmd) == 1)
+    if (execute_builtins(cmd, data) == 1)
     {
         exit(EXIT_SUCCESS);
     }
@@ -132,7 +132,7 @@ void execute_command(t_simple_cmd *cmd)
     }
 }
 
-void execute_simple_cmd(t_simple_cmd *cmd, int *prev_pipe_fd) 
+void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *prev_pipe_fd) 
 {
     int pipe_fd[2];
     pid_t child_pid;
@@ -161,7 +161,7 @@ void execute_simple_cmd(t_simple_cmd *cmd, int *prev_pipe_fd)
         redirect_output(cmd, pipe_fd);
         // if (cmd->prev)
         //     redirect_previous_output(cmd->prev, pipe_fd);
-        execute_command(cmd);
+        execute_command(cmd, data);
     }
     else 
     {
@@ -169,7 +169,7 @@ void execute_simple_cmd(t_simple_cmd *cmd, int *prev_pipe_fd)
         waitpid(child_pid, NULL, 0);
         if (cmd->next != NULL) 
         {
-            execute_simple_cmd(cmd->next, pipe_fd);
+            execute_simple_cmd(cmd->next, data, pipe_fd);
         }
     }
 }

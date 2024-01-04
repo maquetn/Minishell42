@@ -198,7 +198,7 @@ int main(int ac, char **av, char **env)
 			planting(&data);
 		//printf("test\n");
 		if (data.node)
-			execute_simple_cmd(data.node, NULL);
+			execute_simple_cmd(data.node, &data, NULL);
 		//print_nodes(&data);
 		free(input);
 		free_simple_cmd(data.node);
