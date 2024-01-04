@@ -77,7 +77,7 @@ int get_next_token(char *str, int start)
 	{
 		if (str[start] == '>' || str[start] == '<' || str[start] == '|' || str[start] == ' ' || str[start] == '$' || str[start] == '"' || str[start] == '\'')
 		{
-			printf("what do I return in get next token %c i  : %d\n", str[start], start);
+			//printf("what do I return in get next token %c i  : %d\n", str[start], start);
 			return (start);
 		}
 		start++;
@@ -108,7 +108,7 @@ int	get_correct_index(char *str, int i, int cas)
 	else if (cas == 3)
 	{
 		i++;
-		while (ft_isalpha(str[i]) || str[i] == '_')
+		while (ft_isalnum(str[i]) || str[i] == '_')
 			i++;
 	}
 	return (i);
@@ -132,9 +132,17 @@ int	translate_dollar(char *str, int i, char **content, t_minishell *data)
 		free(translated);
 		cas = 2;
 	}
+	if (str[i] == '$' && str[i + 1] == '?')
+	{
+		cas = errno;
+		translated = ft_itoa(cas);
+		*content = ft_strjoin(*content, translated);
+		free(translated);
+		cas = 2;
+	}
 	else if (str[i] == '$' && (str[i + 1] == '"' || str[i + 1] == '\''))
 		return (i + 1);
-	else if (str[i] == '$' && (ft_isalpha(str[i + 1]) || str[i + 1] == '_'))
+	else if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
 	{
 		placeholder = ft_strndup(str, i + 1, get_next_token(str, i + 1) - 1);
 		translated = get_env(placeholder, data->env);
@@ -367,11 +375,13 @@ void	token(char *str, t_minishell *data)
 		}
 		if(dollar_quotes == 1 || dollar_quotes == 2)
 		{
-            // if (dollar_quotes == 1 && str[i + 1] != ' ')
-            //     continue;
+            if (dollar_quotes == 1 && str[i + 1] != ' ' && str[i + 1] != '\0')
+                continue;
 			if(str[i] == '$' || str[i] == '\'' || str[i] == '"')
 			{
-				//printf("char : %c i being : %d surounded by : %c and %c\n", str[i], i, str[i - 1], str[i + 1]);
+				printf("char : %c i being : %d surounded by : %c and %c\n", str[i], i, str[i - 1], str[i + 1]);
+				if (str[i + 1] == '\0' && str[i] == '"')
+					add_token(&head, STR, content, 0);
 				continue;
 			}
 			//printf("content %s , i : %d\n", content, i);

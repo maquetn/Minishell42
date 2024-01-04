@@ -15,6 +15,7 @@ void	restore_terminal(struct termios *original_termios)
 // Signal handler function for SIGINT (Ctrl+C)
 void sig_handler(int signum)
 {
+	//cat + ctrl+C
     (void)signum; // To avoid the unused parameter warning
 
     struct termios original_termios;

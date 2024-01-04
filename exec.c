@@ -126,9 +126,9 @@ void execute_command(t_simple_cmd *cmd)
     }
     else if(execve(cmd->path_to_cmd, cmd->args, NULL) == -1)
     {
-        printf("%s\n", strerror(errno));
+        printf("%s : cmd not found\n", cmd->args[0]);
         //etre sur de bien liberer les cmd avant de d'exit
-        exit(EXIT_FAILURE);
+        exit(127);
     }
 }
 

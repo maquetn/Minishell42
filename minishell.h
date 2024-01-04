@@ -57,6 +57,7 @@ typedef struct s_minishell
 	//int		error;
 	t_token 		*first_token;
 	t_simple_cmd	*node;
+	int				exit_code;
 	
 } t_minishell;
 
