@@ -77,7 +77,7 @@ int get_next_token(char *str, int start)
 	{
 		if (str[start] == '>' || str[start] == '<' || str[start] == '|' || str[start] == ' ' || str[start] == '$' || str[start] == '"' || str[start] == '\'')
 		{
-			//printf("what do I return in get next token %c\n", str[start]);
+			printf("what do I return in get next token %c i  : %d\n", str[start], start);
 			return (start);
 		}
 		start++;
@@ -123,7 +123,7 @@ int	translate_dollar(char *str, int i, char **content, t_minishell *data)
 	int		cas;
 
 	pid = 0;
-
+    cas = 1;
 	if (str[i] == '$' && str[i + 1] == '$')
 	{
 		pid = getpid();
@@ -155,21 +155,22 @@ int	translate_dollar(char *str, int i, char **content, t_minishell *data)
 
 int open_quote(char *str, int i, char quote) 
 {
-    int isOpeningQuote = 0;  // 0 for opening quote, 1 for closing quote
-    
-    // Check if the current quote is an opening or closing quote
-	i++;
-    while (str[i]) 
-	{
-		if (str[i] == quote)
-			isOpeningQuote = !isOpeningQuote;  // Toggle between opening and closing quotes
+    int quotes_amount;
+
+    quotes_amount = 0;
+    while (str[i])
+    {
+        if (str[i] == quote)
+            quotes_amount++;
         i++;
     }
-
-    return isOpeningQuote;
+    if (quotes_amount % 2 == 0)
+        return (0);
+    else
+        return (1);
 }
 
-int	manage_double_quotes(char *str, int i, char **content)
+int	manage_double_quotes(char *str, int i, char **content, t_token **head)
 {
 	int		start;
 
@@ -191,12 +192,14 @@ int	manage_double_quotes(char *str, int i, char **content)
 			break;
 		}
 	}
+    if (str[i + 1] == '\0')
+        add_token(head, STR, *content, 1);
 	// printf("content when ret \" : %s\n", *content);
 	// printf("what do i ret %c & -1 %c & + 1 %c \n", str[i], str[i - 1], str[i + 1]);
 	return (i);
 }
 
-int	manage_single_quotes(char *str, int i, char **content)
+int	manage_single_quotes(char *str, int i, char **content, t_token **head)
 {
 	int		start;
 
@@ -209,12 +212,15 @@ int	manage_single_quotes(char *str, int i, char **content)
 		i++;
 		if (str[i] == '\'')
 		{
-			*content = ft_strjoin(*content, ft_strndup(str, start, i - 1));
+			*content = ft_strjoin_free2(*content, ft_strndup(str, start, i - 1));
+            printf("content : %s\n", *content);
 			break;
 		}
 	}
 	// printf("content when ret \" : %s\n", *content);
-	// printf("what do i ret %c & -1 %c & + 1 %c \n", str[i], str[i - 1], str[i + 1]);
+	printf("what do i ret %c & -1 %c & + 1 %c et i : %d\n", str[i], str[i - 1], str[i + 1], i);
+    if (str[i + 1] == '\0')
+        add_token(head, STR, *content, 1);
 	return (i);
 }
 
@@ -304,35 +310,39 @@ void	token(char *str, t_minishell *data)
 	content = ft_strdup("");
 	while (str[i] != '\0')
 	{
-		printf("\nchar : %c i being : %d surounded by : %c and %c\n\n", str[i], i, str[i - 1], str[i + 1]);
+		//printf("\nchar : %c i being : %d surounded by : %c and %c\n\n", str[i], i, str[i - 1], str[i + 1]);
 		if (str[i] == ' ')
 		{
+            //printf("when\n");
 			i++;
 			continue;
 		}
 		else if (str[i] == '$')
 		{
+            //printf("how do i get here : %d\n", i);
 			dollar_quotes = 1;
 			i = manage_dollar(str, i , &content, data);
 		}
 		else if (str[i] == '"')
 		{
-			if (open_quote(str, i, '"') == 0)
+			if (open_quote(str, i, '"') == 1)
 			{
 				i++;
 				continue;
 			}
-			i = manage_double_quotes(str, i, &content);
+			i = manage_double_quotes(str, i, &content, &head);
 			dollar_quotes = 1;
 		}
 		else if (str[i] == '\'')
 		{
-			if (open_quote(str, i, '\'') == 0)
+            //printf("hello\n");
+			if (open_quote(str, i, '\'') == 1)
 			{
 				i++;
 				continue;
 			}
-			i = manage_single_quotes(str, i, &content);
+            //printf("hello\n");
+			i = manage_single_quotes(str, i, &content, &head);
 			dollar_quotes = 1;
 		}
 		else if (str[i] == '>')
@@ -347,7 +357,7 @@ void	token(char *str, t_minishell *data)
 			//printf("what str[i] : %c et i = %d\n", str[i], i);
 			i = get_next_token(str, i);
 			//printf("contnet : %s\n", content);
-			dollar_quotes = 1;
+			dollar_quotes = 2;
 			//printf("char : %c i being : %d surounded by : %c and %c\n", str[i], i, str[i - 1], str[i + 1]);
 			if(str[i] == '$' || str[i] == '\'' || str[i] == '"')
 			{
@@ -355,19 +365,21 @@ void	token(char *str, t_minishell *data)
 				continue;
 			}
 		}
-		if(dollar_quotes == 1)
+		if(dollar_quotes == 1 || dollar_quotes == 2)
 		{
+            // if (dollar_quotes == 1 && str[i + 1] != ' ')
+            //     continue;
 			if(str[i] == '$' || str[i] == '\'' || str[i] == '"')
 			{
 				//printf("char : %c i being : %d surounded by : %c and %c\n", str[i], i, str[i - 1], str[i + 1]);
 				continue;
 			}
-			printf("content %s , i : %d\n", content, i);
+			//printf("content %s , i : %d\n", content, i);
 			add_token(&head, STR, content, 0);
 			free(content);
 			dollar_quotes = 0;
 			content = ft_strdup("");
-			printf("%d\n", i);
+			//printf("%d\n", i);
 		}
 		//printf("hello\n");
 		//printf("char : %c i being : %d surounded by : %c and %c\n", str[i], i, str[i - 1], str[i + 1]);

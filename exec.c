@@ -42,6 +42,8 @@ void redirect_input(t_simple_cmd *cmd, int *p_fd)
 void redirect_output(t_simple_cmd *cmd, int *p_fd) 
 {
 	int output_fd;
+
+    output_fd = 1;
     if (cmd->output != NULL) 
     {
 		if (cmd->append_mode == 0)

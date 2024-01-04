@@ -94,6 +94,7 @@ char	*ft_itoa(int n);
 int	ft_isalpha(int c);
 int	ft_isalnum(int c);
 char	*get_env(char *name, char **env);
+char	*ft_strjoin_free2(char *s1, char *s2);
 
 
 // BUILTINS
