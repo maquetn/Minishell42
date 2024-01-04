@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 09:48:00 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/04 16:47:04 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/04 16:59:36 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ int execute_builtins(t_simple_cmd *cmd)
     }
     else if (strcmp(cmd->args[0], "env") == 0)
     {
-        printf("env function\n");
+        ft_env();
         return (1);
     }
     else if (strcmp(cmd->args[0], "exit") == 0)
