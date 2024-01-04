@@ -132,15 +132,15 @@ int	translate_dollar(char *str, int i, char **content, t_minishell *data)
 		free(translated);
 		cas = 2;
 	}
-	if (str[i] == '$' && str[i + 1] == '?')
+	else if (str[i] == '$' && str[i + 1] == '?')
 	{
-		cas = errno;
+		cas = data->exit_code;
 		translated = ft_itoa(cas);
 		*content = ft_strjoin(*content, translated);
 		free(translated);
 		cas = 2;
 	}
-	else if (str[i] == '$' && (str[i + 1] == '"' || str[i + 1] == '\''))
+	else if (str[i] == '$' && str[i + 1] == '"' && str[i - 1] == '"')
 		return (i + 1);
 	else if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
 	{
@@ -178,18 +178,20 @@ int open_quote(char *str, int i, char quote)
         return (1);
 }
 
-int	manage_double_quotes(char *str, int i, char **content, t_token **head)
+int	manage_double_quotes(char *str, int i, char **content)
 {
 	int		start;
 
 	start = i + 1;
 	while (str[i])
 	{
-		//reste alors que pas entre quotes
-		// if (open_quote(str, i, '"'))
-		// 	return (i + 1);
 		i++;
-		if (str[i] == '$')
+		if (str[i] == '$' && str[i + 1] == '"' && str[i - 1] == '"')
+		{
+			*content = ft_strjoin_free2(*content, ft_strdup("$"));
+			break;
+		}
+		else if (str[i] == '$')
 		{
 			*content = ft_strjoin(*content, ft_strndup(str, start, i - 1));
 			break;
@@ -200,10 +202,6 @@ int	manage_double_quotes(char *str, int i, char **content, t_token **head)
 			break;
 		}
 	}
-    if (str[i + 1] == '\0')
-        add_token(head, STR, *content, 1);
-	// printf("content when ret \" : %s\n", *content);
-	// printf("what do i ret %c & -1 %c & + 1 %c \n", str[i], str[i - 1], str[i + 1]);
 	return (i);
 }
 
@@ -214,42 +212,38 @@ int	manage_single_quotes(char *str, int i, char **content, t_token **head)
 	start = i + 1;
 	while (str[i])
 	{
-		//reste alors que pas entre quotes
-		// if (open_quote(str, i, '\''))
-		// 	return (i + 1);
 		i++;
 		if (str[i] == '\'')
 		{
 			*content = ft_strjoin_free2(*content, ft_strndup(str, start, i - 1));
-            printf("content : %s\n", *content);
+            //printf("content : %s\n", *content);
 			break;
 		}
 	}
-	// printf("content when ret \" : %s\n", *content);
-	printf("what do i ret %c & -1 %c & + 1 %c et i : %d\n", str[i], str[i - 1], str[i + 1], i);
+	//printf("what do i ret %c & -1 %c & + 1 %c et i : %d\n", str[i], str[i - 1], str[i + 1], i);
     if (str[i + 1] == '\0')
         add_token(head, STR, *content, 1);
 	return (i);
 }
 
-int	something_before(char *str, int i)
-{
-	if (i == 0)
-	{
-		printf("syntax error\n");
-		exit(EXIT_FAILURE);
-	}
-	i--;
-	while (str[i] == ' ' || ft_isalnum(str[i]) || str[i] == '_')
-	{
-		if (ft_isalnum(str[i]) || str[i] == '_')
-			return (1);
-		i--;
-	}
-	printf("syntax error\n");
-	exit(EXIT_FAILURE);
+// int	something_before(char *str, int i)
+// {
+// 	// if (i == 0)
+// 	// {
+// 	// 	printf("syntax error\n");
+// 	// 	exit(EXIT_FAILURE);
+// 	// }
+// 	// i--;
+// 	// while (str[i] == ' ' || ft_isalnum(str[i]) || str[i] == '_')
+// 	// {
+// 	// 	if (ft_isalnum(str[i]) || str[i] == '_')
+// 	// 		return (1);
+// 	// 	i--;
+// 	// }
+// 	// printf("syntax error\n");
+// 	// exit(EXIT_FAILURE);
 
-}
+// }
 
 int	something_behind(char *str, int i)
 {
@@ -288,10 +282,10 @@ int	manage_input_heredoc(char *str, int i, t_token **head)
 	return (i);
 }
 
-int	manage_pipe(int i, t_token **head, char *str)
+int	manage_pipe(int i, t_token **head)
 {
-	if (something_before(str, i))
-		add_token(head, PIPE, "|", 0);
+	//if (something_before(str, i))
+	add_token(head, PIPE, "|", 0);
 	return (i);
 }
 
@@ -335,10 +329,12 @@ void	token(char *str, t_minishell *data)
 		{
 			if (open_quote(str, i, '"') == 1)
 			{
+				if (str[i + 1] == '\0')
+        			add_token(&head, STR, content, 1);
 				i++;
 				continue;
 			}
-			i = manage_double_quotes(str, i, &content, &head);
+			i = manage_double_quotes(str, i, &content);
 			dollar_quotes = 1;
 		}
 		else if (str[i] == '\'')
@@ -358,13 +354,13 @@ void	token(char *str, t_minishell *data)
 		else if (str[i] == '<')
 			i = manage_input_heredoc(str, i, &head) + 1;
 		else if (str[i] == '|')
-			i = manage_pipe(i , &head, str) + 1;
+			i = manage_pipe(i , &head) + 1;
 		else
 		{
-			content = ft_strjoin(content, ft_strndup(str, i, get_spc_chr(str, i)));
+			content = ft_strjoin_free2(content, ft_strndup(str, i, get_spc_chr(str, i)));
 			//printf("what str[i] : %c et i = %d\n", str[i], i);
 			i = get_next_token(str, i);
-			//printf("contnet : %s\n", content);
+			//printf("ptm : %s et i : %d\n", content, i);
 			dollar_quotes = 2;
 			//printf("char : %c i being : %d surounded by : %c and %c\n", str[i], i, str[i - 1], str[i + 1]);
 			if(str[i] == '$' || str[i] == '\'' || str[i] == '"')
@@ -375,13 +371,13 @@ void	token(char *str, t_minishell *data)
 		}
 		if(dollar_quotes == 1 || dollar_quotes == 2)
 		{
-            if (dollar_quotes == 1 && str[i + 1] != ' ' && str[i + 1] != '\0')
+            if (dollar_quotes == 1 && str[i + 1] != ' ' && i > ft_strlen(str))
                 continue;
-			if(str[i] == '$' || str[i] == '\'' || str[i] == '"')
+			else if(str[i] == '$' || str[i] == '\'' || str[i] == '"' || (str[i - 1] == '$' && str[i - 2] == '$' && str[i]))
 			{
-				printf("char : %c i being : %d surounded by : %c and %c\n", str[i], i, str[i - 1], str[i + 1]);
-				if (str[i + 1] == '\0' && str[i] == '"')
-					add_token(&head, STR, content, 0);
+				//printf("char : %c i being : %d surounded by : %c and %c\n", str[i], i, str[i - 1], str[i + 1]);
+				// if (str[i + 1] == '\0' && str[i] == '"')
+				// 	add_token(&head, STR, content, 0);
 				continue;
 			}
 			//printf("content %s , i : %d\n", content, i);
@@ -395,5 +391,5 @@ void	token(char *str, t_minishell *data)
 		//printf("char : %c i being : %d surounded by : %c and %c\n", str[i], i, str[i - 1], str[i + 1]);
 	}
 	data->first_token = head;
-	print_tokens(head);
+	//print_tokens(head);
 }
