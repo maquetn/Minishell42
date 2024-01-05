@@ -84,11 +84,6 @@ int execute_builtins(t_simple_cmd *cmd)
         ft_echo(cmd->args, 1);
         return (1);
     }
-    else if (strcmp(cmd->args[0], "cd") == 0)
-    {
-        ft_cd(cmd->args[1]);
-        return (1);
-    }
     else if (strcmp(cmd->args[0], "pwd") == 0)
     {
         printf("%s\n", ft_pwd());
