@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 09:48:00 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/05 11:20:53 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/05 13:15:02 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,11 +99,11 @@ int execute_builtins(t_simple_cmd *cmd, t_minishell *data)
     //     printf("export function\n");
     //     return (1);
     // }
-    else if (strcmp(cmd->args[0], "unset") == 0)
-    {
-        printf("unset function\n");
-        return (1);
-    }
+    // else if (strcmp(cmd->args[0], "unset") == 0)
+    // {
+    //     printf("unset function\n");
+    //     return (1);
+    // }
     else if (strcmp(cmd->args[0], "env") == 0)
     {
         ft_env(data);
@@ -147,6 +147,10 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *prev_pipe_fd)
     if (strcmp(cmd->args[0], "export") == 0)
     {
         ft_export(data, cmd->args);
+    }
+    else if (strcmp(cmd->args[0], "unset") == 0)
+    {
+        ft_unset(data, cmd->args);
     }
     child_pid = fork(); 
     if (child_pid == -1) 

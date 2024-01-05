@@ -13,7 +13,7 @@ int syntax_env_var(char **args)
         return 1;
 }
 
-char ft_export(t_minishell *data, char **args)
+void ft_export(t_minishell *data, char **args)
 {
 
     if (args[1])
@@ -62,6 +62,6 @@ char ft_export(t_minishell *data, char **args)
         {
             printf("autre cas\n");
         }
-        return 's';
+        //return 's';
     
 }

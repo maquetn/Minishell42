@@ -106,7 +106,8 @@ int ft_exit();
 int ft_cd(char *token);
 void ft_ls(const char *directory_path);
 char* ft_pwd();
-char ft_export(t_minishell *data, char **args);
+void ft_export(t_minishell *data, char **args);
+void ft_unset(t_minishell *data, char **args);
 void ft_env(t_minishell *data);
 
 // CHATGPT
