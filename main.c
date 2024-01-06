@@ -43,10 +43,10 @@ char	**copy_env(char **env)
 	i = 0;
 	while (env[count] != NULL)
 		count++;
-	copy = (char **)malloc(sizeof(char *) * (count + 1));
+	copy = malloc(sizeof(char *) * (count + 1));
 	while (i < count)
 	{
-		copy[i] = ft_strdup(env[i]);
+		copy[i] = strdup(env[i]);
 		i++;
 	}
 	copy[count] = NULL;
@@ -55,6 +55,7 @@ char	**copy_env(char **env)
 
 void	init_shell(t_minishell *data, char **env)
 {
+	data->head = NULL;
 	data->first_token = NULL;
 	data->node = NULL;
 	data->env = copy_env(env);
@@ -202,7 +203,8 @@ int main(int ac, char **av, char **env)
 			execute_simple_cmd(data.node, &data, NULL);
 		//print_nodes(&data);
 		free(input);
-		free_simple_cmd(data.node);
+		//free_simple_cmd(data.node);
+		free_custom_alloc(&data);
 		status = 0;
 	}
 	free_tabl(data.env);

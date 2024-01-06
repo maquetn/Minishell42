@@ -13,7 +13,7 @@
 
 #include "minishell.h"
 
-char	*get_env(char *name, char **env)
+char	*get_env(char *name, char **env, t_minishell *data)
 {
 	char	*path;
 	int		i;
@@ -25,19 +25,17 @@ char	*get_env(char *name, char **env)
 		j = 0;
 		while (env[i][j] && env[i][j] != '=')
 			j++;
-		path = ft_substr(env[i], 0, j);
+		path = ft_substr(env[i], 0, j, data);
 		if (strcmp(path, name) == 0)
 		{
-			free(path);
 			return (env[i] + j + 1);
 		}
-		free(path);
 		i++;
 	}
 	return (NULL);
 }
 
-char	*get_path(char *cmd, char **env)
+char	*get_path(char *cmd, char **env, t_minishell *data)
 {
 	char	*executable;
 	int		i;
@@ -45,22 +43,18 @@ char	*get_path(char *cmd, char **env)
 	char	*potential_path;
 
 	i = -1;
-	paths = ft_split(get_env("PATH", env), ':');
+	paths = ft_split(get_env("PATH", env, data), ':', data);
 	if (!paths)
 		EXIT_FAILURE;
 	while (paths[++i])
 	{
-		potential_path = ft_strjoin(paths[i], "/");
-		executable = ft_strjoin(potential_path, cmd);
-		free(potential_path);
+		potential_path = ft_strjoin(paths[i], "/", data);
+		executable = ft_strjoin(potential_path, cmd, data);
 		if (access(executable, F_OK | X_OK) == 0)
 			{
-				free_tabl(paths);
 				return(executable);
 			}
-		free(executable);
 	}
-	free_tabl(paths);
 	return (strdup(cmd));
 }
 
@@ -127,10 +121,10 @@ void	planting(t_minishell *data)
 	//printf("%s\n", first_token->content);
 	data->node = recursive_parsing(data);
 	//printf("%s\n", first_token->content);
-	free_tokens(first_token);
+	//free_tokens(first_token);
 }
 
-void	count_args_and_malloc(t_simple_cmd *cmd, t_token *token)
+void	count_args_and_malloc(t_simple_cmd *cmd, t_token *token, t_minishell *data)
 {
 	t_token	*temporary;
 	int		i;
@@ -153,7 +147,7 @@ void	count_args_and_malloc(t_simple_cmd *cmd, t_token *token)
 		//printf("?\n");
 	}
 	//printf("malloc arg size %d\n", i); //ok je dois capter le prob de mémoire ici
-	cmd->args = malloc(sizeof(char *) * (i + 1));
+	cmd->args = gc_malloc(sizeof(char *) * (i + 1), data);
 	if (!cmd->args)
 		EXIT_FAILURE;
 }
@@ -165,11 +159,11 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 
 	//printf("first token of cmd : %s\n", token->content);
 	i = 0;
-	cmd = malloc(sizeof(t_simple_cmd));
+	cmd = gc_malloc(sizeof(t_simple_cmd), data);
 	if (!cmd)
 		EXIT_FAILURE;
 	init_simple_cmd(cmd);
-	count_args_and_malloc(cmd, token);
+	count_args_and_malloc(cmd, token, data);
 	while(token)
 	{
 		if (token->type == PIPE)
@@ -184,7 +178,7 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 		else if (token->type == APPEND)
 		{
 			if (token->next != NULL)
-				cmd->output = ft_strdup(token->next->content);
+				cmd->output = ft_strdup(token->next->content, data);
 			if (token->next != NULL && token->next->type != OUTPUT && token->next->type != INPUT)
 				token = token->next->next;
 			else
@@ -194,7 +188,7 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 		else if (token->type == INPUT)
 		{
 			if (token->next != NULL)
-				cmd->input = ft_strdup(token->next->content);
+				cmd->input = ft_strdup(token->next->content, data);
 			if (token->next != NULL && token->next->type != OUTPUT && token->next->type != INPUT)
 				token = token->next->next;
 			else
@@ -203,7 +197,7 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 		else if (token->type == OUTPUT)
 		{
 			if (token->next != NULL)
-				cmd->output = ft_strdup(token->next->content);
+				cmd->output = ft_strdup(token->next->content, data);
 			if (token->next != NULL && token->next->type != OUTPUT && token->next->type != INPUT)
 				token = token->next->next;
 			else
@@ -212,8 +206,8 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 		else
 		{
 			if (i == 0)
-				cmd->path_to_cmd = get_path(token->content, data->env);
-			cmd->args[i] = ft_strdup(token->content);
+				cmd->path_to_cmd = get_path(token->content, data->env, data);
+			cmd->args[i] = ft_strdup(token->content, data);
 			i++;
 			token = token->next;
 		}

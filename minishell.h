@@ -18,6 +18,7 @@
 #include <dirent.h>
 
 typedef struct s_imple_cmd t_simple_cmd;
+typedef struct s_malloc t_malloc;
 
 typedef enum
 {
@@ -50,6 +51,11 @@ typedef struct s_imple_cmd
 
 }	t_simple_cmd;
 
+typedef struct s_malloc
+{
+  void  *adress;
+  t_malloc  *next;
+} t_malloc;
 
 typedef struct s_minishell
 {
@@ -57,6 +63,7 @@ typedef struct s_minishell
 	//int		error;
 	t_token 		*first_token;
 	t_simple_cmd	*node;
+  t_malloc    *head;
 	int				exit_code;
 	
 } t_minishell;
@@ -81,26 +88,26 @@ char* get_current_directory();
 char *get_path();
 int try_executing(char *command, char *path);
 
-char	*ft_substr(char const *s, unsigned int start, unsigned int len);
-char	*ft_strjoin(char *s1, char const *s2);
-char	**ft_split(char const *s, char c);
+char	*ft_substr(char const *s, unsigned int start, unsigned int len, t_minishell *data);
+char	*ft_strjoin(char *s1, char const *s2, t_minishell *data);
+char	**ft_split(char const *s, char c, t_minishell *data);
 t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token);
-char	*ft_strdup(const char *s1);
+char	*ft_strdup(const char *s1, t_minishell *data);
 void	planting(t_minishell *data);
 void	free_tabl(char **tabl);
 void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *prev_pipe_fd);
-void add_token(t_token **head, t_token_type type, char *content, int i);
+void add_token(t_token **head, t_token_type type, char *content, t_minishell *data);
 void	print_nodes(t_minishell *data);
-char	*ft_itoa(int n);
+char	*ft_itoa(int n, t_minishell *data);
 int	ft_isalpha(int c);
 int	ft_isalnum(int c);
-char	*get_env(char *name, char **env);
-char	*ft_strjoin_free2(char *s1, char *s2);
-char	*ft_strjoin_free_both(char *s1, char *s2);
-char    *ft_strndup(char *str, int start, int end);
+char	*get_env(char *name, char **env, t_minishell *data);
+char    *ft_strndup(char *str, int start, int end, t_minishell *data);
 void	expander(t_minishell *data);
 void    print_tokens(t_token *head);
 int remove_double(char *str, int i, char **expanded, t_minishell *data);
+void    *gc_malloc(size_t required_memory ,t_minishell *data);
+void    free_custom_alloc(t_minishell *data);
 
 // BUILTINS
 

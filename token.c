@@ -12,7 +12,7 @@ void	free_tabl(char **tabl)
 	}
 	free(tabl);
 }
-char    *ft_strndup(char *str, int start, int end)
+char    *ft_strndup(char *str, int start, int end, t_minishell *data)
 {
     int len;
     char    *dup;
@@ -20,7 +20,7 @@ char    *ft_strndup(char *str, int start, int end)
 
     len = end - start + 1;
     i = 0;
-    dup = malloc(sizeof(char) * (len + 1));
+    dup = gc_malloc(sizeof(char) * (len + 1), data);
     while (i < len)
     {
         dup[i] = str[start + i];
@@ -31,14 +31,13 @@ char    *ft_strndup(char *str, int start, int end)
 }
 
 
-void add_token(t_token **head, t_token_type type, char *content, int i)
+void add_token(t_token **head, t_token_type type, char *content, t_minishell *data)
 {
 	if (content[0] == '\0')
 	{
-		free(content);
 		return;
 	}
-    t_token *new_token = malloc(sizeof(t_token));
+    t_token *new_token = gc_malloc(sizeof(t_token), data);
     if (new_token == NULL)
 	{
         perror("malloc");
@@ -46,7 +45,7 @@ void add_token(t_token **head, t_token_type type, char *content, int i)
     }
 
     new_token->type = type;
-    new_token->content = strdup(content); // Duplicate the content
+    new_token->content = ft_strdup(content, data); // Duplicate the content
     new_token->next = NULL;
     new_token->prev = NULL;
 
@@ -60,8 +59,6 @@ void add_token(t_token **head, t_token_type type, char *content, int i)
 		current->next = new_token;
         new_token->prev = current;
     }
-    if (i == 1)
-        free(content);
 }
 
 void    print_tokens(t_token *head)
@@ -104,7 +101,7 @@ int	get_spc_chr(char *str, int start)
 	return (start);
 }
 
-int	manage_double_quotes(char *str, int i, char **content)
+int	manage_double_quotes(char *str, int i, char **content, t_minishell *data)
 {
 	int start;
 
@@ -114,14 +111,14 @@ int	manage_double_quotes(char *str, int i, char **content)
 		i++;
 		if (str[i] == '\"' )
 		{
-			*content = ft_strjoin_free2(*content, ft_strndup(str, start - 1, i));
+			*content = ft_strjoin(*content, ft_strndup(str, start - 1, i, data), data);
 			return (i);
 		}
 	}
 	return (i);//si on arrive ici alors syntax error
 }
 
-int	manage_single_quotes(char *str, int i, char **content)
+int	manage_single_quotes(char *str, int i, char **content, t_minishell *data)
 {
 	int start;
 
@@ -131,7 +128,7 @@ int	manage_single_quotes(char *str, int i, char **content)
 		i++;
 		if (str[i] == '\'' )
 		{
-			*content = ft_strjoin_free2(*content, ft_strndup(str, start - 1, i));
+			*content = ft_strjoin(*content, ft_strndup(str, start - 1, i, data), data);
 			return (i);
 		}
 	}
@@ -151,33 +148,33 @@ int	something_behind(char *str, int i)
 	exit(EXIT_FAILURE);
 	return (0);
 }
-int	manage_output_append(char *str, int i, t_token **head)
+int	manage_output_append(char *str, int i, t_token **head, t_minishell *data)
 {
 	if (str[i + 1] == '>' && something_behind(str, i + 1)) //rajouter un check qu'il y ai une redi possible sinon syntax error;
 	{
 		i++;
-		add_token(head, APPEND, ">>", 0);
+		add_token(head, APPEND, ">>", data);
 	}
 	else if (something_behind(str, i))
-		add_token(head, OUTPUT, ">", 0);
+		add_token(head, OUTPUT, ">", data);
 	return (i);
 }
 
-int	manage_input_heredoc(char *str, int i, t_token **head)
+int	manage_input_heredoc(char *str, int i, t_token **head, t_minishell *data)
 {
 	if (str[i + 1] == '<' && something_behind(str, i + 1))
 	{
 		i++;
-		add_token(head, HEREDOC, "<<", 0);
+		add_token(head, HEREDOC, "<<", data);
 	}
 	else if (something_behind(str, i))
-		add_token(head, INPUT, "<", 0);
+		add_token(head, INPUT, "<", data);
 	return (i);
 }
 
-int	manage_pipe(int i, t_token **head)
+int	manage_pipe(int i, t_token **head, t_minishell *data)
 {
-	add_token(head, PIPE, "|", 0);
+	add_token(head, PIPE, "|", data);
 	return (i);
 }
 
@@ -196,53 +193,53 @@ void	token(char *str, t_minishell *data)
 	t_token	*head = NULL; 
 
 	i = 0;
-	content = ft_strdup("");
+	content = ft_strdup("", data);
 	while (str[i] != '\0')
 	{
 		if (str[i] == ' ')
 		{
 			if (str[i - 1] == '"' || str[i - 1] == '\'')
 			{
-				add_token(&head, STR, content, 1);
-				content = ft_strdup("");
+				add_token(&head, STR, content, data);
+				content = ft_strdup("", data);
 			}
 			i++;
 			continue;
 		}
 		else if (str[i] == '>')
 		{
-			i = manage_output_append(str, i, &head) + 1;
+			i = manage_output_append(str, i, &head, data) + 1;
 			continue;
 		}
 		else if (str[i] == '<')
 		{
-			i = manage_input_heredoc(str, i, &head) +1;
+			i = manage_input_heredoc(str, i, &head, data) +1;
 			continue;
 		}
 		else if (str[i] == '|')
 		{
-			i = manage_pipe(i, &head) + 1;
+			i = manage_pipe(i, &head, data) + 1;
 			continue;
 		}
 		else if (str[i] == '\'')
-			i = manage_single_quotes (str, i, &content);
+			i = manage_single_quotes (str, i, &content, data);
 		else if (str[i] == '"')
-			i = manage_double_quotes(str, i, &content);
+			i = manage_double_quotes(str, i, &content, data);
 		if (str[i] == '\'' || str[i] == '"')
 		{
 			i++;
 			if (str[i] == '\0')
-				add_token(&head, STR, content, 1);
+				add_token(&head, STR, content, data);
 			continue;
 		}
 		else
 		{
-			content = ft_strjoin_free2(content, ft_strndup(str, i, get_spc_chr(str, i)));
+			content = ft_strjoin(content, ft_strndup(str, i, get_spc_chr(str, i), data), data);
 			i = get_next_token(str, i);
 			if (str[i] != '\'' && str[i] != '"')
 			{
-				add_token(&head, STR, content, 1);
-				content = ft_strdup("");
+				add_token(&head, STR, content, data);
+				content = ft_strdup("", data);
 			}
 			if (str[i + 1] == '\0')
 				break;

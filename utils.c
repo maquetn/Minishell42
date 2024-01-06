@@ -11,7 +11,7 @@ int	ft_strlen(const char *str)
 }
 
 
-char	*ft_strjoin(char *s1, char const *s2)
+char	*ft_strjoin(char *s1, char const *s2, t_minishell *data)
 {
 	int		i;
 	int		j;
@@ -21,7 +21,7 @@ char	*ft_strjoin(char *s1, char const *s2)
 		return (NULL);
 	i = ft_strlen((char *)s1);
 	j = ft_strlen((char *)s2);
-	new = malloc(sizeof(char) * (i + j + 1));
+	new = gc_malloc(sizeof(char) * (i + j + 1), data);
 	if (!new)
 		return (NULL);
 	i = 0;
@@ -38,66 +38,8 @@ char	*ft_strjoin(char *s1, char const *s2)
 	return (new);
 }
 
-char	*ft_strjoin_free2(char *s1, char *s2)
-{
-	int		i;
-	int		j;
-	char	*new;
 
-	if (!s1 || !s2)
-		return (NULL);
-	i = ft_strlen((char *)s1);
-	j = ft_strlen((char *)s2);
-	new = malloc(sizeof(char) * (i + j + 1));
-	if (!new)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (s1[i])
-	{
-		new[j++] = s1[i];
-		i++;
-	}
-	i = 0;
-	while (s2[i])
-		new[j++] = s2[i++];
-	new[j] = '\0';
-	free(s2);
-	return (new);
-}
-
-char	*ft_strjoin_free_both(char *s1, char *s2)
-{
-	int		i;
-	int		j;
-	char	*new;
-
-	if (!s1 || !s2)
-		return (NULL);
-	i = ft_strlen((char *)s1);
-	j = ft_strlen((char *)s2);
-	new = malloc(sizeof(char) * (i + j + 1));
-	if (!new)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (s1[i])
-	{
-		new[j++] = s1[i];
-		i++;
-	}
-	i = 0;
-	while (s2[i])
-		new[j++] = s2[i++];
-	new[j] = '\0';
-	free(s2);
-	free(s1);
-	return (new);
-}
-
-
-
-char	*ft_substr(char const *s, unsigned int start, unsigned int len)
+char	*ft_substr(char const *s, unsigned int start, unsigned int len, t_minishell *data)
 {
 	char				*new;
 	unsigned int		i;
@@ -107,7 +49,7 @@ char	*ft_substr(char const *s, unsigned int start, unsigned int len)
 	i = 0;
 	if (start > (unsigned int)ft_strlen(s))
 	{
-		new = malloc(sizeof(char) * 1);
+		new = gc_malloc((sizeof(char) * 1), data);
 		if (!new)
 			return (NULL);
 		new[0] = '\0';
@@ -115,7 +57,7 @@ char	*ft_substr(char const *s, unsigned int start, unsigned int len)
 	}
 	while (i < len && s[start + i])
 		i++;
-	new = malloc(sizeof(char) * (i + 1));
+	new = gc_malloc(sizeof(char) * (i + 1), data);
 	if (!new)
 		return (NULL);
 	i = -1;
@@ -148,7 +90,7 @@ int	ft_wrdcount(char const *s, char c)
 	return (count);
 }
 
-char	*ft_dup(const char *s, int start, int end)
+char	*ft_dup(const char *s, int start, int end, t_minishell *data)
 {
 	char	*word;
 	int		i;
@@ -156,7 +98,7 @@ char	*ft_dup(const char *s, int start, int end)
 	i = 0;
 	if (!s)
 		return (NULL);
-	word = malloc((end - start + 1) * sizeof(char));
+	word = gc_malloc((end - start + 1) * sizeof(char), data);
 	if (!word)
 		return (NULL);
 	while (start < end)
@@ -182,7 +124,7 @@ char	**ft_free(char **tabl, int i)
 	return (NULL);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_split(char const *s, char c, t_minishell *data)
 {
 	int		iter;
 	char	**tabl;
@@ -192,18 +134,18 @@ char	**ft_split(char const *s, char c)
 	iter = -1;
 	i = -1;
 	j = 0;
-	tabl = malloc((ft_wrdcount(s, c) + 1) * sizeof(char *));
+	tabl = gc_malloc((ft_wrdcount(s, c) + 1) * sizeof(char *), data);
 	if (!tabl || !s)
-		return (ft_free(tabl, j));
+		return (NULL);
 	while (++i <= ft_strlen(s))
 	{
 		if (s[i] != c && iter < 0)
 			iter = i;
 		else if ((s[i] == c || i == ft_strlen(s)) && iter >= 0)
 		{
-			tabl[j] = ft_dup(s, iter, i);
+			tabl[j] = ft_dup(s, iter, i, data);
 			if (tabl[j++] == NULL)
-				return (ft_free(tabl, j));
+				return (NULL);
 			iter = -1;
 		}
 	}
@@ -211,7 +153,7 @@ char	**ft_split(char const *s, char c)
 	return (tabl);
 }
 
-char	*ft_strdup(const char *s1)
+char	*ft_strdup(const char *s1, t_minishell *data)
 {
 	char	*a;
 	int		len;
@@ -219,7 +161,7 @@ char	*ft_strdup(const char *s1)
 
 	i = 0;
 	len = ft_strlen((char *)s1);
-	a = malloc(sizeof(char) * (len + 1));
+	a = gc_malloc(sizeof(char) * (len + 1), data);
 	if (!a)
 		return (NULL);
 	while (i < len)
@@ -269,7 +211,7 @@ char	*ft_do(char *new, int len, long nbr, int neg)
 	return (new);
 }
 
-char	*ft_itoa(int n)
+char	*ft_itoa(int n, t_minishell *data)
 {
 	char	*new;
 	int		len;
@@ -281,7 +223,7 @@ char	*ft_itoa(int n)
 	if (n < 0)
 		neg = 0;
 	len = ft_length(nbr);
-	new = malloc(sizeof(char) * (len + 1));
+	new = gc_malloc(sizeof(char) * (len + 1), data);
 	if (!new)
 		return (NULL);
 	new = ft_do(new, len, nbr, neg);
