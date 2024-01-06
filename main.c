@@ -89,7 +89,6 @@ void	free_simple_cmd(t_simple_cmd *cmd)
 		free(temp->path_to_cmd);
 		free(temp->input);
 		free(temp->output);
-		free(temp->heredoc_eof);
 		temp->prev = NULL;
 		next = temp->next;
 		free(temp);
@@ -193,6 +192,8 @@ int main(int ac, char **av, char **env)
 			continue;
 		}
 		token(input, &data);
+		if (data.first_token)
+			expander(&data);
 		//printf("test\n");
 		if (data.first_token)
 			planting(&data);

@@ -93,7 +93,6 @@ void	init_simple_cmd(t_simple_cmd *cmd)
 	cmd->output = NULL;
 	cmd->prev = NULL;
     cmd->next = NULL;
-	cmd->heredoc_eof = NULL;
 	cmd->append_mode = 0;
 }
 
@@ -117,8 +116,7 @@ t_simple_cmd	*recursive_parsing(t_minishell *data)
 		prev->next = next;
 		next->prev = prev;
 	}
-
-	return prev;
+	return (prev);
 }
 
 void	planting(t_minishell *data)
@@ -181,8 +179,7 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 		}
 		else if (token->type == HEREDOC)
 		{
-			if (token->next != NULL)
-				cmd->heredoc_eof = ft_strdup(token->next->content);
+			//faire en sorte que mon noeud soit un heredoc
 		}
 		else if (token->type == APPEND)
 		{
@@ -216,7 +213,6 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 		{
 			if (i == 0)
 				cmd->path_to_cmd = get_path(token->content, data->env);
-
 			cmd->args[i] = ft_strdup(token->content);
 			i++;
 			token = token->next;
