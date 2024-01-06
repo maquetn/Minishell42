@@ -11,7 +11,8 @@ SRCS = token.c \
 	   builtins/ft_env.c \
 	   builtins/ft_pwd.c \
 	   builtins/ft_export.c \
-	   builtins/ft_unset.c
+	   builtins/ft_unset.c \
+	   expander.c
 
 OBJ_DIR = obj
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))

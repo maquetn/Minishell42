@@ -35,6 +35,7 @@ typedef struct s_token
   char *content;
   struct s_token *next;
   struct s_token *prev;
+  int   simple_quotes;
 } t_token;
 
 typedef struct s_imple_cmd
@@ -43,8 +44,7 @@ typedef struct s_imple_cmd
   char			*path_to_cmd;
   char			*input; //default STDIN else pipeout, fd
   char			*output; //default STDOUT else pipein, fd
-  int			append_mode;
-  char			*heredoc_eof;
+  int			  append_mode;
   t_simple_cmd	*prev;
   t_simple_cmd	*next;
 
@@ -96,7 +96,11 @@ int	ft_isalpha(int c);
 int	ft_isalnum(int c);
 char	*get_env(char *name, char **env);
 char	*ft_strjoin_free2(char *s1, char *s2);
-
+char	*ft_strjoin_free_both(char *s1, char *s2);
+char    *ft_strndup(char *str, int start, int end);
+void	expander(t_minishell *data);
+void    print_tokens(t_token *head);
+int remove_double(char *str, int i, char **expanded, t_minishell *data);
 
 // BUILTINS
 
