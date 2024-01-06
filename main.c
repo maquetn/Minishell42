@@ -78,24 +78,24 @@ void	print_nodes(t_minishell *data)
 	}
 }
 
-void	free_simple_cmd(t_simple_cmd *cmd)
-{
-	t_simple_cmd	*temp;
-	t_simple_cmd	*next;
+// void	free_simple_cmd(t_simple_cmd *cmd)
+// {
+// 	t_simple_cmd	*temp;
+// 	t_simple_cmd	*next;
 
-	temp = cmd;
-	while (temp)
-	{
-		free_tabl(temp->args);
-		free(temp->path_to_cmd);
-		free(temp->input);
-		free(temp->output);
-		temp->prev = NULL;
-		next = temp->next;
-		free(temp);
-		temp = next;
-	}
-}
+// 	temp = cmd;
+// 	while (temp)
+// 	{
+// 		free_tabl(temp->args);
+// 		free(temp->path_to_cmd);
+// 		free(temp->input);
+// 		free(temp->output);
+// 		temp->prev = NULL;
+// 		next = temp->next;
+// 		free(temp);
+// 		temp = next;
+// 	}
+// }
 /*
 int check_parse(char *str)
 {

@@ -58,25 +58,25 @@ char	*get_path(char *cmd, char **env, t_minishell *data)
 	return (strdup(cmd));
 }
 
-void free_tokens(t_token *token)
-{
-    t_token *temp;
-    t_token *next_token;
+// void free_tokens(t_token *token)
+// {
+//     t_token *temp;
+//     t_token *next_token;
 
-    temp = token;
-    while (temp)
-    {
-        //printf("Freeing token: %p, content: %s\n", (void *)temp, temp->content);
+//     temp = token;
+//     while (temp)
+//     {
+//         //printf("Freeing token: %p, content: %s\n", (void *)temp, temp->content);
 
-        free(temp->content);
+//         free(temp->content);
 
-        next_token = temp->next;
-        temp->prev = NULL;
-        free(temp);
+//         next_token = temp->next;
+//         temp->prev = NULL;
+//         free(temp);
 
-        temp = next_token;
-    }
-}
+//         temp = next_token;
+//     }
+// }
 
 
 void	init_simple_cmd(t_simple_cmd *cmd)
