@@ -73,7 +73,7 @@ int	dollar(char *str, int i, char **expanded, t_minishell *data)
         else if (str[i] == '$' && str[i + 1] == '"')
             i = remove_double(str, i + 1, expanded, data);
         else if (str[i] == '$' && str[i + 1] == '\'')
-            i = remove_single(str, i + 1, expanded);
+            i = remove_single(str, i + 1, expanded) + 1;
         else if (str[i] == '$')
         {
             *expanded = ft_strjoin(*expanded, "$");
@@ -173,6 +173,6 @@ void	expander(t_minishell *data)
 		data->first_token = data->first_token->next;
 	}
     rewind_tokens(data);
-    //print_tokens(data->first_token);
+    print_tokens(data->first_token);
 }
 
