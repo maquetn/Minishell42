@@ -246,5 +246,5 @@ void	token(char *str, t_minishell *data)
 		}
 	}
 	data->first_token = head;
-	print_tokens(head);
+	//print_tokens(head);
 }
