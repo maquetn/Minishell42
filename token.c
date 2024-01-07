@@ -395,5 +395,5 @@ void	token(char *str, t_minishell *data)
 		//printf("char : %c i being : %d surounded by : %c and %c\n", str[i], i, str[i - 1], str[i + 1]);
 	}
 	data->first_token = head;
-	print_tokens(head);
+	//print_tokens(head);
 }
