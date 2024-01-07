@@ -12,11 +12,23 @@
 
 #include "minishell.h"
 
-char    **manage_heredoc(t_simple_cmd *cmd)
-{
-    cmd->heredoc = 0;
-    return (NULL);
-}
+// char    **manage_heredoc(char *delim, t_minishell *data)
+// {
+//     char    *file;
+//     char    *prompt;
+//     char    *input;
+
+//     prompt = ">";
+//     while (1)
+//     {
+//         input = readline(prompt);
+//         if (strcmp(input, delim) == 0)
+//             break;
+//     }
+//     free(input);
+
+//     return (file);
+// }
 
 void close_pipe(int pipe_fd[2]) 
 {
@@ -24,13 +36,14 @@ void close_pipe(int pipe_fd[2])
     close(pipe_fd[1]);
 }
 
-void redirect_input(t_simple_cmd *cmd, int *p_fd) 
+void redirect_input(t_simple_cmd *cmd, int *p_fd/*, t_minishell *data*/) 
 {
-    if (cmd->input != NULL && cmd->heredoc == 1)
-    {
-        cmd->heredoc_tabl = manage_heredoc(cmd);
-    }
-    else if (cmd->input != NULL) 
+    // if (cmd->input != NULL && cmd->heredoc == 1)
+    // {
+    //     cmd->input = manage_heredoc(cmd->input, data);
+    //     int input_fd = open(cmd->input, O_RDONLY);
+    // }
+    if (cmd->input != NULL) 
     {
         int input_fd = open(cmd->input, O_RDONLY);
         if (input_fd == -1) 
@@ -141,7 +154,7 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *prev_pipe_fd)
 {
     int pipe_fd[2];
     pid_t child_pid;
- 
+    
     if (cmd == NULL) 
         return;
     if (pipe(pipe_fd) == -1) 
@@ -166,7 +179,7 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *prev_pipe_fd)
     if (child_pid == 0) 
     {
         //close_pipe(pipe_fd);
-        redirect_input(cmd, prev_pipe_fd);
+        redirect_input(cmd, prev_pipe_fd/*, data*/);
         redirect_output(cmd, pipe_fd);
         // if (cmd->prev)
         //     redirect_previous_output(cmd->prev, pipe_fd);

@@ -142,6 +142,21 @@ int	check_if_quotes_are_closed_or_forbidden(char *str)
 	return (1);
 }
 
+int	is_only_space(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] && str[i] == ' ')
+	{
+		if (str[i] != ' ' && str[i] != '\0')
+			return (0);
+		i++;
+	}
+	if (i >= ft_strlen(str))
+		return (1);
+	return (0);
+}
 
 int main(int ac, char **av, char **env)
 {
@@ -174,7 +189,7 @@ int main(int ac, char **av, char **env)
 			free(input);
 			break;
 		}
-		if (input[0] == '\0')
+		if (input[0] == '\0' || is_only_space(input) == 1)
 		{
 			free(input);
 			continue;

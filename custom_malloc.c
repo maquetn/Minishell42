@@ -51,7 +51,8 @@ void    free_strings(t_malloc *node)
 
 void    free_custom_alloc(t_minishell *data)
 {
-    free_strings(data->head);
+    if (data->head)
+        free_strings(data->head);
     data->head = NULL;
 }
 

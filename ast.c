@@ -102,7 +102,7 @@ t_simple_cmd	*get_cmd(t_token *token, t_minishell *data)
 
 t_simple_cmd	*recursive_parsing(t_minishell *data)
 {
-	t_simple_cmd	*prev;
+	t_simple_cmd	*prev = NULL;
 	t_simple_cmd	*next = NULL;
 
 	prev = get_cmd(data->first_token, data);

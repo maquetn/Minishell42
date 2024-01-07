@@ -179,6 +179,6 @@ void	expander(t_minishell *data)
 		data->first_token = data->first_token->next;
 	}
     rewind_tokens(data);
-    print_tokens(data->first_token);
+    //print_tokens(data->first_token);
 }
 
