@@ -88,6 +88,7 @@ void	init_simple_cmd(t_simple_cmd *cmd)
 	cmd->prev = NULL;
     cmd->next = NULL;
 	cmd->append_mode = 0;
+	cmd->heredoc = 0;
 }
 
 t_simple_cmd	*get_cmd(t_token *token, t_minishell *data)
@@ -174,6 +175,13 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 		else if (token->type == HEREDOC)
 		{
 			//faire en sorte que mon noeud soit un heredoc
+			if (token->next != NULL)
+				cmd->input = ft_strdup(token->next->content, data);
+			if (token->next != NULL && token->next->type != OUTPUT && token->next->type != INPUT)
+				token = token->next->next;
+			else
+				token = token->next;
+			cmd->heredoc = 1;
 		}
 		else if (token->type == APPEND)
 		{

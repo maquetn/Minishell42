@@ -20,7 +20,11 @@ void close_pipe(int pipe_fd[2])
 
 void redirect_input(t_simple_cmd *cmd, int *p_fd) 
 {
-    if (cmd->input != NULL) 
+    if (cmd->input != NULL && cmd->heredoc == 1)
+    {
+        cmd->input = manage_heredoc(cmd);
+    }
+    else if (cmd->input != NULL) 
     {
         int input_fd = open(cmd->input, O_RDONLY);
         if (input_fd == -1) 
