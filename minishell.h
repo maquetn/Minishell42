@@ -47,6 +47,7 @@ typedef struct s_imple_cmd
   char			*output; //default STDOUT else pipein, fd
   int			  append_mode;
   int       heredoc;
+  char      **heredoc_tabl;
   t_simple_cmd	*prev;
   t_simple_cmd	*next;
 

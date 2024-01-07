@@ -12,6 +12,12 @@
 
 #include "minishell.h"
 
+char    **manage_heredoc(t_simple_cmd *cmd)
+{
+    cmd->heredoc = 0;
+    return (NULL);
+}
+
 void close_pipe(int pipe_fd[2]) 
 {
     close(pipe_fd[0]);
@@ -22,7 +28,7 @@ void redirect_input(t_simple_cmd *cmd, int *p_fd)
 {
     if (cmd->input != NULL && cmd->heredoc == 1)
     {
-        cmd->input = manage_heredoc(cmd);
+        cmd->heredoc_tabl = manage_heredoc(cmd);
     }
     else if (cmd->input != NULL) 
     {

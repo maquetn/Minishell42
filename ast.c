@@ -87,6 +87,7 @@ void	init_simple_cmd(t_simple_cmd *cmd)
 	cmd->output = NULL;
 	cmd->prev = NULL;
     cmd->next = NULL;
+	cmd->heredoc_tabl = NULL;
 	cmd->append_mode = 0;
 	cmd->heredoc = 0;
 }
