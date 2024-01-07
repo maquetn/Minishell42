@@ -110,6 +110,9 @@ void    print_tokens(t_token *head);
 int remove_double(char *str, int i, char **expanded, t_minishell *data);
 void    *gc_malloc(size_t required_memory ,t_minishell *data);
 void    free_custom_alloc(t_minishell *data);
+int	ft_strcmp(char *s1, char *s2);
+int get_cancer(char *str, int i);
+void	ft_putstr_fd(char *s, int fd);
 
 // BUILTINS
 
@@ -122,12 +125,5 @@ char* ft_pwd();
 void ft_export(t_minishell *data, char **args);
 void ft_unset(t_minishell *data, char **args);
 void ft_env(t_minishell *data);
-
-// CHATGPT
-
-void tokenize(char *input, t_minishell *shell);
-char *translate_dollar_sign(char *token, char **env);
-int find_token_end(const char *str, int start);
-int handle_quotes(const char *str, int i, char quote_type);
 
 #endif

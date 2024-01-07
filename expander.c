@@ -133,8 +133,9 @@ void	fine_touch(t_token *token, t_minishell *data)
         else if (translated[i] == '$')
         {
             i = dollar(translated, i, &expanded, data, 0);
-            if (translated[i] == '\'' || (translated[i - 1] == '$' && translated[i - 2] == '$'))
-                continue;
+            if (i >= 2)
+                if (translated[i] == '\'' || (translated[i - 1] == '$' && translated[i - 2] == '$'))
+                    continue;
         }
         else
         {
@@ -179,6 +180,6 @@ void	expander(t_minishell *data)
 		data->first_token = data->first_token->next;
 	}
     rewind_tokens(data);
-    //print_tokens(data->first_token);
+    print_tokens(data->first_token);
 }
 

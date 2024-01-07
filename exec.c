@@ -12,23 +12,92 @@
 
 #include "minishell.h"
 
-// char    **manage_heredoc(char *delim, t_minishell *data)
-// {
-//     char    *file;
-//     char    *prompt;
-//     char    *input;
+int get_dollar(char *str, int i)
+{
+    while (str[i] != '$' && str[i] != '\0')
+        i++;
+    return (i);
+}
 
-//     prompt = ">";
-//     while (1)
-//     {
-//         input = readline(prompt);
-//         if (strcmp(input, delim) == 0)
-//             break;
-//     }
-//     free(input);
+char    *heredoc_dollar(char *str, t_minishell *data)
+{
+    char    *translated = NULL;
+    char    *placeholder = NULL;
+    char    *placeholder2 = NULL;
+    int code;
+    int i;
 
-//     return (file);
-// }
+    i = 0;
+    translated = ft_strdup("", data);
+    code = 0;
+    while (str[i] != '\0')
+    {
+        if (str[i] == '$' && str[i + 1] == '$')
+        {
+            code = (int)getpid();
+            placeholder = ft_itoa(code, data);
+            translated = ft_strjoin(translated, placeholder, data);
+            i += 2;
+        }
+        else if (str[i] == '$' && str[i + 1] == '?')
+        {
+            code = data->exit_code;
+		    placeholder = ft_itoa(code, data);
+		    translated = ft_strjoin(translated, placeholder, data);
+            i += 2;
+        }
+        else if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
+        {
+            placeholder2 = ft_strndup(str, i + 1, get_cancer(str, i + 1) - 1, data);
+            placeholder = get_env(placeholder2, data->env, data);
+            if (placeholder == NULL)
+            	placeholder = ft_strdup("", data);
+            translated = ft_strjoin(translated, placeholder, data);
+            i = get_cancer(str, i + 1);
+        }
+        else if (str[i] == '$')
+        {
+            translated = ft_strjoin(translated, "$", data);
+            i++;
+        }
+        else
+        {
+            translated = ft_strjoin(translated, ft_strndup(str, i, get_dollar(str, i + 1) - 1, data), data);
+            i = get_dollar(str, i);
+        }
+    }
+    translated = ft_strjoin(translated, "\n", data);
+    printf("trans :%s\n", translated);
+    return (translated);
+}
+
+char    *heredoc_expander(char *str, char **file, t_minishell *data)
+{
+    char    *translated;
+
+    translated = heredoc_dollar(str, data);
+    *file = ft_strjoin(*file, translated, data);
+    return (*file);
+}
+
+char    *manage_heredoc(char *delim, t_minishell *data)
+{
+    char    *file;
+    char    *input;
+
+    file = ft_strdup("", data);
+    while (1)
+    {
+        input = readline("> ");
+        if (ft_strcmp(delim, input) == 0)
+            break;
+        else
+            file = heredoc_expander(input, &file, data);
+        free(input);
+    }
+    free(input);
+    return (file);
+}
 
 void close_pipe(int pipe_fd[2]) 
 {
@@ -36,14 +105,16 @@ void close_pipe(int pipe_fd[2])
     close(pipe_fd[1]);
 }
 
-void redirect_input(t_simple_cmd *cmd, int *p_fd/*, t_minishell *data*/) 
+void redirect_input(t_simple_cmd *cmd, int *p_fd, t_minishell *data) 
 {
-    // if (cmd->input != NULL && cmd->heredoc == 1)
-    // {
-    //     cmd->input = manage_heredoc(cmd->input, data);
-    //     int input_fd = open(cmd->input, O_RDONLY);
-    // }
-    if (cmd->input != NULL) 
+    if (cmd->input != NULL && cmd->heredoc == 1)
+    {
+        cmd->input = manage_heredoc(cmd->input, data);
+        printf("input heredoc : %s\n", cmd->input);
+        // ft_putstr_fd(cmd->input, 1);
+        // ft_putstr_fd("\0", 1);
+    }
+    else if (cmd->input != NULL) 
     {
         int input_fd = open(cmd->input, O_RDONLY);
         if (input_fd == -1) 
@@ -179,7 +250,7 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *prev_pipe_fd)
     if (child_pid == 0) 
     {
         //close_pipe(pipe_fd);
-        redirect_input(cmd, prev_pipe_fd/*, data*/);
+        redirect_input(cmd, prev_pipe_fd, data);
         redirect_output(cmd, pipe_fd);
         // if (cmd->prev)
         //     redirect_previous_output(cmd->prev, pipe_fd);
