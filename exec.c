@@ -265,17 +265,17 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *prev_pipe_fd)
         perror("pipe");
         exit(EXIT_FAILURE);
     }
-    // COMMENTAIRE si le arg[0] est vide il y a seg fault ici 
-
-    // printf("ffdff\n");
-    // if (strcmp(cmd->args[0], "export") == 0)
-    // {
-    //     ft_export(data, cmd->args);
-    // }
-    // else if (strcmp(cmd->args[0], "unset") == 0)
-    // {
-    //     ft_unset(data, cmd->args);
-    // }
+    if (cmd->args != NULL)
+    {
+        if (strcmp(cmd->args[0], "export") == 0 && prev_pipe_fd == 0)
+        {
+            ft_export(data, cmd->args);
+        }
+        else if (strcmp(cmd->args[0], "unset") == 0 && prev_pipe_fd == 0)
+        {
+            ft_unset(data, cmd->args);
+        }
+    }
     child_pid = fork();
     if (child_pid == -1) 
     {

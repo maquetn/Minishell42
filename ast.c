@@ -45,7 +45,7 @@ char	*get_path(char *cmd, char **env, t_minishell *data)
 	i = -1;
 	paths = ft_split(get_env("PATH", env, data), ':', data);
 	if (!paths)
-		EXIT_FAILURE;
+		exit(EXIT_FAILURE);//completer avec exit code correct
 	while (paths[++i])
 	{
 		potential_path = ft_strjoin(paths[i], "/", data);
@@ -139,9 +139,10 @@ void	count_args_and_malloc(t_simple_cmd *cmd, t_token *token, t_minishell *data)
 			i--;
 		temporary = temporary->next;
 	}
-	cmd->args = gc_malloc(sizeof(char *) * (i + 1), data);
-	if (!cmd->args)
-		EXIT_FAILURE;
+	if (i != 0)
+		cmd->args = gc_malloc(sizeof(char *) * (i + 1), data);
+	// if (!cmd->args)
+	// 	EXIT_FAILURE;
 }
 
 t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
@@ -206,12 +207,14 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 		{
 			if (i == 0)
 				cmd->path_to_cmd = get_path(token->content, data->env, data);
-			cmd->args[i] = ft_strdup(token->content, data);
+			if (cmd->args)
+				cmd->args[i] = ft_strdup(token->content, data);
 			i++;
 			token = token->next;
 		}
 	}
-	cmd->args[i] = NULL;
+	if (cmd->args)
+		cmd->args[i] = NULL;
 	data->first_token = token;
 	return (cmd);
 }
