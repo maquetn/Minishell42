@@ -268,13 +268,9 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *prev_pipe_fd)
     if (cmd->args != NULL)
     {
         if (strcmp(cmd->args[0], "export") == 0 && prev_pipe_fd == 0)
-        {
             ft_export(data, cmd->args);
-        }
         else if (strcmp(cmd->args[0], "unset") == 0 && prev_pipe_fd == 0)
-        {
             ft_unset(data, cmd->args);
-        }
     }
     child_pid = fork();
     if (child_pid == -1) 
