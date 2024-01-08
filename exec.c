@@ -105,15 +105,30 @@ void close_pipe(int pipe_fd[2])
     close(pipe_fd[1]);
 }
 
+int redirect_heredoc(t_simple_cmd *cmd, t_minishell *data)
+{
+    char    *input;
+    int fd[2];
+
+
+    if (pipe(fd) == -1)
+        EXIT_FAILURE;
+    input = ft_strdup(cmd->input, data);
+    ft_putstr_fd(input, fd[STDOUT_FILENO]);
+    close (fd[STDOUT_FILENO]);
+    return (fd[STDIN_FILENO]);
+}
+
 void redirect_input(t_simple_cmd *cmd, int *p_fd, t_minishell *data) 
 {
-    (void)data;
+    int input_fd;
+
+    input_fd = 0;
     if (cmd->input != NULL && cmd->heredoc == 1)
     {
-        //cmd->input = manage_heredoc(cmd->input, data);
-        printf("input heredoc : %s\n", cmd->input);
-        // ft_putstr_fd(cmd->input, 1);
-        // ft_putstr_fd("\0", 1);
+        input_fd = redirect_heredoc(cmd, data);
+        dup2(input_fd, STDIN_FILENO);
+        close(input_fd);
     }
     else if (cmd->input != NULL) 
     {
@@ -251,7 +266,7 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *prev_pipe_fd)
         exit(EXIT_FAILURE);
     }
     // COMMENTAIRE si le arg[0] est vide il y a seg fault ici 
-    
+
     // printf("ffdff\n");
     // if (strcmp(cmd->args[0], "export") == 0)
     // {

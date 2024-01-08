@@ -85,7 +85,7 @@ char    *manage_heredoc(char *delim, t_minishell *data)
     char    *input;
 
     file = ft_strdup("", data);
-    printf("delimiter : %s\n", delim);
+    //printf("delimiter : %s\n", delim);
     while (1)
     {
         input = readline("> ");
