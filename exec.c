@@ -12,92 +12,92 @@
 
 #include "minishell.h"
 
-int get_dollar(char *str, int i)
-{
-    while (str[i] != '$' && str[i] != '\0')
-        i++;
-    return (i);
-}
+// int get_dollar(char *str, int i)
+// {
+//     while (str[i] != '$' && str[i] != '\0')
+//         i++;
+//     return (i);
+// }
 
-char    *heredoc_dollar(char *str, t_minishell *data)
-{
-    char    *translated = NULL;
-    char    *placeholder = NULL;
-    char    *placeholder2 = NULL;
-    int code;
-    int i;
+// char    *heredoc_dollar(char *str, t_minishell *data)
+// {
+//     char    *translated = NULL;
+//     char    *placeholder = NULL;
+//     char    *placeholder2 = NULL;
+//     int code;
+//     int i;
 
-    i = 0;
-    translated = ft_strdup("", data);
-    code = 0;
-    while (str[i] != '\0')
-    {
-        if (str[i] == '$' && str[i + 1] == '$')
-        {
-            code = (int)getpid();
-            placeholder = ft_itoa(code, data);
-            translated = ft_strjoin(translated, placeholder, data);
-            i += 2;
-        }
-        else if (str[i] == '$' && str[i + 1] == '?')
-        {
-            code = data->exit_code;
-		    placeholder = ft_itoa(code, data);
-		    translated = ft_strjoin(translated, placeholder, data);
-            i += 2;
-        }
-        else if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
-        {
-            placeholder2 = ft_strndup(str, i + 1, get_cancer(str, i + 1) - 1, data);
-            placeholder = get_env(placeholder2, data->env, data);
-            if (placeholder == NULL)
-            	placeholder = ft_strdup("", data);
-            translated = ft_strjoin(translated, placeholder, data);
-            i = get_cancer(str, i + 1);
-        }
-        else if (str[i] == '$')
-        {
-            translated = ft_strjoin(translated, "$", data);
-            i++;
-        }
-        else
-        {
-            translated = ft_strjoin(translated, ft_strndup(str, i, get_dollar(str, i + 1) - 1, data), data);
-            i = get_dollar(str, i);
-        }
-    }
-    translated = ft_strjoin(translated, "\n", data);
-    printf("trans :%s\n", translated);
-    return (translated);
-}
+//     i = 0;
+//     translated = ft_strdup("", data);
+//     code = 0;
+//     while (str[i] != '\0')
+//     {
+//         if (str[i] == '$' && str[i + 1] == '$')
+//         {
+//             code = (int)getpid();
+//             placeholder = ft_itoa(code, data);
+//             translated = ft_strjoin(translated, placeholder, data);
+//             i += 2;
+//         }
+//         else if (str[i] == '$' && str[i + 1] == '?')
+//         {
+//             code = data->exit_code;
+// 		    placeholder = ft_itoa(code, data);
+// 		    translated = ft_strjoin(translated, placeholder, data);
+//             i += 2;
+//         }
+//         else if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
+//         {
+//             placeholder2 = ft_strndup(str, i + 1, get_cancer(str, i + 1) - 1, data);
+//             placeholder = get_env(placeholder2, data->env, data);
+//             if (placeholder == NULL)
+//             	placeholder = ft_strdup("", data);
+//             translated = ft_strjoin(translated, placeholder, data);
+//             i = get_cancer(str, i + 1);
+//         }
+//         else if (str[i] == '$')
+//         {
+//             translated = ft_strjoin(translated, "$", data);
+//             i++;
+//         }
+//         else
+//         {
+//             translated = ft_strjoin(translated, ft_strndup(str, i, get_dollar(str, i + 1) - 1, data), data);
+//             i = get_dollar(str, i);
+//         }
+//     }
+//     translated = ft_strjoin(translated, "\n", data);
+//     printf("trans :%s\n", translated);
+//     return (translated);
+// }
 
-char    *heredoc_expander(char *str, char **file, t_minishell *data)
-{
-    char    *translated;
+// char    *heredoc_expander(char *str, char **file, t_minishell *data)
+// {
+//     char    *translated;
 
-    translated = heredoc_dollar(str, data);
-    *file = ft_strjoin(*file, translated, data);
-    return (*file);
-}
+//     translated = heredoc_dollar(str, data);
+//     *file = ft_strjoin(*file, translated, data);
+//     return (*file);
+// }
 
-char    *manage_heredoc(char *delim, t_minishell *data)
-{
-    char    *file;
-    char    *input;
+// char    *manage_heredoc(char *delim, t_minishell *data)
+// {
+//     char    *file;
+//     char    *input;
 
-    file = ft_strdup("", data);
-    while (1)
-    {
-        input = readline("> ");
-        if (ft_strcmp(delim, input) == 0)
-            break;
-        else
-            file = heredoc_expander(input, &file, data);
-        free(input);
-    }
-    free(input);
-    return (file);
-}
+//     file = ft_strdup("", data);
+//     while (1)
+//     {
+//         input = readline("> ");
+//         if (ft_strcmp(delim, input) == 0)
+//             break;
+//         else
+//             file = heredoc_expander(input, &file, data);
+//         free(input);
+//     }
+//     free(input);
+//     return (file);
+// }
 
 void close_pipe(int pipe_fd[2]) 
 {
@@ -107,9 +107,10 @@ void close_pipe(int pipe_fd[2])
 
 void redirect_input(t_simple_cmd *cmd, int *p_fd, t_minishell *data) 
 {
+    (void)data;
     if (cmd->input != NULL && cmd->heredoc == 1)
     {
-        cmd->input = manage_heredoc(cmd->input, data);
+        //cmd->input = manage_heredoc(cmd->input, data);
         printf("input heredoc : %s\n", cmd->input);
         // ft_putstr_fd(cmd->input, 1);
         // ft_putstr_fd("\0", 1);
@@ -133,6 +134,25 @@ void redirect_input(t_simple_cmd *cmd, int *p_fd, t_minishell *data)
     }
 }
 
+int create_all_open_last(t_simple_cmd *cmd)
+{
+    int output_fd;
+
+    output_fd = 1;
+    while (cmd->output)
+    {
+        if (cmd->append_mode == 0)
+            output_fd = open(cmd->output->name, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+        else if (cmd->append_mode == 1)
+            output_fd = open(cmd->output->name, O_WRONLY | O_CREAT | O_APPEND, 0666);
+        if (cmd->output->next == NULL)
+            break;
+        else
+            cmd->output = cmd->output->next;
+    }
+    return (output_fd);
+}
+
 void redirect_output(t_simple_cmd *cmd, int *p_fd) 
 {
 	int output_fd;
@@ -140,10 +160,7 @@ void redirect_output(t_simple_cmd *cmd, int *p_fd)
     output_fd = 1;
     if (cmd->output != NULL) 
     {
-		if (cmd->append_mode == 0)
-        	output_fd = open(cmd->output, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-		else if (cmd->append_mode == 1)
-			output_fd = open(cmd->output, O_WRONLY | O_CREAT | O_APPEND, 0666);
+        output_fd = create_all_open_last(cmd);
         if (output_fd == -1) 
         {
             perror("open");
@@ -215,7 +232,7 @@ void execute_command(t_simple_cmd *cmd, t_minishell *data)
     }
     else if(execve(cmd->path_to_cmd, cmd->args, NULL) == -1)
     {
-        printf("%s : cmd not found\n", cmd->args[0]);
+        fprintf(stderr, "%s : cmd not found\n", cmd->args[0]);
         //etre sur de bien liberer les cmd avant de d'exit
         exit(127);
     }
@@ -233,36 +250,40 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *prev_pipe_fd)
         perror("pipe");
         exit(EXIT_FAILURE);
     }
-    if (strcmp(cmd->args[0], "export") == 0)
-    {
-        ft_export(data, cmd->args);
-    }
-    else if (strcmp(cmd->args[0], "unset") == 0)
-    {
-        ft_unset(data, cmd->args);
-    }
-    child_pid = fork(); 
+    // COMMENTAIRE si le arg[0] est vide il y a seg fault ici 
+    
+    // printf("ffdff\n");
+    // if (strcmp(cmd->args[0], "export") == 0)
+    // {
+    //     ft_export(data, cmd->args);
+    // }
+    // else if (strcmp(cmd->args[0], "unset") == 0)
+    // {
+    //     ft_unset(data, cmd->args);
+    // }
+    child_pid = fork();
     if (child_pid == -1) 
     {
         perror("fork");
         exit(EXIT_FAILURE);
     }
-    if (child_pid == 0) 
+    if (child_pid == 0)
     {
         //close_pipe(pipe_fd);
         redirect_input(cmd, prev_pipe_fd, data);
         redirect_output(cmd, pipe_fd);
         // if (cmd->prev)
         //     redirect_previous_output(cmd->prev, pipe_fd);
+        // je dois wait pid avant d'exec ?!
         execute_command(cmd, data);
     }
-    else 
+    else
     {
         close(pipe_fd[1]);
-        waitpid(child_pid, NULL, 0);
-        if (cmd->next != NULL) 
+        if (cmd->next != NULL)
         {
             execute_simple_cmd(cmd->next, data, pipe_fd);
         }
+        waitpid(child_pid, NULL, 0);
     }
 }

@@ -19,6 +19,7 @@
 
 typedef struct s_imple_cmd t_simple_cmd;
 typedef struct s_malloc t_malloc;
+typedef struct s_files_list t_files_list;
 
 typedef enum
 {
@@ -39,15 +40,20 @@ typedef struct s_token
   int   simple_quotes;
 } t_token;
 
+typedef struct s_files_list
+{
+  char  *name;
+  t_files_list  *next;
+} t_files_list;
+
 typedef struct s_imple_cmd
 {
   char			**args; //cmd + args
   char			*path_to_cmd;
   char			*input; //default STDIN else pipeout, fd
-  char			*output; //default STDOUT else pipein, fd
+  t_files_list			*output; //default STDOUT else pipein, fd
   int			  append_mode;
   int       heredoc;
-  char      **heredoc_tabl;
   t_simple_cmd	*prev;
   t_simple_cmd	*next;
 
@@ -113,6 +119,9 @@ void    free_custom_alloc(t_minishell *data);
 int	ft_strcmp(char *s1, char *s2);
 int get_cancer(char *str, int i);
 void	ft_putstr_fd(char *s, int fd);
+void    translate_heredoc(t_simple_cmd *cmd, t_minishell *data);
+char    *manage_heredoc(char *delim, t_minishell *data);
+char    *heredoc_dollar(char *str, t_minishell *data);
 
 // BUILTINS
 

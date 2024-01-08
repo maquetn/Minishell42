@@ -52,7 +52,7 @@ int	dollar(char *str, int i, char **expanded, t_minishell *data, int coming_from
             translated = ft_itoa(pid, data);
             *expanded = ft_strjoin(*expanded, translated, data);
             i += 2;
-            printf("str i : %c\n", str[i]);
+            //printf("str i : %c\n", str[i]);
         }
         else if (str[i] == '$' && str[i + 1] == '?')
         {
@@ -169,17 +169,34 @@ void rewind_tokens(t_minishell *data)
         data->first_token = data->first_token->prev;
 }
 
+void    expand_heredoc(t_token *token, t_minishell *data)
+{
+    token->content = heredoc_dollar(token->content, data);
+}
+
 void	expander(t_minishell *data)
 {
+    int heredoc;
+
+    heredoc = 0;
 	while (data->first_token)
 	{
-		if (data->first_token->type == STR && need_refine(data->first_token->content))
+        if (data->first_token->prev != NULL)
+        {
+            if (data->first_token->type == STR && data->first_token->prev->type == HEREDOC && need_refine(data->first_token->content))
+            {
+                heredoc = 1;
+                expand_heredoc(data->first_token, data);
+            }
+        }
+		if (data->first_token->type == STR && need_refine(data->first_token->content) && heredoc == 0)
 			fine_touch(data->first_token, data);
         if (data->first_token->next == NULL)
             break;
 		data->first_token = data->first_token->next;
+        heredoc = 0;
 	}
     rewind_tokens(data);
-    print_tokens(data->first_token);
+    //print_tokens(data->first_token);
 }
 

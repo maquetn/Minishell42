@@ -13,7 +13,8 @@ SRCS = token.c \
 	   builtins/ft_export.c \
 	   builtins/ft_unset.c \
 	   expander.c \
-	   custom_malloc.c
+	   custom_malloc.c \
+	   heredoc.c
 
 OBJ_DIR = obj
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))

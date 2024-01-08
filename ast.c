@@ -58,26 +58,25 @@ char	*get_path(char *cmd, char **env, t_minishell *data)
 	return (strdup(cmd));
 }
 
-// void free_tokens(t_token *token)
-// {
-//     t_token *temp;
-//     t_token *next_token;
+void	add_file(char *name, t_minishell *data, t_files_list **head)
+{
+	t_files_list *newnode;
+	t_files_list *temp = NULL;
 
-//     temp = token;
-//     while (temp)
-//     {
-//         //printf("Freeing token: %p, content: %s\n", (void *)temp, temp->content);
+	newnode = gc_malloc(sizeof(t_files_list), data);
+	newnode->name = ft_strdup(name, data);
+	newnode->next = NULL;
 
-//         free(temp->content);
-
-//         next_token = temp->next;
-//         temp->prev = NULL;
-//         free(temp);
-
-//         temp = next_token;
-//     }
-// }
-
+	if (*head == NULL)
+		*head = newnode;
+	else
+	{
+		temp = *head;
+		while (temp->next != NULL)
+			temp = temp->next;
+		temp->next = newnode;
+	}
+}
 
 void	init_simple_cmd(t_simple_cmd *cmd)
 {
@@ -87,7 +86,6 @@ void	init_simple_cmd(t_simple_cmd *cmd)
 	cmd->output = NULL;
 	cmd->prev = NULL;
     cmd->next = NULL;
-	cmd->heredoc_tabl = NULL;
 	cmd->append_mode = 0;
 	cmd->heredoc = 0;
 }
@@ -120,10 +118,7 @@ void	planting(t_minishell *data)
 	t_token	*first_token;
 	
 	first_token = data->first_token;
-	//printf("%s\n", first_token->content);
 	data->node = recursive_parsing(data);
-	//printf("%s\n", first_token->content);
-	//free_tokens(first_token);
 }
 
 void	count_args_and_malloc(t_simple_cmd *cmd, t_token *token, t_minishell *data)
@@ -132,11 +127,9 @@ void	count_args_and_malloc(t_simple_cmd *cmd, t_token *token, t_minishell *data)
 	int		i;
 
 	temporary = token;
-	//printf("Content: %s \n", temporary->content);
 	i = 0;
 	while(temporary)
 	{
-		//printf("while\n");
 		if (temporary->type == PIPE)
 			break;
 		if (temporary->type == STR || temporary->type == HEREDOC
@@ -144,11 +137,8 @@ void	count_args_and_malloc(t_simple_cmd *cmd, t_token *token, t_minishell *data)
 			i++;
 		else if ((temporary->type == INPUT || temporary->type == OUTPUT) && temporary->next->type == STR)
 			i--;
-		//printf("haha\n");
 		temporary = temporary->next;
-		//printf("?\n");
 	}
-	//printf("malloc arg size %d\n", i); //ok je dois capter le prob de mémoire ici
 	cmd->args = gc_malloc(sizeof(char *) * (i + 1), data);
 	if (!cmd->args)
 		EXIT_FAILURE;
@@ -159,7 +149,6 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 	t_simple_cmd	*cmd;
 	int				i;
 
-	//printf("first token of cmd : %s\n", token->content);
 	i = 0;
 	cmd = gc_malloc(sizeof(t_simple_cmd), data);
 	if (!cmd)
@@ -175,9 +164,8 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 		}
 		else if (token->type == HEREDOC)
 		{
-			//faire en sorte que mon noeud soit un heredoc
 			if (token->next != NULL)
-				cmd->input = ft_strdup(token->next->content, data);
+				cmd->input = manage_heredoc(token->next->content, data);
 			if (token->next != NULL && token->next->type != OUTPUT && token->next->type != INPUT)
 				token = token->next->next;
 			else
@@ -187,7 +175,7 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 		else if (token->type == APPEND)
 		{
 			if (token->next != NULL)
-				cmd->output = ft_strdup(token->next->content, data);
+				add_file(token->next->content, data, &cmd->output);
 			if (token->next != NULL && token->next->type != OUTPUT && token->next->type != INPUT)
 				token = token->next->next;
 			else
@@ -202,15 +190,17 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 				token = token->next->next;
 			else
 				token = token->next;
+			cmd->heredoc = 0;
 		}
 		else if (token->type == OUTPUT)
 		{
 			if (token->next != NULL)
-				cmd->output = ft_strdup(token->next->content, data);
+				add_file(token->next->content, data, &cmd->output);
 			if (token->next != NULL && token->next->type != OUTPUT && token->next->type != INPUT)
 				token = token->next->next;
 			else
 				token = token->next;
+			cmd->append_mode = 0;
 		}
 		else
 		{

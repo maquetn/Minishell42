@@ -21,7 +21,6 @@ void    update_free_list(t_malloc **head, void *adress)
     newnode->adress = adress;
     newnode->next = NULL;
     
-    //printf("seg here ? \n");
     if (*head == NULL)
         *head = newnode;
     else

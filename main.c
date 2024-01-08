@@ -1,5 +1,4 @@
 #include "minishell.h"
-//rajouter un check syntax error entre token et parsing ??
 
 int status = 0;
 
@@ -66,8 +65,8 @@ void	print_nodes(t_minishell *data)
 	while (data->node)
 	{
 		int i = 0;
-		printf("output : %s\n", data->node->output);
-		printf("input : %s\n", data->node->input);
+		//printf("output : %s\n", data->node->output);
+		printf("\ninput : %s\n", data->node->input);
 		printf("path : %s\n", data->node->path_to_cmd);
 		while (data->node->args[i])
 		{
@@ -77,40 +76,6 @@ void	print_nodes(t_minishell *data)
 		data->node = data->node->next;
 	}
 }
-
-// void	free_simple_cmd(t_simple_cmd *cmd)
-// {
-// 	t_simple_cmd	*temp;
-// 	t_simple_cmd	*next;
-
-// 	temp = cmd;
-// 	while (temp)
-// 	{
-// 		free_tabl(temp->args);
-// 		free(temp->path_to_cmd);
-// 		free(temp->input);
-// 		free(temp->output);
-// 		temp->prev = NULL;
-// 		next = temp->next;
-// 		free(temp);
-// 		temp = next;
-// 	}
-// }
-/*
-int check_parse(char *str)
-{
-    // faudra rendre cette fct absolument impermeable pour que la suite marche
-    int i;
-
-    i = ft_strlen(str);
-    if (i > 0 && (str[i - 1] == '>' || str[i - 1] == '<' || str[i - 1] == '.'))
-    {
-        printf("syntax error near unexpected token `a gerer'\n");
-        return (1);
-    }
-    else
-        return (0);
-}*/
 
 int	check_if_quotes_are_closed_or_forbidden(char *str)
 {
@@ -196,11 +161,6 @@ int main(int ac, char **av, char **env)
 		}
 		if (input != NULL)
        		add_history(input);
-		/*if (check_parse(input))
-		{
-			free(input);
-			continue;
-		}*/
 		if (check_if_quotes_are_closed_or_forbidden(input) == 0)
 		{
 			printf("We should not manage that in minishell\n");
@@ -210,15 +170,12 @@ int main(int ac, char **av, char **env)
 		token(input, &data);
 		if (data.first_token)
 			expander(&data);
-		//printf("test\n");
 		if (data.first_token)
 			planting(&data);
-		//printf("test\n");
 		if (data.node)
 			execute_simple_cmd(data.node, &data, NULL);
 		//print_nodes(&data);
 		free(input);
-		//free_simple_cmd(data.node);
 		free_custom_alloc(&data);
 		status = 0;
 	}
