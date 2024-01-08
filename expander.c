@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdor <marvin@42.fr>                        +#+  +:+       +#+        */
+/*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 17:14:18 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/05 18:18:45 by mdor             ###   ########.fr       */
+/*   Updated: 2024/01/08 12:11:58 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,6 @@ void	expander(t_minishell *data)
 		data->first_token = data->first_token->next;
 	}
     rewind_tokens(data);
-    print_tokens(data->first_token);
+    //print_tokens(data->first_token);
 }
 

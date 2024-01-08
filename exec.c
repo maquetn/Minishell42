@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 09:48:00 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/05 13:15:02 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/08 12:18:04 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,10 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *prev_pipe_fd)
     {
         perror("pipe");
         exit(EXIT_FAILURE);
+    }
+    if (strcmp(cmd->args[0], "cd") == 0)
+    {
+        ft_cd(cmd->args[0], data);
     }
     if (strcmp(cmd->args[0], "export") == 0)
     {

@@ -116,7 +116,7 @@ void    free_custom_alloc(t_minishell *data);
 void exec_builtin(t_simple_cmd *cmd);
 void ft_echo(char **args, int index);
 int ft_exit();
-int ft_cd(char *token);
+int ft_cd(char *token, t_minishell *data);
 void ft_ls(const char *directory_path);
 char* ft_pwd();
 void ft_export(t_minishell *data, char **args);
