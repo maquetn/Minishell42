@@ -34,9 +34,7 @@ char    *ft_strndup(char *str, int start, int end, t_minishell *data)
 void add_token(t_token **head, t_token_type type, char *content, t_minishell *data)
 {
 	if (content[0] == '\0')
-	{
 		return;
-	}
     t_token *new_token = gc_malloc(sizeof(t_token), data);
     if (new_token == NULL)
 	{

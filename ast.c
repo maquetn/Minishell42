@@ -55,7 +55,7 @@ char	*get_path(char *cmd, char **env, t_minishell *data)
 				return(executable);
 			}
 	}
-	return (strdup(cmd));
+	return (ft_strdup(cmd, data));
 }
 
 void	add_file(char *name, t_minishell *data, t_files_list **head)
@@ -166,7 +166,7 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 		else if (token->type == HEREDOC)
 		{
 			if (token->next != NULL)
-				cmd->input = manage_heredoc(token->next->content, data);
+				cmd->heredoc_string = manage_heredoc(token->next->content, data);
 			if (token->next != NULL && token->next->type != OUTPUT && token->next->type != INPUT)
 				token = token->next->next;
 			else
@@ -186,7 +186,7 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 		else if (token->type == INPUT)
 		{
 			if (token->next != NULL)
-				cmd->input = ft_strdup(token->next->content, data);
+				add_file(token->next->content, data, &cmd->input);
 			if (token->next != NULL && token->next->type != OUTPUT && token->next->type != INPUT)
 				token = token->next->next;
 			else

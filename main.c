@@ -66,7 +66,7 @@ void	print_nodes(t_minishell *data)
 	{
 		int i = 0;
 		//printf("output : %s\n", data->node->output);
-		printf("\ninput : %s\n", data->node->input);
+		//printf("\ninput : %s\n", data->node->input);
 		printf("path : %s\n", data->node->path_to_cmd);
 		while (data->node->args[i])
 		{
@@ -94,8 +94,6 @@ int	check_if_quotes_are_closed_or_forbidden(char *str)
 			double_quotes = 0;
 		else if (str[i] == '\'' && single == 1)
 			single = 0;
-		else if (str[i] == ';' || str[i] == '\\')
-			return (0);
 		else if (str[i] == '"')
 			double_quotes = 1;
 		else if (str[i] == '\'')
@@ -123,20 +121,12 @@ int	is_only_space(char *str)
 	return (0);
 }
 
-int main(int ac, char **av, char **env)
+void	looping(t_minishell *data)
 {
-	(void)ac;
-	(void)av;
 	char *prompt;
 	char *input;
-	t_minishell	data;
 
-	init_shell(&data, env);
 	prompt = "\033[0;32m 🐚 Minishell > \033[0;37m";
-
-	signal(SIGINT, sig_handler);
-	signal(SIGQUIT, SIG_IGN); // back slash
-
 	while (1)
 	{
 		if (status == 1)
@@ -167,19 +157,32 @@ int main(int ac, char **av, char **env)
 			free(input);
 			continue;
 		}
-		token(input, &data);
-		if (data.first_token)
-			expander(&data);
-		if (data.first_token)
-			planting(&data);
-		if (data.node)
-			execute_simple_cmd(data.node, &data, NULL);
+		token(input, data);
+		if (data->first_token)
+			expander(data);
+		if (data->first_token)
+			planting(data);
+		if (data->node)
+			execute_simple_cmd(data->node, data, NULL);
 		//print_nodes(&data);
 		free(input);
-		free_custom_alloc(&data);
+		free_custom_alloc(data);
 		status = 0;
 	}
+	return ;
+}
+
+int main(int ac, char **av, char **env)
+{
+	(void)ac;
+	(void)av;
+	t_minishell	data;
+
+	init_shell(&data, env);
+	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, SIG_IGN); // back slash
+	looping(&data);
 	free_tabl(data.env);
 	//system("leaks minishell");
-	return (0);
+	return (data.exit_code);
 }

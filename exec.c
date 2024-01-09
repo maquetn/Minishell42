@@ -113,10 +113,26 @@ int redirect_heredoc(t_simple_cmd *cmd, t_minishell *data)
 
     if (pipe(fd) == -1)
         EXIT_FAILURE;
-    input = ft_strdup(cmd->input, data);
+    input = ft_strdup(cmd->heredoc_string, data);
     ft_putstr_fd(input, fd[STDOUT_FILENO]);
     close (fd[STDOUT_FILENO]);
     return (fd[STDIN_FILENO]);
+}
+
+int open_all(t_simple_cmd *cmd)
+{
+    int input_fd;
+
+    input_fd = 0;
+    while(cmd->input)
+    {
+        input_fd = open(cmd->input->name, O_RDONLY);
+        if (cmd->input->next == NULL)
+            break;
+        else
+            cmd->input = cmd->input->next;
+    }
+    return (input_fd);
 }
 
 void redirect_input(t_simple_cmd *cmd, int *p_fd, t_minishell *data) 
@@ -124,15 +140,16 @@ void redirect_input(t_simple_cmd *cmd, int *p_fd, t_minishell *data)
     int input_fd;
 
     input_fd = 0;
-    if (cmd->input != NULL && cmd->heredoc == 1)
+    if (cmd->heredoc == 1 && cmd->heredoc_string)
     {
+        input_fd = open_all(cmd);
         input_fd = redirect_heredoc(cmd, data);
         dup2(input_fd, STDIN_FILENO);
         close(input_fd);
     }
     else if (cmd->input != NULL) 
     {
-        int input_fd = open(cmd->input, O_RDONLY);
+        input_fd = open_all(cmd);
         if (input_fd == -1) 
         {
             perror("open");
@@ -248,7 +265,7 @@ void execute_command(t_simple_cmd *cmd, t_minishell *data)
     else if(execve(cmd->path_to_cmd, cmd->args, NULL) == -1)
     {
         fprintf(stderr, "%s : cmd not found\n", cmd->args[0]);
-        //etre sur de bien liberer les cmd avant de d'exit
+        data->exit_code = 127;
         exit(127);
     }
 }
@@ -285,16 +302,13 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *prev_pipe_fd)
         redirect_output(cmd, pipe_fd);
         // if (cmd->prev)
         //     redirect_previous_output(cmd->prev, pipe_fd);
-        // je dois wait pid avant d'exec ?!
         execute_command(cmd, data);
     }
     else
     {
         close(pipe_fd[1]);
         if (cmd->next != NULL)
-        {
             execute_simple_cmd(cmd->next, data, pipe_fd);
-        }
         waitpid(child_pid, NULL, 0);
     }
 }

@@ -50,8 +50,9 @@ typedef struct s_imple_cmd
 {
   char			**args; //cmd + args
   char			*path_to_cmd;
-  char			*input; //default STDIN else pipeout, fd
+  t_files_list      *input; //default STDIN else pipeout, fd
   t_files_list			*output; //default STDOUT else pipein, fd
+  char      *heredoc_string;
   int			  append_mode;
   int       heredoc;
   t_simple_cmd	*prev;
