@@ -126,6 +126,7 @@ int open_all(t_simple_cmd *cmd)
     input_fd = 0;
     while(cmd->input)
     {
+		printf("input->name : %s\n", cmd->input->name);
         input_fd = open(cmd->input->name, O_RDONLY);
         if (cmd->input->next == NULL)
             break;
@@ -142,7 +143,11 @@ void redirect_input(t_simple_cmd *cmd, int *p_fd, t_minishell *data)
     input_fd = 0;
     if (cmd->heredoc == 1 && cmd->heredoc_string)
     {
-        input_fd = open_all(cmd);
+        if ((input_fd = open_all(cmd)) == -1)
+		{
+            perror("open");
+            exit(EXIT_FAILURE);
+        }
         input_fd = redirect_heredoc(cmd, data);
         dup2(input_fd, STDIN_FILENO);
         close(input_fd);
