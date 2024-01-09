@@ -180,9 +180,9 @@ void execute_command(t_simple_cmd *cmd, t_minishell *data)
     {
         exit(EXIT_SUCCESS);
     }
-    else if(execve(cmd->path_to_cmd, cmd->args, NULL) == -1)
+    else if(execve(cmd->path_to_cmd, cmd->args, data->env) == -1)
     {
-        fprintf(stderr, "%s : cmd not found\n", cmd->args[0]);
+        fprintf(stderr,  "%s : cmd not found\n", cmd->args[0]);
         data->exit_code = 127;
         exit(127);
     }

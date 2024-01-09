@@ -45,7 +45,10 @@ char	*get_path(char *cmd, char **env, t_minishell *data)
 	i = -1;
 	paths = ft_split(get_env("PATH", env, data), ':', data);
 	if (!paths)
+	{
+		printf("split faild\n");
 		exit(EXIT_FAILURE);//completer avec exit code correct
+	}
 	while (paths[++i])
 	{
 		potential_path = ft_strjoin(paths[i], "/", data);

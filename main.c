@@ -32,8 +32,9 @@ void sig_handler(int signum)
     status = 1;
 }
 
-char	**copy_env(char **env)
+char	**copy_env(char **env, t_minishell *data)
 {
+	(void)data;
 	int count;
 	char	**copy;
 	int	i;
@@ -57,7 +58,7 @@ void	init_shell(t_minishell *data, char **env)
 	data->head = NULL;
 	data->first_token = NULL;
 	data->node = NULL;
-	data->env = copy_env(env);
+	data->env = copy_env(env, data);
 }
 
 void	print_nodes(t_minishell *data)
