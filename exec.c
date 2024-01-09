@@ -12,12 +12,6 @@
 
 #include "minishell.h"
 
-void close_pipe(int pipe_fd[2]) 
-{
-    close(pipe_fd[0]);
-    close(pipe_fd[1]);
-}
-
 int redirect_heredoc(t_simple_cmd *cmd, t_minishell *data)
 {
     char    *input;
@@ -39,7 +33,6 @@ int open_all(t_simple_cmd *cmd)
     input_fd = 0;
     while(cmd->input)
     {
-		//printf("input->name : %s\n", cmd->input->name);
         input_fd = open(cmd->input->name, O_RDONLY);
         if (cmd->input->next == NULL)
             break;
@@ -127,16 +120,6 @@ void redirect_output(t_simple_cmd *cmd, int *p_fd)
     }
 }
 
-// void redirect_previous_output(t_simple_cmd *cmd, int pipe_fd[2]) 
-// {
-//     if (cmd->prev != NULL)
-//     {
-//         printf("usefull\n");
-//         dup2(pipe_fd[1], STDOUT_FILENO);
-//         close(pipe_fd[1]);
-//     }
-// }
-
 int execute_builtins(t_simple_cmd *cmd, t_minishell *data)
 {
     //dans lideal il faudrait que les builtins renvoient 1 si SUCCESS
@@ -150,16 +133,6 @@ int execute_builtins(t_simple_cmd *cmd, t_minishell *data)
         printf("%s\n", ft_pwd());
         return (1);
     }
-    // else if (strcmp(cmd->args[0], "export") == 0)
-    // {
-    //     printf("export function\n");
-    //     return (1);
-    // }
-    // else if (strcmp(cmd->args[0], "unset") == 0)
-    // {
-    //     printf("unset function\n");
-    //     return (1);
-    // }
     else if (strcmp(cmd->args[0], "env") == 0)
     {
         ft_env(data);
@@ -215,11 +188,8 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *prev_pipe_fd)
     }
     if (child_pid == 0)
     {
-        //close_pipe(pipe_fd);
         redirect_input(cmd, prev_pipe_fd, data);
         redirect_output(cmd, pipe_fd);
-        // if (cmd->prev)
-        //     redirect_previous_output(cmd->prev, pipe_fd);
         execute_command(cmd, data);
     }
     else
@@ -229,4 +199,5 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *prev_pipe_fd)
             execute_simple_cmd(cmd->next, data, pipe_fd);
         waitpid(child_pid, NULL, 0);
     }
+    close(pipe_fd[0]);
 }
