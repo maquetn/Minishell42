@@ -60,6 +60,7 @@ void	init_shell(t_minishell *data, char **env)
 	data->node = NULL;
 	data->env = copy_env(env, data);
 	data->error_trigger = 0;
+	data->exit_code = 0;
 }
 
 void	print_nodes(t_minishell *data)

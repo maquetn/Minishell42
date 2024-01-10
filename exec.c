@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mdor <mdor@student.s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 09:48:00 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/05 13:15:02 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/10 15:18:16 by mdor             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,14 @@ int open_all(t_simple_cmd *cmd)
     while(cmd->input)
     {
         input_fd = open(cmd->input->name, O_RDONLY);
+		if (input_fd == -1)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(cmd->input->name, 2);
+			ft_putstr_fd(": ", 2);
+			perror("");
+			break;
+		}
         if (cmd->input->next == NULL)
             break;
         else
@@ -51,7 +59,7 @@ void redirect_input(t_simple_cmd *cmd, int *p_fd, t_minishell *data)
     {
         if ((input_fd = open_all(cmd)) == -1)
 		{
-            perror("open");
+            //perror("open");
             exit(EXIT_FAILURE);
         }
         input_fd = redirect_heredoc(cmd, data);
@@ -63,7 +71,7 @@ void redirect_input(t_simple_cmd *cmd, int *p_fd, t_minishell *data)
         input_fd = open_all(cmd);
         if (input_fd == -1) 
         {
-            perror("open");
+            //perror("open");
             exit(EXIT_FAILURE);
         }
         dup2(input_fd, STDIN_FILENO);
@@ -85,7 +93,17 @@ int create_all_open_last(t_simple_cmd *cmd)
     while (cmd->output)
     {
         if (cmd->append_mode == 0)
-            output_fd = open(cmd->output->name, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+		{
+			output_fd = open(cmd->output->name, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+            if (output_fd == -1)
+			{
+				ft_putstr_fd("minishell :", 2);
+				ft_putstr_fd(cmd->output->name, 2);
+				ft_putstr_fd(":", 2);
+				perror("");
+			}
+							
+		}
         else if (cmd->append_mode == 1)
             output_fd = open(cmd->output->name, O_WRONLY | O_CREAT | O_APPEND, 0666);
         if (cmd->output->next == NULL)
@@ -106,7 +124,7 @@ void redirect_output(t_simple_cmd *cmd, int *p_fd)
         output_fd = create_all_open_last(cmd);
         if (output_fd == -1) 
         {
-            perror("open");
+            //perror("open");
             exit(EXIT_FAILURE);
         }
         dup2(output_fd, STDOUT_FILENO);
@@ -156,7 +174,7 @@ void execute_command(t_simple_cmd *cmd, t_minishell *data)
     else if(execve(cmd->path_to_cmd, cmd->args, data->env) == -1)
     {
         fprintf(stderr,  "%s : cmd not found\n", cmd->args[0]);
-        data->exit_code = 127;
+        data->error_trigger = 127;
         exit(127);
     }
 }
