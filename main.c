@@ -59,6 +59,7 @@ void	init_shell(t_minishell *data, char **env)
 	data->first_token = NULL;
 	data->node = NULL;
 	data->env = copy_env(env, data);
+	data->error_trigger = 0;
 }
 
 void	print_nodes(t_minishell *data)
@@ -152,22 +153,23 @@ void	looping(t_minishell *data)
 		}
 		if (input != NULL)
        		add_history(input);
-		if (check_if_quotes_are_closed_or_forbidden(input) == 0)
-		{
-			printf("We should not manage that in minishell\n");
-			free(input);
-			continue;
-		}
+		// if (check_if_quotes_are_closed_or_forbidden(input) == 0)
+		// {
+		// 	printf("We should not manage that in minishell\n");
+		// 	free(input);
+		// 	continue;
+		// }
 		token(input, data);
-		if (data->first_token)
+		if (data->first_token && data->error_trigger == 0)
 			expander(data);
-		if (data->first_token)
+		if (data->first_token && data->error_trigger == 0)
 			planting(data);
-		if (data->node)
+		if (data->node && data->error_trigger == 0)
 			execute_simple_cmd(data->node, data, NULL);
 		//print_nodes(&data);
 		free(input);
 		free_custom_alloc(data);
+		data->error_trigger = 0;
 		status = 0;
 	}
 	return ;

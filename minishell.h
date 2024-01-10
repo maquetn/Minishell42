@@ -74,6 +74,7 @@ typedef struct s_minishell
 	t_simple_cmd	*node;
   t_malloc    *head;
 	int				exit_code;
+  int       error_trigger;
 	
 } t_minishell;
 
@@ -123,6 +124,7 @@ void	ft_putstr_fd(char *s, int fd);
 void    translate_heredoc(t_simple_cmd *cmd, t_minishell *data);
 char    *manage_heredoc(char *delim, t_minishell *data);
 char    *heredoc_dollar(char *str, t_minishell *data);
+int print_syntax_error(t_token *token);
 
 // BUILTINS
 

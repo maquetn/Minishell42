@@ -60,6 +60,8 @@ void    *gc_malloc(size_t required_memory ,t_minishell *data)
     void    *memory;
 
     memory = malloc(required_memory);
+    if (!memory)
+        ft_putstr_fd("minishell : malloc failure\n", 2);
     update_free_list(&data->head, memory);
     return (memory);
 }

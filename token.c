@@ -148,24 +148,24 @@ int	something_behind(char *str, int i)
 }
 int	manage_output_append(char *str, int i, t_token **head, t_minishell *data)
 {
-	if (str[i + 1] == '>' && something_behind(str, i + 1)) //rajouter un check qu'il y ai une redi possible sinon syntax error;
+	if (str[i + 1] == '>') //rajouter un check qu'il y ai une redi possible sinon syntax error;
 	{
 		i++;
 		add_token(head, APPEND, ">>", data);
 	}
-	else if (something_behind(str, i))
+	else
 		add_token(head, OUTPUT, ">", data);
 	return (i);
 }
 
 int	manage_input_heredoc(char *str, int i, t_token **head, t_minishell *data)
 {
-	if (str[i + 1] == '<' && something_behind(str, i + 1))
+	if (str[i + 1] == '<')
 	{
 		i++;
 		add_token(head, HEREDOC, "<<", data);
 	}
-	else if (something_behind(str, i))
+	else
 		add_token(head, INPUT, "<", data);
 	return (i);
 }
