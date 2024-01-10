@@ -12,9 +12,16 @@
 
 #include "minishell.h"
 
+int get_cancer_or_space(char *str, int i)
+{
+    while (str[i] != '"' && str[i] != '\'' && str[i] != '$' && str[i] != '\0' && str[i] != ' ')
+        i++;
+    return (i);
+}
+
 int get_cancer(char *str, int i)
 {
-    while (str[i] != '"' && str[i] != '\'' && str[i] != '$' && str[i] != '\0')
+    while (str[i] != '"' && str[i] != '\'' && str[i] != '$' && str[i] != '\0' )
         i++;
     return (i);
 }
@@ -63,12 +70,15 @@ int	dollar(char *str, int i, char **expanded, t_minishell *data, int coming_from
         }
         else if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
         {
-            placeholder = ft_strndup(str, i + 1, get_cancer(str, i + 1) - 1, data);
+            placeholder = ft_strndup(str, i + 1, get_cancer_or_space(str, i + 1) - 1, data);
+            //printf("place :%s\n", placeholder);
             translated = get_env(placeholder, data->env, data);
+            //printf("trans :%s\n", translated);
             if (translated == NULL)
             	translated = ft_strdup("", data);
             *expanded = ft_strjoin(*expanded, translated, data);
-            i = get_cancer(str, i + 1);
+            //printf("exp :%s\n", *expanded);
+            i = get_cancer_or_space(str, i + 1);
         }
         else if (coming_from_quote == 0)
         {

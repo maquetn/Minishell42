@@ -79,7 +79,7 @@ void	print_nodes(t_minishell *data)
 	}
 }
 
-int	check_if_quotes_are_closed_or_forbidden(char *str)
+int	check_if_quotes_are_closed(char *str)
 {
 	int	i;
 	int	single;
@@ -90,9 +90,7 @@ int	check_if_quotes_are_closed_or_forbidden(char *str)
 	double_quotes = 0;
 	while(str[i])
 	{
-		if (str[i] == '|' && str[i + 1] == '|')
-			return (0);
-		else if (str[i] == '"' && double_quotes == 1)
+		if (str[i] == '"' && double_quotes == 1)
 			double_quotes = 0;
 		else if (str[i] == '\'' && single == 1)
 			single = 0;
