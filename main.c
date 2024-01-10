@@ -167,6 +167,7 @@ void	looping(t_minishell *data)
 		//print_nodes(&data);
 		free(input);
 		free_custom_alloc(data);
+		data->exit_code = data->error_trigger;//je prep la logique de exit code ici
 		data->error_trigger = 0;
 		status = 0;
 	}
