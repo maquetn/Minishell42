@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 unsigned long int verif_env_var(char *env_var)
 {

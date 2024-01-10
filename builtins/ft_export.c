@@ -1,4 +1,4 @@
-#include <minishell.h>
+#include "../minishell.h"
 
 int syntax_env_var(char **args)
 {

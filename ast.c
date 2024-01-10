@@ -6,7 +6,7 @@
 /*   By: mdor <mdor@student.s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 09:39:04 by mdor              #+#    #+#             */
-/*   Updated: 2023/12/30 13:55:38 by mdor             ###   ########.fr       */
+/*   Updated: 2024/01/10 14:44:47 by mdor             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,9 @@ t_simple_cmd	*recursive_parsing(t_minishell *data)
 
 void	planting(t_minishell *data)
 {
-	t_token	*first_token;
+	// t_token	*first_token;
 	
-	first_token = data->first_token;
+	// first_token = data->first_token;
 	data->node = recursive_parsing(data);
 }
 
