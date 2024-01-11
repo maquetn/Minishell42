@@ -92,7 +92,11 @@ void check_type(t_token **tokens, int arg);
 
 
 char* expand_path(char *input);
-
+char *process_double_dollar(char *translated, int *i, t_minishell *data);
+char *process_exit_code(char *translated, int *i, t_minishell *data);
+char *process_env_variable(char *str, char *translated, int *i, t_minishell *data);
+char *process_single_dollar(char *translated, int *i, t_minishell *data);
+char *process_other_chars(char *str, char *translated, int *i, t_minishell *data);
 void	process_pipe_token(t_minishell *data, t_token **token);
 void	process_heredoc(t_minishell *data, t_token **token, t_simple_cmd *cmd);
 void	process_append(t_minishell *data, t_token **token, t_simple_cmd *cmd);
@@ -129,7 +133,7 @@ int get_cancer(char *str, int i);
 void	ft_putstr_fd(char *s, int fd);
 void    translate_heredoc(t_simple_cmd *cmd, t_minishell *data);
 char    *manage_heredoc(char *delim, t_minishell *data);
-char    *heredoc_dollar(char *str, t_minishell *data);
+char    *heredoc_dollar(char *str, t_minishell *data, int j);
 int print_syntax_error(t_token *token);
 
 // BUILTINS
