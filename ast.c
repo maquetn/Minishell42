@@ -89,5 +89,7 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 	if (cmd->args)
 		cmd->args[i] = NULL;
 	data->first_token = token;
+	if (data->error_trigger != 0)
+		data->first_token = NULL;
 	return (cmd);
 }
