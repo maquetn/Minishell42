@@ -173,7 +173,7 @@ void execute_command(t_simple_cmd *cmd, t_minishell *data)
     }
     else if(execve(cmd->path_to_cmd, cmd->args, data->env) == -1)
     {
-        fprintf(stderr,  "%s : cmd not found\n", cmd->args[0]);
+        fprintf(stderr,  "minishell: %s: command not found\n", cmd->args[0]);
         data->error_trigger = 127;
         exit(127);
     }
@@ -215,13 +215,16 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *prev_pipe_fd)
     {
         close(pipe_fd[1]);
         if (cmd->next != NULL)
+        {
             execute_simple_cmd(cmd->next, data, pipe_fd);
+            waitpid(child_pid, NULL, 0);
+        }
 		else
     	{
         // Only wait and set error_trigger for the last command in the pipeline
-        waitpid(child_pid, &status, 0);
-        if (WIFEXITED(status))
-            data->error_trigger = WEXITSTATUS(status);
+            waitpid(child_pid, &status, 0);
+            if (WIFEXITED(status))
+                data->error_trigger = WEXITSTATUS(status);
    	 	}
     }
     close(pipe_fd[0]);
