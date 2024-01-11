@@ -15,7 +15,11 @@ SRCS = token.c \
 	   expander.c \
 	   custom_malloc.c \
 	   heredoc.c \
-	   error.c
+	   error.c \
+	   ast_utils.c \
+	   path_utils.c \
+	   process_tokens.c \
+	   expander_utils.c
 
 OBJ_DIR = obj
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))

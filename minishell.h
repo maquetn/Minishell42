@@ -93,11 +93,14 @@ void check_type(t_token **tokens, int arg);
 
 char* expand_path(char *input);
 
+void	process_pipe_token(t_minishell *data, t_token **token);
+void	process_heredoc(t_minishell *data, t_token **token, t_simple_cmd *cmd);
+void	process_append(t_minishell *data, t_token **token, t_simple_cmd *cmd);
+void	process_input(t_minishell *data, t_token **token, t_simple_cmd *cmd);
+void	process_output(t_minishell *data, t_token **token, t_simple_cmd *cmd);
+t_simple_cmd	*get_cmd(t_token *token, t_minishell *data);
+t_simple_cmd	*recursive_parsing(t_minishell *data);
 char* get_current_directory();
-
-char *get_path();
-int try_executing(char *command, char *path);
-
 char	*ft_substr(char const *s, unsigned int start, unsigned int len, t_minishell *data);
 char	*ft_strjoin(char *s1, char const *s2, t_minishell *data);
 char	**ft_split(char const *s, char c, t_minishell *data);
@@ -112,6 +115,9 @@ char	*ft_itoa(int n, t_minishell *data);
 int	ft_isalpha(int c);
 int	ft_isalnum(int c);
 char	*get_env(char *name, char **env, t_minishell *data);
+char	*get_path(char *cmd, char **env, t_minishell *data);
+void	add_file(char *name, t_minishell *data, t_files_list **head);
+void	init_simple_cmd(t_simple_cmd *cmd);
 char    *ft_strndup(char *str, int start, int end, t_minishell *data);
 void	expander(t_minishell *data);
 void    print_tokens(t_token *head);

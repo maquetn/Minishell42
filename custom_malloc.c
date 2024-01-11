@@ -1,67 +1,69 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   custom_malloc.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mdor <marvin@42.fr>                        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/06 10:24:53 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/06 10:24:55 by mdor             ###   ########.fr       */
-/*                                                                            */
+/*																			  */
+/*														:::	  ::::::::        */
+/*   custom_malloc.c									:+:	  :+:	:+:       */
+/*													+:+ +:+		 +:+	      */
+/*   By: mdor <marvin@42.fr>						+#+  +:+	   +#+		  */
+/*												+#+#+#+#+#+   +#+		      */
+/*   Created: 2024/01/06 10:24:53 by mdor			  #+#	#+#			      */
+/*   Updated: 2024/01/06 10:24:55 by mdor			 ###   ########.fr	      */
+/*																			  */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void    update_free_list(t_malloc **head, void *adress)
+void	update_free_list(t_malloc **head, void *adress)
 {
-    t_malloc    *newnode;
-    t_malloc    *temp = NULL;
+	t_malloc	*newnode;
+	t_malloc	*temp;
 
-    newnode = malloc(sizeof(t_malloc));
-    newnode->adress = adress;
-    newnode->next = NULL;
-    
-    if (*head == NULL)
-        *head = newnode;
-    else
-    {
-        temp = *head;
-        while (temp->next != NULL)
-            temp = temp->next;
-        temp->next = newnode;
-    }
+	temp = NULL;
+	newnode = malloc(sizeof(t_malloc));
+	newnode->adress = adress;
+	newnode->next = NULL;
+	if (*head == NULL)
+		*head = newnode;
+	else
+	{
+		temp = *head;
+		while (temp->next != NULL)
+			temp = temp->next;
+		temp->next = newnode;
+	}
 }
 
-void    free_strings(t_malloc *node)
+void	free_strings(t_malloc *node)
 {
-    t_malloc    *temp = NULL;
-    t_malloc    *next = NULL;
+	t_malloc	*temp;
+	t_malloc	*next;
 
-    temp = node;
-    while (temp)
-    {
-        if (temp->adress)
-            free(temp->adress);
-        next = temp->next;
-        free(temp);
-        temp = next;
-    }
+	temp = NULL;
+	next = NULL;
+	temp = node;
+	while (temp)
+	{
+		if (temp->adress)
+			free(temp->adress);
+		next = temp->next;
+		free(temp);
+		temp = next;
+	}
 }
 
-void    free_custom_alloc(t_minishell *data)
+void	free_custom_alloc(t_minishell *data)
 {
-    if (data->head)
-        free_strings(data->head);
-    data->head = NULL;
+	if (data->head)
+		free_strings(data->head);
+	data->head = NULL;
 }
 
-void    *gc_malloc(size_t required_memory ,t_minishell *data)
+void	*gc_malloc(size_t required_memory, t_minishell *data)
 {
-    void    *memory;
+	void	*memory;
 
-    memory = malloc(required_memory);
-    if (!memory)
-        ft_putstr_fd("minishell : malloc failure\n", 2);
-    update_free_list(&data->head, memory);
-    return (memory);
+	memory = malloc(required_memory);
+	if (!memory)
+		ft_putstr_fd("minishell : malloc failure\n", 2);
+	update_free_list(&data->head, memory);
+	return (memory);
 }
