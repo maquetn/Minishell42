@@ -206,5 +206,5 @@ void	expander(t_minishell *data)
 		heredoc = 0;
 	}
 	rewind_tokens(data);
-	print_tokens(data->first_token);
+	//print_tokens(data->first_token);
 }
