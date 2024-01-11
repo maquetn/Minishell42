@@ -15,8 +15,6 @@ char* ft_pwd()
         free(cwd);
         exit(EXIT_FAILURE);
     }
-
-    // Check if the current directory is the root directory
     if (strcmp(cwd, "/") == 0)
     {
         free(cwd);
