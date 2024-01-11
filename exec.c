@@ -6,7 +6,7 @@
 /*   By: mdor <mdor@student.s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 09:48:00 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/10 15:18:16 by mdor             ###   ########.fr       */
+/*   Updated: 2024/01/11 10:30:55 by mdor             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,6 +182,7 @@ void execute_command(t_simple_cmd *cmd, t_minishell *data)
 void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *prev_pipe_fd) 
 {
     int pipe_fd[2];
+	int	status;
     pid_t child_pid;
     
     if (cmd == NULL) 
@@ -215,7 +216,13 @@ void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *prev_pipe_fd)
         close(pipe_fd[1]);
         if (cmd->next != NULL)
             execute_simple_cmd(cmd->next, data, pipe_fd);
-        waitpid(child_pid, NULL, 0);
+		else
+    	{
+        // Only wait and set error_trigger for the last command in the pipeline
+        waitpid(child_pid, &status, 0);
+        if (WIFEXITED(status))
+            data->error_trigger = WEXITSTATUS(status);
+   	 	}
     }
     close(pipe_fd[0]);
 }
