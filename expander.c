@@ -57,8 +57,8 @@ int	dollar(char *str, int i, char **expanded, t_minishell *data, int coming_from
 	{
 		if (str[i] == '$' && str[i + 1] == '$')
 		{
-			pid = getpid();
-			translated = ft_itoa(pid, data);
+			//pid = getpid();
+			translated = ft_strdup("$$", data);
 			*expanded = ft_strjoin(*expanded, translated, data);
 			i += 2;
 		}

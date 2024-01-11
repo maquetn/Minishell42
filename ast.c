@@ -83,7 +83,7 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 			process_output(data, &token, cmd);
 		else
 			other(data, &token, cmd, &i);
-		if (data->error_trigger == 1)
+		if (data->error_trigger != 0)
 			break ;
 	}
 	if (cmd->args)
