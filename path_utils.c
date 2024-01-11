@@ -45,8 +45,7 @@ char	*get_path(char *cmd, char **env, t_minishell *data)
 	paths = ft_split(get_env("PATH", env, data), ':', data);
 	if (!paths)
 	{
-		printf("split faild\n");
-		exit(EXIT_FAILURE);//completer avec exit code correct
+		return (ft_strdup(cmd, data));
 	}
 	while (paths[++i])
 	{
