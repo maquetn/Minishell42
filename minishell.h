@@ -90,7 +90,7 @@ void	sig_handler(int signum);
 
 void check_type(t_token **tokens, int arg);
 
-
+int	get_dollar(char *str, int i);
 char* expand_path(char *input);
 char *process_double_dollar(char *translated, int *i, t_minishell *data);
 char *process_exit_code(char *translated, int *i, t_minishell *data);
