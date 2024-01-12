@@ -51,13 +51,13 @@ char	*ft_strjoin(char *s1, char const *s2, t_minishell *data)
 
 char	*ft_substr(char const *s, int start, int len, t_minishell *data)
 {
-	char				*new;
-	unsigned int		i;
+	char	*new;
+	int		i;
 
 	if (!s)
 		return (NULL);
 	i = 0;
-	if (start > (unsigned int)ft_strlen(s))
+	if (start > ft_strlen(s))
 	{
 		new = gc_malloc((sizeof(char) * 1), data);
 		if (!new)
