@@ -44,6 +44,7 @@ char	**copy_env(char **env, t_minishell *data)
 	while (env[count] != NULL)
 		count++;
 	copy = malloc(sizeof(char *) * (count + 1));
+	//on peut facilement erase OLDPWD ici des qu'on relance le shell et incrementer le SHLVL 
 	while (i < count)
 	{
 		copy[i] = strdup(env[i]);
@@ -68,8 +69,6 @@ void	print_nodes(t_minishell *data)
 	while (data->node)
 	{
 		int i = 0;
-		//printf("output : %s\n", data->node->output);
-		//printf("\ninput : %s\n", data->node->input);
 		printf("path : %s\n", data->node->path_to_cmd);
 		while (data->node->args[i])
 		{
