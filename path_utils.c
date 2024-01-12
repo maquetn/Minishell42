@@ -25,7 +25,7 @@ char	*get_env(char *name, char **env, t_minishell *data)
 		while (env[i][j] && env[i][j] != '=')
 			j++;
 		path = ft_substr(env[i], 0, j, data);
-		if (ft_strcmp(path, name) == 0)
+		if (ft_strcmp(path, name, data) == 0)
 		{
 			return (env[i] + j + 1);
 		}

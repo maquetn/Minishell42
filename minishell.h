@@ -148,7 +148,7 @@ int		remove_double(char *str, int i, char **expanded, t_minishell *data);
 int		remove_single(char *str, int i, char **expanded, t_minishell *data);
 void	*gc_malloc(size_t required_memory ,t_minishell *data);
 void	free_custom_alloc(t_minishell *data);
-int		ft_strcmp(char *s1, char *s2);
+int		ft_strcmp(char *s1, char *s2, t_minishell *data);
 int		get_cancer(char *str, int i);
 void	ft_putstr_fd(char *s, int fd);
 char	*manage_heredoc(char *delim, t_minishell *data, int quoted);

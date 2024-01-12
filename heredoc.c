@@ -31,7 +31,6 @@ char	*heredoc_expander(char *str, char **file, t_minishell *data)
 	char	*translated;
 
 	translated = heredoc_dollar(str, data, 0);
-	printf("trans : %s", translated);
 	*file = ft_strjoin(*file, translated, data);
 	return (*file);
 }
@@ -41,12 +40,12 @@ char	*manage_heredoc(char *delim, t_minishell *data, int quoted)
 	char	*file;
 	char	*input;
 
-	printf("delim : %s, quoted : %d\n", delim, quoted);
 	file = ft_strdup("", data);
 	while (1)
 	{
 		input = readline("> ");
-		if (ft_strcmp(delim, heredoc_delim(input, data)) == 0)
+		if (ft_strcmp(delim, heredoc_delim(input, data), data) == 0 
+			|| ft_strcmp(delim, heredoc_delim(input, data), data) == -42000)
 			break ;
 		else if (quoted)
 		{

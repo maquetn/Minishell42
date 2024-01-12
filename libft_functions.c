@@ -84,6 +84,8 @@ char	*ft_strdup(const char *s1, t_minishell *data)
 	int		i;
 
 	i = 0;
+	if (!s1)
+		return (NULL);
 	len = ft_strlen((char *)s1);
 	a = gc_malloc(sizeof(char) * (len + 1), data);
 	if (!a)

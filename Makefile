@@ -25,6 +25,7 @@ SRCS = token.c \
 	   libft_functions.c \
 	   utils2.c \
 	   parsing_utils.c \
+	   redirection.c 
 
 OBJ_DIR = obj
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
