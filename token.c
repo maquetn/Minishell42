@@ -21,6 +21,8 @@ char    *ft_strndup(char *str, int start, int end, t_minishell *data)
     len = end - start + 1;
     i = 0;
     dup = gc_malloc(sizeof(char) * (len + 1), data);
+	if (dup == NULL)
+		return (NULL);
     while (i < len)
     {
         dup[i] = str[start + i];

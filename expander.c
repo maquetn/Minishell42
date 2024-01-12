@@ -177,7 +177,6 @@ void	rewind_tokens(t_minishell *data)
 void	expand_heredoc(t_token *token, t_minishell *data)
 {
 	token->content = heredoc_dollar(token->content, data, 1);
-	printf("delim ? : %s\n", token->content);
 }
 
 void	expander(t_minishell *data)

@@ -12,13 +12,19 @@
 
 #include "minishell.h"
 
-void	update_free_list(t_malloc **head, void *adress)
+int	update_free_list(t_malloc **head, void *adress, t_minishell *data)
 {
 	t_malloc	*newnode;
 	t_malloc	*temp;
 
 	temp = NULL;
 	newnode = malloc(sizeof(t_malloc));
+	if (newnode == NULL)
+	{
+		ft_putstr_fd("minishell : malloc failure\n", 2);
+		data->error_trigger = 1;
+		return (1);
+	}
 	newnode->adress = adress;
 	newnode->next = NULL;
 	if (*head == NULL)
@@ -30,6 +36,7 @@ void	update_free_list(t_malloc **head, void *adress)
 			temp = temp->next;
 		temp->next = newnode;
 	}
+	return (0);
 }
 
 void	free_strings(t_malloc *node)
@@ -67,6 +74,7 @@ void	*gc_malloc(size_t required_memory, t_minishell *data)
 		ft_putstr_fd("minishell : malloc failure\n", 2);
 		data->error_trigger = 1;
 	}
-	update_free_list(&data->head, memory);
+	if (update_free_list(&data->head, memory, data))
+		return (NULL);
 	return (memory);
 }

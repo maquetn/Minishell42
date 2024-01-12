@@ -18,7 +18,11 @@ int	redirect_heredoc(t_simple_cmd *cmd, t_minishell *data)
 	int		fd[2];
 
 	if (pipe(fd) == -1)
-		EXIT_FAILURE;
+	{
+		perror ("pipe");
+		data->error_trigger = 1;
+		exit(EXIT_FAILURE);
+	}
 	input = ft_strdup(cmd->heredoc_string, data);
 	ft_putstr_fd(input, fd[STDOUT_FILENO]);
 	close (fd[STDOUT_FILENO]);
@@ -90,20 +94,18 @@ int	create_all_open_last(t_simple_cmd *cmd)
 	while (cmd->output)
 	{
 		if (cmd->append_mode == 0)
-		{
 			output_fd = open(cmd->output->name, 
 					O_WRONLY | O_CREAT | O_TRUNC, 0666);
-			if (output_fd == -1)
-			{
-				ft_putstr_fd("minishell :", 2);
-				ft_putstr_fd(cmd->output->name, 2);
-				ft_putstr_fd(":", 2);
-				perror("");
-			}
-		}
 		else if (cmd->append_mode == 1)
 			output_fd = open(cmd->output->name,
 					O_WRONLY | O_CREAT | O_APPEND, 0666);
+		if (output_fd == -1)
+		{
+			ft_putstr_fd("minishell :", 2);
+			ft_putstr_fd(cmd->output->name, 2);
+			ft_putstr_fd(":", 2);
+			perror("");
+		}
 		if (cmd->output->next == NULL)
 			break ;
 		else

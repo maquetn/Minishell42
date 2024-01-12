@@ -57,8 +57,10 @@ int	other(t_minishell *data, t_token **token, t_simple_cmd *cmd, int *i)
 		cmd->path_to_cmd = get_path((*token)->content, data->env, data);
 	if (cmd->args)
 		cmd->args[*i] = ft_strdup((*token)->content, data);
-	if (cmd->args[*i] == NULL)
+	if (cmd->args[*i] == NULL || cmd->path_to_cmd == NULL)
+	{
 		return (1);
+	}
 	(*i)++;
 	*token = (*token)->next;
 	return (0);

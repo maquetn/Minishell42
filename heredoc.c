@@ -40,7 +40,6 @@ char	*manage_heredoc(char *delim, t_minishell *data)
 	char	*file;
 	char	*input;
 
-	printf("delim : %s\n", delim);
 	file = ft_strdup("", data);
 	while (1)
 	{
