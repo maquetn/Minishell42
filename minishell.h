@@ -33,37 +33,37 @@ typedef enum
 
 typedef struct s_token
 {
-  t_token_type type;
-  char *content;
-  struct s_token *next;
-  struct s_token *prev;
-  int   simple_quotes;
+	t_token_type type;
+	char *content;
+	struct s_token *next;
+	struct s_token *prev;
+	int   simple_quotes;
 } t_token;
 
 typedef struct s_files_list
 {
-  char  *name;
-  t_files_list  *next;
+	char  *name;
+	t_files_list  *next;
 } t_files_list;
 
 typedef struct s_imple_cmd
 {
-  char			**args; //cmd + args
-  char			*path_to_cmd;
-  t_files_list      *input; //default STDIN else pipeout, fd
-  t_files_list			*output; //default STDOUT else pipein, fd
-  char      *heredoc_string;
-  int			  append_mode;
-  int       heredoc;
-  t_simple_cmd	*prev;
-  t_simple_cmd	*next;
+	char			**args; //cmd + args
+	char			*path_to_cmd;
+	t_files_list      *input; //default STDIN else pipeout, fd
+	t_files_list			*output; //default STDOUT else pipein, fd
+	char      *heredoc_string;
+	int			  append_mode;
+	int       heredoc;
+	t_simple_cmd	*prev;
+	t_simple_cmd	*next;
 
 }	t_simple_cmd;
 
 typedef struct s_malloc
 {
-  void  *adress;
-  t_malloc  *next;
+	void  *adress;
+	t_malloc  *next;
 } t_malloc;
 
 typedef struct s_minishell
@@ -72,9 +72,9 @@ typedef struct s_minishell
 	//int		error;
 	t_token 		*first_token;
 	t_simple_cmd	*node;
-  t_malloc    *head;
+	t_malloc    *head;
 	int				exit_code;
-  int       error_trigger;
+	int       error_trigger;
 	
 } t_minishell;
 
@@ -112,12 +112,12 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token);
 char	*ft_strdup(const char *s1, t_minishell *data);
 void	planting(t_minishell *data);
 void	free_tabl(char **tabl);
-void execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *prev_pipe_fd);
-void add_token(t_token **head, t_token_type type, char *content, t_minishell *data);
+void	execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *prev_pipe_fd);
+void	add_token(t_token **head, t_token_type type, char *content, t_minishell *data);
 void	print_nodes(t_minishell *data);
 char	*ft_itoa(int n, t_minishell *data);
-int	ft_isalpha(int c);
-int	ft_isalnum(int c);
+int		ft_isalpha(int c);
+int		ft_isalnum(int c);
 char	*get_env(char *name, char **env, t_minishell *data);
 char	*get_path(char *cmd, char **env, t_minishell *data);
 void	add_file(char *name, t_minishell *data, t_files_list **head);
@@ -125,27 +125,27 @@ void	init_simple_cmd(t_simple_cmd *cmd);
 char    *ft_strndup(char *str, int start, int end, t_minishell *data);
 void	expander(t_minishell *data);
 void    print_tokens(t_token *head);
-int remove_double(char *str, int i, char **expanded, t_minishell *data);
+int		remove_double(char *str, int i, char **expanded, t_minishell *data);
 void    *gc_malloc(size_t required_memory ,t_minishell *data);
 void    free_custom_alloc(t_minishell *data);
-int	ft_strcmp(char *s1, char *s2);
-int get_cancer(char *str, int i);
+int		ft_strcmp(char *s1, char *s2);
+int		get_cancer(char *str, int i);
 void	ft_putstr_fd(char *s, int fd);
 void    translate_heredoc(t_simple_cmd *cmd, t_minishell *data);
 char    *manage_heredoc(char *delim, t_minishell *data);
 char    *heredoc_dollar(char *str, t_minishell *data, int j);
-int print_syntax_error(t_token *token);
+int		print_syntax_error(t_token *token);
 
 // BUILTINS
 
-void exec_builtin(t_simple_cmd *cmd);
-void ft_echo(char **args, int index);
-int ft_exit();
-int ft_cd(char *token);
-void ft_ls(const char *directory_path);
-char* ft_pwd();
-void ft_export(t_minishell *data, char **args);
-void ft_unset(t_minishell *data, char **args);
-void ft_env(t_minishell *data);
+void	exec_builtin(t_simple_cmd *cmd);
+void	ft_echo(char **args, int index);
+int		ft_exit();
+int		ft_cd(t_minishell *data, char *token);
+void	ft_ls(const char *directory_path);
+char*	ft_pwd();
+void	ft_export(t_minishell *data, char **args);
+void	ft_unset(t_minishell *data, char **args);
+void	ft_env(t_minishell *data);
 
 #endif
