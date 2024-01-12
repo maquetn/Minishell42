@@ -176,7 +176,7 @@ void	execute_command(t_simple_cmd *cmd, t_minishell *data)
 		data->error_trigger = 127;
 		exit(127);
 	}
-}	
+}
 
 void	execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *pp_fd)
 {
