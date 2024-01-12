@@ -90,8 +90,11 @@ void	sig_handler(int signum);
 
 void check_type(t_token **tokens, int arg);
 
+int	create_all_open_last(t_simple_cmd *cmd);
+int	open_all(t_simple_cmd *cmd);
 int	get_dollar(char *str, int i);
 char* expand_path(char *input);
+int	redirect_heredoc(t_simple_cmd *cmd, t_minishell *data);
 char *process_double_dollar(char *translated, int *i, t_minishell *data);
 char *process_exit_code(char *translated, int *i, t_minishell *data);
 char *process_env_variable(char *str, char *translated, int *i, t_minishell *data);
