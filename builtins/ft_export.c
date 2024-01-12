@@ -14,9 +14,17 @@ void ft_export(t_minishell *data, char **args)
 {
     if (args[1])
     {
+        int env_count = 0;
+
+        if (strcmp(args[1], "OLD_PWD=") == 0)
+        {
+            free(data->env[env_count]);
+            data->env[env_count] = strdup(args[2]);
+            printf("%s\n\n", data->env[env_count]);
+            return;
+        }
         if (syntax_env_var(args) != -1)
         {
-        int env_count = 0;
 
         while (data->env[env_count] != NULL)
         {
