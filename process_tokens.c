@@ -50,7 +50,7 @@ int	process_append(t_minishell *data, t_token **token, t_simple_cmd *cmd)
 			*token = (*token)->next->next;
 		else
 			*token = (*token)->next;
-		return ;
+		return (1);
 	}
 	if (add_file((*token)->next->content, data, &cmd->output))
 		return (1);
@@ -70,7 +70,7 @@ int	process_input(t_minishell *data, t_token **token, t_simple_cmd *cmd)
 			*token = (*token)->next->next;
 		else
 			*token = (*token)->next;
-		return ;
+		return (1);
 	}
 	if (add_file((*token)->next->content, data, &cmd->input))
 		return (1);
@@ -90,7 +90,7 @@ int	process_output(t_minishell *data, t_token **token, t_simple_cmd *cmd)
 			*token = (*token)->next->next;
 		else
 			*token = (*token)->next;
-		return ;
+		return (1);
 	}
 	if (add_file((*token)->next->content, data, &cmd->output))
 		return (1);

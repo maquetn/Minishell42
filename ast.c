@@ -80,14 +80,20 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 		else if (token->type == HEREDOC)
 			process_heredoc(data, &token, cmd);
 		else if (token->type == APPEND)
+		{
 			if (process_append(data, &token, cmd))
 				break ;
+		}
 		else if (token->type == INPUT)
+		{
 			if (process_input(data, &token, cmd))
 				break ;
+		}
 		else if (token->type == OUTPUT)
+		{
 			if (process_output(data, &token, cmd))
 				break ;
+		}
 		else
 			other(data, &token, cmd, &i);
 		if (data->error_trigger != 0)
