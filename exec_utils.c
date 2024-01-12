@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   exec_utils.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mdor <marvin@42.fr>                        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/12 15:22:16 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/12 15:22:18 by mdor             ###   ########.fr       */
-/*                                                                            */
+/*																			  */
+/*														:::	  ::::::::        */
+/*   exec_utils.c									   :+:	  :+:	:+:       */
+/*													+:+ +:+		 +:+	      */
+/*   By: mdor <marvin@42.fr>						+#+  +:+	   +#+		  */
+/*												+#+#+#+#+#+   +#+		      */
+/*   Created: 2024/01/12 15:22:16 by mdor			  #+#	#+#			      */
+/*   Updated: 2024/01/12 15:22:18 by mdor			 ###   ########.fr	      */
+/*																			  */
 /* ************************************************************************** */
 
 #include "minishell.h"
@@ -79,4 +79,24 @@ int	create_all_open_last(t_simple_cmd *cmd)
 			cmd->output = cmd->output->next;
 	}
 	return (output_fd);
+}
+
+void	handle_builtin(t_simple_cmd *cmd, t_minishell *data, int *pp_fd)
+{
+	if (cmd->args != NULL)
+	{
+		if (strcmp(cmd->args[0], "export") == 0 && pp_fd == 0)
+			ft_export(data, cmd->args);
+		else if (strcmp(cmd->args[0], "unset") == 0 && pp_fd == 0)
+			ft_unset(data, cmd->args);
+		else if (strcmp(cmd->args[0], "cd") == 0 && pp_fd == 0)
+			ft_cd(data, cmd->args[1]);
+	}
+}
+
+void	child(t_simple_cmd *cmd, t_minishell *data, int *pipe_fd, int *pp_fd)
+{
+	redirect_input(cmd, pp_fd, data);
+	redirect_output(cmd, pipe_fd);
+	execute_command(cmd, data);
 }
