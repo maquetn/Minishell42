@@ -114,7 +114,7 @@ int process_output(t_minishell *data, t_token **token, t_simple_cmd *cmd);
 t_simple_cmd	*get_cmd(t_token *token, t_minishell *data);
 t_simple_cmd	*recursive_parsing(t_minishell *data);
 char* get_current_directory();
-char	*ft_substr(char const *s, unsigned int start, unsigned int len, t_minishell *data);
+char	*ft_substr(char const *s, int start, int len, t_minishell *data);
 char	*ft_strjoin(char *s1, char const *s2, t_minishell *data);
 char	**ft_split(char const *s, char c, t_minishell *data);
 t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token);

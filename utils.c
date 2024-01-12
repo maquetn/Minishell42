@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mdor <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/12 15:48:02 by mdor              #+#    #+#             */
+/*   Updated: 2024/01/12 15:48:03 by mdor             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	ft_strlen(const char *str)
@@ -9,7 +21,6 @@ int	ft_strlen(const char *str)
 		i++;
 	return (i);
 }
-
 
 char	*ft_strjoin(char *s1, char const *s2, t_minishell *data)
 {
@@ -38,8 +49,7 @@ char	*ft_strjoin(char *s1, char const *s2, t_minishell *data)
 	return (new);
 }
 
-
-char	*ft_substr(char const *s, unsigned int start, unsigned int len, t_minishell *data)
+char	*ft_substr(char const *s, int start, int len, t_minishell *data)
 {
 	char				*new;
 	unsigned int		i;
@@ -128,8 +138,8 @@ char	**ft_split(char const *s, char c, t_minishell *data)
 {
 	int		iter;
 	char	**tabl;
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 
 	iter = -1;
 	i = -1;
