@@ -170,7 +170,7 @@ void	execute_command(t_simple_cmd *cmd, t_minishell *data)
 	}
 	else if (execve(cmd->path_to_cmd, cmd->args, data->env) == -1)
 	{
-		if (ft_strcmp(cmd->args[0], "unset") == 0 || strcmp(cmd->args[0], "export") == 0)
+		if (ft_strcmp(cmd->args[0], "unset") == 0 || ft_strcmp(cmd->args[0], "export") == 0 || ft_strcmp(cmd->args[0], "cd") == 0)
 			exit(0);
 		fprintf(stderr, "minishell: %s: command not found\n", cmd->args[0]);
 		data->error_trigger = 127;
