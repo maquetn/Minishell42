@@ -5,7 +5,7 @@ int syntax_env_var(char **args)
     int i = -1;
     while (args[1][++i] && args[1][i] != '=')
     {
-        if (isdigit(args[1][0]) || (!isalnum(args[1][i]) && args[1][i] != '_' && (args[1][i] == '+' && (i == 0 || args[1][i + 1] != '='))))
+        if (isdigit(args[1][0]) || (!isalnum(args[1][i]) && args[1][i] != '_' && (args[1][i] == '+' && args[1][i + 1] != '=')))
             return -1;
     }
     if (args[1][i] == '=')
@@ -19,6 +19,8 @@ void ft_export(t_minishell *data, char **args)
     //int plus_flag = 0;
     while (args[exp])
     {
+
+        //printf("%s", args[1]);
         int env_count = 0;
 
         if (strcmp(args[1], "OLD_PWD=") == 0)
@@ -59,11 +61,17 @@ void ft_export(t_minishell *data, char **args)
                 new_env[i] = strdup(data->env[i]);
                 i++;
             }
+            // if(args[1][syntax_env_var(args) - 1] == '+')
+            // {
+            //     char *temp1 = NULL;
+            //     strncpy(temp1, args[1], syntax_env_var(args));
 
+            // }
+            // else
+            // {
             new_env[env_count] = strdup(args[1]);
-            printf("\n\nici\n\n");
             new_env[env_count + 1] = NULL;
-
+            // }
             i = 0;
             while (i < env_count)
             {
