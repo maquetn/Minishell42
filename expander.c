@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"	
+#include <stdbool.h>
 
 int	_next(char *str, int i)
 {
@@ -174,9 +175,89 @@ void	rewind_tokens(t_minishell *data)
 		data->first_token = data->first_token->prev;
 }
 
+int	quoted(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '"' || str[i] == '\'')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+
+char *heredoc_delim(char *str, t_minishell *data)
+{
+    int len = 0, i = 0;
+    bool in_quote = false;
+	char	*translated = NULL;
+
+    while (str[i] != '\0')
+	{
+        if (str[i] == '$' && (str[i + 1] == '\'' || str[i + 1] == '\"') && !in_quote)
+		{
+            i += 2;
+            continue;
+        }
+        if ((str[i] == '\'' || str[i] == '\"') && !in_quote)
+		{
+            in_quote = true;
+            i++;
+            continue;
+        }
+		else if ((str[i] == '\'' || str[i] == '\"') && in_quote)
+		{
+            in_quote = false;
+            i++;
+            continue;
+        }
+        len++;
+        i++;
+    }
+    translated = gc_malloc(len + 1, data); 
+    if (translated == NULL)
+		return NULL;
+
+    int j = 0;
+    i = 0;
+    in_quote = false;
+    while (str[i] != '\0')
+	{
+        if (str[i] == '$' && ((str[i + 1] == '\'' || str[i + 1] == '\"') && str[i + 2] != '\0') && !in_quote)
+		{
+            i += 2;
+            continue;
+        }
+        if ((str[i] == '\'' || str[i] == '\"') && !in_quote)
+		{
+            in_quote = true;
+            i++;
+            continue;
+        }
+		else if ((str[i] == '\'' || str[i] == '\"') && in_quote)
+		{
+            in_quote = false;
+            i++;
+            continue;
+        }
+        translated[j++] = str[i];
+        i++;
+    }
+    translated[j] = '\0';
+    return (translated);
+}
+
+
+
 void	expand_heredoc(t_token *token, t_minishell *data)
 {
-	token->content = heredoc_dollar(token->content, data, 1);
+	if (quoted(token->content))
+		token->quoted_heredoc = 1;
+	token->content = heredoc_delim(token->content, data);
 }
 
 void	expander(t_minishell *data)

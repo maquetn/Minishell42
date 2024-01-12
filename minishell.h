@@ -37,7 +37,7 @@ typedef struct s_token
 	char *content;
 	struct s_token *next;
 	struct s_token *prev;
-	int   simple_quotes;
+	int		quoted_heredoc;
 } t_token;
 
 typedef struct s_files_list
@@ -91,6 +91,7 @@ void	sig_handler(int signum);
 void check_type(t_token **tokens, int arg);
 
 int	create_all_open_last(t_simple_cmd *cmd);
+char *heredoc_delim(char *str, t_minishell *data);
 int	ft_length(long n);
 char	*ft_do(char *new, int len, long nbr, int neg);
 void handle_builtin(t_simple_cmd *cmd, t_minishell *data, int *pp_fd);
@@ -143,7 +144,7 @@ int		ft_strcmp(char *s1, char *s2);
 int		get_cancer(char *str, int i);
 void	ft_putstr_fd(char *s, int fd);
 void    translate_heredoc(t_simple_cmd *cmd, t_minishell *data);
-char    *manage_heredoc(char *delim, t_minishell *data);
+char    *manage_heredoc(char *delim, t_minishell *data, int quoted);
 char    *heredoc_dollar(char *str, t_minishell *data, int j);
 int		print_syntax_error(t_token *token);
 

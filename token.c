@@ -39,17 +39,12 @@ void add_token(t_token **head, t_token_type type, char *content, t_minishell *da
 		return;
     t_token *new_token = gc_malloc(sizeof(t_token), data);
     if (new_token == NULL)
-	{
-        perror("malloc");
-		data->error_trigger = 1;
 		return ;
-    }
-
     new_token->type = type;
     new_token->content = ft_strdup(content, data);
     new_token->next = NULL;
     new_token->prev = NULL;
-
+	new_token->quoted_heredoc = 0;
     if (*head == NULL) 
         *head = new_token;
 	else 
