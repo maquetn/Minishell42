@@ -21,7 +21,9 @@ SRCS = token.c \
 	   process_tokens.c \
 	   expander_utils.c \
 	   heredoc_utils.c \
-	   exec_utils.c
+	   exec_utils.c \
+	   libft_functions.c \
+	   utils2.c
 
 OBJ_DIR = obj
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))

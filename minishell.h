@@ -91,6 +91,8 @@ void	sig_handler(int signum);
 void check_type(t_token **tokens, int arg);
 
 int	create_all_open_last(t_simple_cmd *cmd);
+int	ft_length(long n);
+char	*ft_do(char *new, int len, long nbr, int neg);
 void handle_builtin(t_simple_cmd *cmd, t_minishell *data, int *pp_fd);
 void child(t_simple_cmd *cmd, t_minishell *data, int *pipe_fd, int *pp_fd);
 void parent(t_simple_cmd *cmd, t_minishell *data, int *pipe_fd, pid_t child_pid);
