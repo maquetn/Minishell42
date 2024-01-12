@@ -90,8 +90,19 @@ void	sig_handler(int signum);
 
 void check_type(t_token **tokens, int arg);
 
+int	create_all_open_last(t_simple_cmd *cmd);
+int	ft_length(long n);
+char	*ft_do(char *new, int len, long nbr, int neg);
+void handle_builtin(t_simple_cmd *cmd, t_minishell *data, int *pp_fd);
+void child(t_simple_cmd *cmd, t_minishell *data, int *pipe_fd, int *pp_fd);
+void parent(t_simple_cmd *cmd, t_minishell *data, int *pipe_fd, pid_t child_pid);
+void	redirect_output(t_simple_cmd *cmd, int *p_fd);
+void	redirect_input(t_simple_cmd *cmd, int *p_fd, t_minishell *data);
+void	execute_command(t_simple_cmd *cmd, t_minishell *data);
+int	open_all(t_simple_cmd *cmd);
 int	get_dollar(char *str, int i);
 char* expand_path(char *input);
+int	redirect_heredoc(t_simple_cmd *cmd, t_minishell *data);
 char *process_double_dollar(char *translated, int *i, t_minishell *data);
 char *process_exit_code(char *translated, int *i, t_minishell *data);
 char *process_env_variable(char *str, char *translated, int *i, t_minishell *data);
@@ -105,7 +116,7 @@ int process_output(t_minishell *data, t_token **token, t_simple_cmd *cmd);
 t_simple_cmd	*get_cmd(t_token *token, t_minishell *data);
 t_simple_cmd	*recursive_parsing(t_minishell *data);
 char* get_current_directory();
-char	*ft_substr(char const *s, unsigned int start, unsigned int len, t_minishell *data);
+char	*ft_substr(char const *s, int start, int len, t_minishell *data);
 char	*ft_strjoin(char *s1, char const *s2, t_minishell *data);
 char	**ft_split(char const *s, char c, t_minishell *data);
 t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token);
