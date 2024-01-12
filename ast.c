@@ -12,7 +12,7 @@
 
 #include "minishell.h"	
 
-void	malloc_args(t_simple_cmd *cmd, t_token *token, t_minishell *data)
+int	malloc_args(t_simple_cmd *cmd, t_token *token, t_minishell *data)
 {
 	t_token	*temporary;
 	int		i;
@@ -33,8 +33,9 @@ void	malloc_args(t_simple_cmd *cmd, t_token *token, t_minishell *data)
 	}
 	if (i != 0)
 		cmd->args = gc_malloc(sizeof(char *) * (i + 1), data);
-	if (!cmd->args)
-		EXIT_FAILURE;
+	if (cmd->args == NULL)
+		return (1);
+	return (0);
 }
 
 t_simple_cmd	*init_simple_cmd_wrapper(t_minishell *data, t_token *token)
@@ -42,10 +43,11 @@ t_simple_cmd	*init_simple_cmd_wrapper(t_minishell *data, t_token *token)
 	t_simple_cmd	*cmd;
 
 	cmd = gc_malloc(sizeof(t_simple_cmd), data);
-	if (!cmd)
-		EXIT_FAILURE;
+	if (cmd == NULL)
+		return (NULL);
 	init_simple_cmd(cmd);
-	malloc_args(cmd, token, data);
+	if (malloc_args(cmd, token, data))
+		return (NULL);
 	return (cmd);
 }
 
@@ -66,6 +68,8 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 
 	i = 0;
 	cmd = init_simple_cmd_wrapper(data, token);
+	if (cmd == NULL)
+		return (NULL);
 	while (token)
 	{
 		if (token->type == PIPE) 
@@ -76,11 +80,14 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 		else if (token->type == HEREDOC)
 			process_heredoc(data, &token, cmd);
 		else if (token->type == APPEND)
-			process_append(data, &token, cmd);
+			if (process_append(data, &token, cmd))
+				break ;
 		else if (token->type == INPUT)
-			process_input(data, &token, cmd);
+			if (process_input(data, &token, cmd))
+				break ;
 		else if (token->type == OUTPUT)
-			process_output(data, &token, cmd);
+			if (process_output(data, &token, cmd))
+				break ;
 		else
 			other(data, &token, cmd, &i);
 		if (data->error_trigger != 0)

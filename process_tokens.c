@@ -38,7 +38,7 @@ void	process_heredoc(t_minishell *data, t_token **token, t_simple_cmd *cmd)
 	cmd->heredoc = 1;
 }
 
-void	process_append(t_minishell *data, t_token **token, t_simple_cmd *cmd)
+int	process_append(t_minishell *data, t_token **token, t_simple_cmd *cmd)
 {
 	if ((*token)->next == NULL || 
 		(*token)->next->type == PIPE || (*token)->next->type == HEREDOC
@@ -52,12 +52,14 @@ void	process_append(t_minishell *data, t_token **token, t_simple_cmd *cmd)
 			*token = (*token)->next;
 		return ;
 	}
-	add_file((*token)->next->content, data, &cmd->output);
+	if (add_file((*token)->next->content, data, &cmd->output))
+		return (1);
 	*token = (*token)->next->next;
 	cmd->append_mode = 1;
+	return (0);
 }
 
-void	process_input(t_minishell *data, t_token **token, t_simple_cmd *cmd)
+int	process_input(t_minishell *data, t_token **token, t_simple_cmd *cmd)
 {
 	if ((*token)->next == NULL || 
 		(*token)->next->type == PIPE || (*token)->next->type == APPEND
@@ -70,12 +72,14 @@ void	process_input(t_minishell *data, t_token **token, t_simple_cmd *cmd)
 			*token = (*token)->next;
 		return ;
 	}
-	add_file((*token)->next->content, data, &cmd->input);
+	if (add_file((*token)->next->content, data, &cmd->input))
+		return (1);
 	*token = (*token)->next->next;
 	cmd->heredoc = 0;
+	return (0);
 }
 
-void	process_output(t_minishell *data, t_token **token, t_simple_cmd *cmd)
+int	process_output(t_minishell *data, t_token **token, t_simple_cmd *cmd)
 {
 	if ((*token)->next == NULL || 
 		(*token)->next->type == PIPE || (*token)->next->type == INPUT
@@ -88,7 +92,9 @@ void	process_output(t_minishell *data, t_token **token, t_simple_cmd *cmd)
 			*token = (*token)->next;
 		return ;
 	}
-	add_file((*token)->next->content, data, &cmd->output);
+	if (add_file((*token)->next->content, data, &cmd->output))
+		return (1);
 	*token = (*token)->next->next;
 	cmd->append_mode = 0;
+	return (0);
 }

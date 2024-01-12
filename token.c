@@ -39,11 +39,12 @@ void add_token(t_token **head, t_token_type type, char *content, t_minishell *da
     if (new_token == NULL)
 	{
         perror("malloc");
-        exit(EXIT_FAILURE);
+		data->error_trigger = 1;
+		return ;
     }
 
     new_token->type = type;
-    new_token->content = ft_strdup(content, data); // Duplicate the content
+    new_token->content = NULL;
     new_token->next = NULL;
     new_token->prev = NULL;
 
@@ -77,7 +78,6 @@ int get_next_token(char *str, int start)
 	{
 		if (str[start] == '>' || str[start] == '<' || str[start] == '|' || str[start] == ' ' || str[start] == '"' || str[start] == '\'' || str[start] == '\0')
 		{
-			//printf("what do I return in get next token %c i  : %d\n", str[start], start);
 			return (start);
 		}
 		start++;
@@ -148,7 +148,7 @@ int	something_behind(char *str, int i)
 }
 int	manage_output_append(char *str, int i, t_token **head, t_minishell *data)
 {
-	if (str[i + 1] == '>') //rajouter un check qu'il y ai une redi possible sinon syntax error;
+	if (str[i + 1] == '>')
 	{
 		i++;
 		add_token(head, APPEND, ">>", data);
