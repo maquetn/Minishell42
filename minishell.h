@@ -16,6 +16,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <dirent.h>
+#include <stdbool.h>
 
 typedef struct s_imple_cmd t_simple_cmd;
 typedef struct s_malloc t_malloc;
@@ -90,6 +91,10 @@ void	sig_handler(int signum);
 
 void check_type(t_token **tokens, int arg);
 
+void	expand_heredoc(t_token *token, t_minishell *data);
+int	need_refine(char *str);
+int	quoted(char *str);
+void	rewind_tokens(t_minishell *data);
 int	create_all_open_last(t_simple_cmd *cmd);
 char *heredoc_delim(char *str, t_minishell *data);
 int	ft_length(long n);
@@ -127,6 +132,7 @@ void	free_tabl(char **tabl);
 void	execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *prev_pipe_fd);
 void	add_token(t_token **head, t_token_type type, char *content, t_minishell *data);
 void	print_nodes(t_minishell *data);
+int	_next(char *str, int i);
 char	*ft_itoa(int n, t_minishell *data);
 int		ft_isalpha(int c);
 int		ft_isalnum(int c);
@@ -138,6 +144,7 @@ char    *ft_strndup(char *str, int start, int end, t_minishell *data);
 void	expander(t_minishell *data);
 void    print_tokens(t_token *head);
 int		remove_double(char *str, int i, char **expanded, t_minishell *data);
+int	remove_single(char *str, int i, char **expanded, t_minishell *data);
 void    *gc_malloc(size_t required_memory ,t_minishell *data);
 void    free_custom_alloc(t_minishell *data);
 int		ft_strcmp(char *s1, char *s2);
@@ -147,6 +154,7 @@ void    translate_heredoc(t_simple_cmd *cmd, t_minishell *data);
 char    *manage_heredoc(char *delim, t_minishell *data, int quoted);
 char    *heredoc_dollar(char *str, t_minishell *data, int j);
 int		print_syntax_error(t_token *token);
+int	dollar(char *str, int i, char **expanded, t_minishell *data, int quoted);
 
 // BUILTINS
 

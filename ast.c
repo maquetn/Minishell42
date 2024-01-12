@@ -27,7 +27,7 @@ int	malloc_args(t_simple_cmd *cmd, t_token *token, t_minishell *data)
 			i++;
 		else if ((temporary->type == INPUT || temporary->type == OUTPUT
 				|| temporary->type == HEREDOC || temporary->type == APPEND)
-				&& temporary->next != NULL && temporary->next->type == STR)
+			&& temporary->next != NULL && temporary->next->type == STR)
 			i--;
 		temporary = temporary->next;
 	}

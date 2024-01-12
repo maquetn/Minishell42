@@ -1,49 +1,16 @@
 /* ************************************************************************** */
 /*																			  */
-/*														:::	  ::::::::        */
-/*   expander.c										 :+:	  :+:	:+:       */
-/*													+:+ +:+		 +:+	      */
+/*														:::	  ::::::::	      */
+/*   expander.c										 :+:	  :+:	:+:	      */
+/*													+:+ +:+		 +:+		  */
 /*   By: mdor <marvin@42.fr>						+#+  +:+	   +#+		  */
-/*												+#+#+#+#+#+   +#+		      */
-/*   Created: 2024/01/05 17:14:18 by mdor			  #+#	#+#			      */
-/*   Updated: 2024/01/05 18:18:45 by mdor			 ###   ########.fr	      */
+/*												+#+#+#+#+#+   +#+			  */
+/*   Created: 2024/01/05 17:14:18 by mdor			  #+#	#+#				  */
+/*   Updated: 2024/01/05 18:18:45 by mdor			 ###   ########.fr		  */
 /*																			  */
 /* ************************************************************************** */
 
 #include "minishell.h"	
-#include <stdbool.h>
-
-int	_next(char *str, int i)
-{
-	while (str[i] != '"' && str[i] != '\'' 
-		&& str[i] != '$' && str[i] != '\0' && str[i] != ' ')
-		i++;
-	return (i);
-}
-
-int	get_cancer(char *str, int i)
-{
-	while (str[i] != '"' && str[i] != '\'' && str[i] != '$' && str[i] != '\0' )
-		i++;
-	return (i);
-}
-
-int	remove_single(char *str, int i, char **expanded, t_minishell *data)
-{
-	int	start;
-
-	i++;
-	start = i;
-	while (str[i])
-	{
-		if (str[i] == '\'')
-			break ;
-		i++;
-	}
-	*expanded = ft_strjoin(*expanded, 
-			ft_strndup(str, start, i - 1, data), data);
-	return (i);
-}
 
 int	dollar(char *str, int i, char **expanded, t_minishell *data, int quoted)
 {
@@ -97,29 +64,6 @@ int	dollar(char *str, int i, char **expanded, t_minishell *data, int quoted)
 	return (i);
 }
 
-int	remove_double(char *str, int i, char **exp, t_minishell *data)
-{
-	int	start;
-
-	i++;
-	start = i;
-	while (str[i])
-	{
-		if (str[i] == '"')
-			break ;
-		else if (str[i] == '$')
-		{
-			*exp = ft_strjoin(*exp, ft_strndup(str, start, i - 1, data), data);
-			i = dollar(str, i, exp, data, 1);
-			start = i;
-			continue ;
-		}
-		i++;
-	}
-	*exp = ft_strjoin(*exp, ft_strndup(str, start, i - 1, data), data);
-	return (i);
-}
-
 void	fine_touch(t_token *token, t_minishell *data)
 {
 	char	*translated = NULL;
@@ -153,111 +97,6 @@ void	fine_touch(t_token *token, t_minishell *data)
 		i++;
 	}
 	token->content = ft_strdup(expanded, data);
-}
-
-int	need_refine(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		if (str[i] == '\'' || str[i] == '"' || str[i] == '$')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-void	rewind_tokens(t_minishell *data)
-{
-	while (data->first_token->prev)
-		data->first_token = data->first_token->prev;
-}
-
-int	quoted(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '"' || str[i] == '\'')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-
-char *heredoc_delim(char *str, t_minishell *data)
-{
-    int len = 0, i = 0;
-    bool in_quote = false;
-	char	*translated = NULL;
-
-    while (str[i] != '\0')
-	{
-        if (str[i] == '$' && (str[i + 1] == '\'' || str[i + 1] == '\"') && !in_quote)
-		{
-            i += 2;
-            continue;
-        }
-        if ((str[i] == '\'' || str[i] == '\"') && !in_quote)
-		{
-            in_quote = true;
-            i++;
-            continue;
-        }
-		else if ((str[i] == '\'' || str[i] == '\"') && in_quote)
-		{
-            in_quote = false;
-            i++;
-            continue;
-        }
-        len++;
-        i++;
-    }
-    translated = gc_malloc(len + 1, data); 
-    if (translated == NULL)
-		return NULL;
-
-    int j = 0;
-    i = 0;
-    in_quote = false;
-    while (str[i] != '\0')
-	{
-        if (str[i] == '$' && ((str[i + 1] == '\'' || str[i + 1] == '\"') && str[i + 2] != '\0') && !in_quote)
-		{
-            i += 2;
-            continue;
-        }
-        if ((str[i] == '\'' || str[i] == '\"') && !in_quote)
-		{
-            in_quote = true;
-            i++;
-            continue;
-        }
-		else if ((str[i] == '\'' || str[i] == '\"') && in_quote)
-		{
-            in_quote = false;
-            i++;
-            continue;
-        }
-        translated[j++] = str[i];
-        i++;
-    }
-    translated[j] = '\0';
-    return (translated);
-}
-
-
-
-void	expand_heredoc(t_token *token, t_minishell *data)
-{
-	if (quoted(token->content))
-		token->quoted_heredoc = 1;
-	token->content = heredoc_delim(token->content, data);
 }
 
 void	expander(t_minishell *data)
