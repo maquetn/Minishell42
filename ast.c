@@ -51,14 +51,17 @@ t_simple_cmd	*init_simple_cmd_wrapper(t_minishell *data, t_token *token)
 	return (cmd);
 }
 
-void	other(t_minishell *data, t_token **token, t_simple_cmd *cmd, int *i)
+int	other(t_minishell *data, t_token **token, t_simple_cmd *cmd, int *i)
 {
 	if (*i == 0)
 		cmd->path_to_cmd = get_path((*token)->content, data->env, data);
 	if (cmd->args)
 		cmd->args[*i] = ft_strdup((*token)->content, data);
+	if (cmd->args[*i] == NULL)
+		return (1);
 	(*i)++;
 	*token = (*token)->next;
+	return (0);
 }
 
 t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
@@ -95,7 +98,10 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 				break ;
 		}
 		else
-			other(data, &token, cmd, &i);
+		{
+			if (other(data, &token, cmd, &i))
+				break ;
+		}
 		if (data->error_trigger != 0)
 			break ;
 	}

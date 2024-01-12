@@ -44,7 +44,7 @@ void add_token(t_token **head, t_token_type type, char *content, t_minishell *da
     }
 
     new_token->type = type;
-    new_token->content = NULL;
+    new_token->content = ft_strdup(content, data);
     new_token->next = NULL;
     new_token->prev = NULL;
 
