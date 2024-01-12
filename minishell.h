@@ -155,6 +155,10 @@ char	*manage_heredoc(char *delim, t_minishell *data, int quoted);
 char	*heredoc_dollar(char *str, t_minishell *data, int j);
 int		print_syntax_error(t_token *token);
 int		dollar(char *str, int i, char **expanded, t_minishell *data, int quoted);
+int		calculate_translated_length(const char *str);
+char	*build_translated_string(char *str, int len, t_minishell *data);
+bool	is_quote_char(char c);
+bool	is_escape_sequence(const char *str, int index);
 
 // BUILTINS
 
