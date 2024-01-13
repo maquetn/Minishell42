@@ -80,7 +80,7 @@ t_simple_cmd	*recursive_parsing(t_minishell *data)
 	return (prev);
 }
 
-void planting(t_minishell *data)
+void	planting(t_minishell *data)
 {
 	data->node = recursive_parsing(data);
 }

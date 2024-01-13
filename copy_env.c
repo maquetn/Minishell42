@@ -66,13 +66,15 @@ int	ft_atoi(const char *str)
 
 char	*shlvl_copy(char *str)
 {
-	int lvl;
-	int	i;
-	char	*shlvl = NULL;
-	char	*lvl_ar = NULL;
+	int		lvl;
+	int		i;
+	char	*shlvl;
+	char	*lvl_ar;
 
 	i = 6;
 	lvl = 0;
+	shlvl = NULL;
+	lvl_ar = NULL;
 	while (str[i] != '\0')
 	{
 		if (ft_isdigit(str[i]))
@@ -126,7 +128,7 @@ char	**copy_env(char **env)
 	if (!copy)
 	{
 		ft_putstr_fd("minishell : malloc failure\n", 2);
-		return (NULL);   
+		return (NULL);
 	}
 	i = -1;
 	while (++i < count)
@@ -134,7 +136,7 @@ char	**copy_env(char **env)
 		if (ft_strncmp(env[i], "OLDPWD=", 7) == 0)
 		{
 			old = 1;
-			continue;
+			continue ;
 		}
 		if (ft_strncmp(env[i], "SHLVL=", 6) == 0)
 			copy[i] = shlvl_copy(env[i]);

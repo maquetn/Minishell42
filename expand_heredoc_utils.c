@@ -43,17 +43,17 @@ char	*build_translated_string(char **str, int len, t_minishell *data)
 	return (translated);
 }
 
-bool is_quote_char(char c)
+bool	is_quote_char(char c)
 {
 	return (c == '\'' || c == '\"');
 }
 
-bool is_escape_sequence(const char *str, int index)
+bool	is_escape_sequence(const char *str, int index)
 {
 	return (str[index] == '$' && is_quote_char(str[index + 1]));
 }
 
-char *heredoc_delim(char *str, t_minishell *data)
+char	*heredoc_delim(char *str, t_minishell *data)
 {
 	int len; 
 
