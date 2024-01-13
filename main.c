@@ -32,34 +32,12 @@ void sig_handler(int signum)
     status = 1;
 }
 
-char	**copy_env(char **env, t_minishell *data)
-{
-	(void)data;
-	int count;
-	char	**copy;
-	int	i;
-
-	count = 0;
-	i = 0;
-	while (env[count] != NULL)
-		count++;
-	copy = malloc(sizeof(char *) * (count + 1));
-	//on peut facilement erase OLDPWD ici des qu'on relance le shell et incrementer le SHLVL 
-	while (i < count)
-	{
-		copy[i] = strdup(env[i]);
-		i++;
-	}
-	copy[count] = NULL;
-	return (copy);
-}
-
 void	init_shell(t_minishell *data, char **env)
 {
 	data->head = NULL;
 	data->first_token = NULL;
 	data->node = NULL;
-	data->env = copy_env(env, data);
+	data->env = copy_env(env);
 	data->error_trigger = 0;
 	data->exit_code = 0;
 }

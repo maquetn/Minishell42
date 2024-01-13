@@ -159,6 +159,11 @@ int		calculate_translated_length(const char *str);
 char	*build_translated_string(char *str, int len, t_minishell *data);
 bool	is_quote_char(char c);
 bool	is_escape_sequence(const char *str, int index);
+char	**copy_env(char **env);
+char    *no_gc_strndup(char *str, int start, int end);
+char	*no_gc_itoa(int n);
+char	*no_gc_strjoin(char *s1, char const *s2);
+char	*no_gc_strdup(const char *s1);
 
 // BUILTINS
 
