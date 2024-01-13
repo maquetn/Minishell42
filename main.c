@@ -111,7 +111,7 @@ void	looping(t_minishell *data)
 			break;
 		if (status != 1)
 			input = readline(prompt);
-		if (input == NULL || strcmp(input, "exit") == 0)
+		if (input == NULL)
 		{
 			printf("\n");
 			printf("       \e[1;33m\e[44m ********************************************************* \033[0;37m\n");

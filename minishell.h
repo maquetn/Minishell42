@@ -168,7 +168,7 @@ char	*no_gc_strdup(const char *s1);
 // BUILTINS
 
 void	ft_echo(char **args, int index);
-int		ft_exit();
+int		ft_exit(t_minishell *data);
 int		ft_cd(t_minishell *data, char *token);
 char*	ft_pwd();
 void	ft_export(t_minishell *data, char **args);

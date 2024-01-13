@@ -94,6 +94,8 @@ void	handle_builtin(t_simple_cmd *cmd, t_minishell *data, int *pp_fd)
 			ft_unset(data, cmd->args);
 		else if (strcmp(cmd->args[0], "cd") == 0 && pp_fd == 0)
 			ft_cd(data, cmd->args[1]);
+		else if (ft_strcmp(cmd->args[0], "exit", data) == 0)
+			ft_exit(data);
 	}
 }
 

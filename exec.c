@@ -29,11 +29,6 @@ int	execute_builtins(t_simple_cmd *cmd, t_minishell *data)
 		ft_env(data);
 		return (1);
 	}
-	else if (strcmp(cmd->args[0], "exit") == 0)
-	{
-		ft_exit();
-		return (1);
-	}
 	else
 		return (0);
 }

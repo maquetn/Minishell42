@@ -122,7 +122,7 @@ char	**copy_env(char **env)
 	if (i == -5 && sh_lvl == 1)
 		copy = malloc(sizeof(char *) * (count));
 	else if (i == -5 || sh_lvl == 1)
-		copy = malloc(sizeof(char *) * (count + 1));
+		copy = malloc(sizeof(char *) * (count));
 	else
 		copy = malloc(sizeof(char *) * (count + 2));
 	if (!copy)
