@@ -1,56 +1,74 @@
 #include "../minishell.h"
 
-int syntax_env_var(char **args)
+int syntax_env_var(char *arg)
 {
-    int i = -1;
-    while (args[1][++i] && args[1][i] != '=')
+    int i = 0;
+    if(isdigit(arg[0]) != 0)
+        return(-1);
+    while (arg[i] && arg[i] != '=')
     {
-        if (isdigit(args[1][0]) || (!isalnum(args[1][i]) && args[1][i] != '_' && (args[1][i] == '+' && args[1][i + 1] != '=')))
-            return -1;
+        if (!isalnum(arg[i]) && arg[i] != '_')
+        {
+            if (arg[i] == '+' && arg[i + 1] != '=')
+                return -1;
+        }
+        i++;
     }
-    if (args[1][i] == '=')
+    if (arg[i] == '=')
         return i;
-    return -1;
+    else
+        return -1;
 }
 
 void ft_export(t_minishell *data, char **args)
 {
     int exp = 1;
-    //int plus_flag = 0;
     while (args[exp])
     {
-
-        //printf("%s", args[1]);
+        char *current_arg = args[exp];
         int env_count = 0;
 
-        if (strcmp(args[1], "OLD_PWD=") == 0)
+        while (data->env[env_count] != NULL)
         {
-            free(data->env[env_count]);
-            data->env[env_count] = strdup(args[2]);
-            printf("%s\n\n", data->env[env_count]);
-            return;
-        }
-        if (syntax_env_var(args) != -1)
-        {
-            while (data->env[env_count] != NULL)
+            if (strncmp(data->env[env_count], current_arg, syntax_env_var(current_arg)) == 0 &&
+                data->env[env_count][syntax_env_var(current_arg)] == '=')
             {
-                if (strncmp(data->env[env_count], args[1], syntax_env_var(args)) == 0 &&
-                    data->env[env_count][syntax_env_var(args)] == '=')
+                if (data->env[env_count][syntax_env_var(current_arg) - 1] == '+')
                 {
-                    if(data->env[env_count][syntax_env_var(args) - 1] == '+')
-                    {
-                        //APPEND
-                        printf("%s\n%s\n",data->env[env_count], args[1]);
-                        strncat(data->env[env_count], args[1] + syntax_env_var(args)+1, strlen(args[1]) - syntax_env_var(args));
-                    }
-                    else
-                    {
-                        free(data->env[env_count]);
-                        data->env[env_count] = strdup(args[1]);
-                    }
-                    return;
+                    // Append
+                    size_t current_length = strlen(data->env[env_count]);
+                    size_t append_length = strlen(current_arg + syntax_env_var(current_arg) + 1);
+
+                    char *new_buffer = (char *)malloc(current_length + append_length + 1);
+                    strcpy(new_buffer, data->env[env_count]);
+                    strcat(new_buffer, current_arg + syntax_env_var(current_arg) + 1);
+                    free(data->env[env_count]);
+                    data->env[env_count] = new_buffer;
                 }
-                env_count++;
+                else
+                {
+                    // Update
+                    free(data->env[env_count]);
+                    data->env[env_count] = strdup(current_arg);
+                }
+
+                break;
+            }
+            env_count++;
+        }
+
+        if (data->env[env_count] == NULL)
+        {
+            // Variable not found, add it to env
+            char *charPosition = strchr(current_arg, '+');
+
+            char removed_plus[PATH_MAX];
+            if (charPosition != NULL)
+            {
+                size_t removed_plus_length = charPosition - current_arg;
+                strncpy(removed_plus, current_arg, removed_plus_length);
+                removed_plus[removed_plus_length] = '\0';
+                strcat(removed_plus, charPosition + 1);
             }
 
             char **new_env = (char **)malloc((env_count + 2) * sizeof(char *));
@@ -61,17 +79,49 @@ void ft_export(t_minishell *data, char **args)
                 new_env[i] = strdup(data->env[i]);
                 i++;
             }
-            // if(args[1][syntax_env_var(args) - 1] == '+')
-            // {
-            //     char *temp1 = NULL;
-            //     strncpy(temp1, args[1], syntax_env_var(args));
 
-            // }
-            // else
-            // {
-            new_env[env_count] = strdup(args[1]);
-            new_env[env_count + 1] = NULL;
-            // }
+            if (charPosition != NULL && strncmp(removed_plus, current_arg, charPosition - current_arg) == 0)
+            {
+                i = 0;
+                while (new_env[i])
+                {
+                    char *equalSignPos = strchr(new_env[i], '=');
+                    if (equalSignPos != NULL)
+                    {
+                        size_t substringLength = equalSignPos - new_env[i];
+                        char *substring = malloc((substringLength + 1) * sizeof(char));
+
+                        size_t current_length = strlen(new_env[i]);
+                        size_t append_length = strlen(strchr(removed_plus, '=') + 1);
+                        size_t total_length = current_length + append_length;
+
+                        new_env[i] = realloc(new_env[i], total_length + 1);
+
+                        strncpy(substring, new_env[i], substringLength);
+                        substring[substringLength] = '\0';
+
+                        int biggest = 0;
+                        if (substringLength > 0 && (substringLength > (strlen(removed_plus) - strlen(strchr(removed_plus, '=')))))
+                            biggest = substringLength;
+                        else if (strlen(removed_plus) > 0)
+                            biggest = strlen(removed_plus) - strlen(strchr(removed_plus, '='));
+
+                        if (strncmp(substring, removed_plus, biggest) == 0)
+                        {
+                            strcat(new_env[i], strchr(removed_plus, '=') + 1);
+                        }
+                        free(substring);
+                    }
+                    i++;
+                }
+            }
+            else if(syntax_env_var(current_arg) != -1)
+            {
+                printf("\n\n\nTEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEST\n");
+                new_env[env_count] = strdup(current_arg);
+                new_env[env_count + 1] = NULL;
+            }
+            printf("\n%d\n", syntax_env_var(current_arg));
             i = 0;
             while (i < env_count)
             {
@@ -79,10 +129,8 @@ void ft_export(t_minishell *data, char **args)
                 i++;
             }
             free(data->env);
-
             data->env = new_env;
         }
-
         exp++;
     }
 
