@@ -10,6 +10,8 @@
 /*																			  */
 /* ************************************************************************** */
 
+//protected sauf les close pipes zzz
+
 #include "minishell.h"
 
 int	execute_builtins(t_simple_cmd *cmd, t_minishell *data)
@@ -60,14 +62,16 @@ void	execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *pp_fd)
 	if (pipe(pipe_fd) == -1)
 	{
 		perror("pipe");
-		exit(EXIT_FAILURE);
+		data->error_trigger = 1;
+		return ;
 	}
 	handle_builtin(cmd, data, pp_fd);
 	child_pid = fork();
 	if (child_pid == -1)
 	{
 		perror("fork");
-		exit(EXIT_FAILURE);
+		data->error_trigger = 1;
+		return ;
 	}
 	if (child_pid == 0)
 		child(cmd, data, pipe_fd, pp_fd);

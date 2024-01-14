@@ -25,11 +25,6 @@ int ft_cd(t_minishell *data, char *token)
 
 	oldpwd(data, NULL);
 
-	if(token[1])
-	{
-		printf("cd: string not in pwd: ..\n");
-		return(1);
-	}
     if (token == NULL || token[0] == '\0' || (strcmp(&token[0], "~") == 0))
     {
         char *home_dir = getenv("HOME");

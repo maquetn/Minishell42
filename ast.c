@@ -10,6 +10,8 @@
 /*																			  */
 /* ************************************************************************** */
 
+//malloc protected
+
 #include "minishell.h"	
 
 int	malloc_args(t_simple_cmd *cmd, t_token *token, t_minishell *data)

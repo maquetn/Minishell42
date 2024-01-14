@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+//malloc protectd
+
 #include "minishell.h"
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
@@ -64,17 +66,31 @@ int	ft_atoi(const char *str)
 	return (famoso * neg);
 }
 
+char	*increment_sh_lvl(char *str, int i)
+{
+	char	*shlvl;
+	int		lvl;
+	char	*lvl_ar;
+
+	shlvl = no_gc_strndup(str, 6, i);
+	lvl = ft_atoi(shlvl);
+	free(shlvl);
+	lvl++;
+	lvl_ar = no_gc_itoa(lvl);
+	shlvl = no_gc_strjoin("SHLVL=", lvl_ar);
+	free(lvl_ar);
+	return (shlvl);
+}
+
 char	*shlvl_copy(char *str)
 {
 	int		lvl;
 	int		i;
 	char	*shlvl;
-	char	*lvl_ar;
 
 	i = 6;
 	lvl = 0;
 	shlvl = NULL;
-	lvl_ar = NULL;
 	while (str[i] != '\0')
 	{
 		if (ft_isdigit(str[i]))
@@ -89,67 +105,68 @@ char	*shlvl_copy(char *str)
 		shlvl = no_gc_strdup("SHLVL=1");
 	else
 	{
-		shlvl = no_gc_strndup(str, 6, i);
-		lvl = ft_atoi(shlvl);
-		free(shlvl);
-		lvl++;
-		lvl_ar = no_gc_itoa(lvl);
-		shlvl = no_gc_strjoin("SHLVL=", lvl_ar);
-		free(lvl_ar);
+		shlvl = increment_sh_lvl(str, i);
 	}
 	return (shlvl);
 }
 
-char	**copy_env(char **env)
+char	**malloc_new_env_size(char **env)
 {
 	int		count;
-	char	**copy;
 	int		i;
-	int		old;
 	int		sh_lvl;
+	char	**copy;
 
+	i = 0;
 	count = 0;
-	old = 0;
 	sh_lvl = 0;
-	while (env[count] != NULL)
+	while (env[i] != NULL)
 	{
-		if (ft_strncmp(env[count], "OLDPWD=", 7) == 0)
-			i = -5;
-		if (ft_strncmp(env[count], "SHLVL=", 6) == 0)
+		if (ft_strncmp(env[i], "OLDPWD=", 7) == 0)
+		{
+			i++;
+			continue ;
+		}
+		else if (ft_strncmp(env[i], "SHLVL=", 6) == 0)
 			sh_lvl = 1;
 		count++;
+		i++;
 	}
-	if (i == -5 && sh_lvl == 1)
-		copy = malloc(sizeof(char *) * (count));
-	else if (i == -5 || sh_lvl == 1)
-		copy = malloc(sizeof(char *) * (count));
-	else
-		copy = malloc(sizeof(char *) * (count + 2));
+	if (sh_lvl == 0)
+		count++;
+	return (copy = malloc(sizeof(char *) * (count + 1)));
+}
+
+char	**copy_env(char **env)
+{
+	char	**copy;
+	int		j;
+	int		i;
+	int		sh_lvl;
+
+	i = -1;
+	j = -1;
+	sh_lvl = 0;
+	copy = malloc_new_env_size(env);
 	if (!copy)
 	{
 		ft_putstr_fd("minishell : malloc failure\n", 2);
 		return (NULL);
 	}
-	i = -1;
-	while (++i < count)
+	while (env[++j] != NULL)
 	{
-		if (ft_strncmp(env[i], "OLDPWD=", 7) == 0)
-		{
-			old = 1;
+		if (ft_strncmp(env[j], "OLDPWD=", 7) == 0)
 			continue ;
+		if (ft_strncmp(env[j], "SHLVL=", 6) == 0)
+		{
+			sh_lvl = 1;
+			copy[++i] = shlvl_copy(env[j]);
 		}
-		if (ft_strncmp(env[i], "SHLVL=", 6) == 0)
-			copy[i] = shlvl_copy(env[i]);
-		else if (old == 0)
-			copy[i] = strdup(env[i]);
 		else
-			copy[i - 1] = strdup(env[i]);
+			copy[++i] = no_gc_strdup(env[j]);
 	}
 	if (sh_lvl == 0)
-	{
-		copy[i] = no_gc_strdup("SHLVL=1");
-		i++;
-	}
-	copy[i] = NULL;
+		copy[++i] = no_gc_strdup("SHLVL=1");
+	copy[++i] = NULL;
 	return (copy);
 }
