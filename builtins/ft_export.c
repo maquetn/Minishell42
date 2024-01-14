@@ -83,6 +83,8 @@ void ft_export(t_minishell *data, char **args)
             if (charPosition != NULL && strncmp(removed_plus, current_arg, charPosition - current_arg) == 0)
             {
                 i = 0;
+                int variableExists = 0;  // Flag to check if the variable already exists
+
                 while (new_env[i])
                 {
                     char *equalSignPos = strchr(new_env[i], '=');
@@ -105,16 +107,26 @@ void ft_export(t_minishell *data, char **args)
                             biggest = substringLength;
                         else if (strlen(removed_plus) > 0)
                             biggest = strlen(removed_plus) - strlen(strchr(removed_plus, '='));
-
+/*
                         if (strncmp(substring, removed_plus, biggest) == 0)
                         {
+                            // Variable with the same name found
+                            variableExists = 1;
                             strcat(new_env[i], strchr(removed_plus, '=') + 1);
-                        }
+                        }*/
                         free(substring);
                     }
                     i++;
                 }
+
+                // If the variable doesn't exist, add it
+                if (!variableExists)
+                {
+                    new_env[i] = strdup(current_arg);
+                    new_env[i + 1] = NULL;
+                }
             }
+
             else if(syntax_env_var(current_arg) != -1)
             {
                 printf("\n\n\nTEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEST\n");
