@@ -1,14 +1,23 @@
+/* ************************************************************************** */
+/*																			  */
+/*														:::	  ::::::::        */
+/*   ft_exit.c										  :+:	  :+:	:+:       */
+/*													+:+ +:+		 +:+	      */
+/*   By: mdor <marvin@42.fr>						+#+  +:+	   +#+	      */
+/*												+#+#+#+#+#+   +#+		      */
+/*   Created: 2024/01/14 14:14:00 by mdor			  #+#	#+#			      */
+/*   Updated: 2024/01/14 14:14:09 by mdor			 ###   ########.fr	      */
+/*																			  */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-int ft_exit(t_minishell *data)
+int	ft_exit(t_minishell *data)
 {
-    printf("\n");
-	printf("       \e[1;33m\e[44m ********************************************************* \033[0;37m\n");
-	printf("       \e[1;33m\e[44m *                                                       * \033[0;37m\n");
-	printf("       \e[1;33m\e[44m *        🐚 🐚 🐚    Exiting Minishell.    🐚 🐚 🐚     * \033[0;37m\n");
-	printf("       \e[1;33m\e[44m *                                                       * \033[0;37m\n");
-	printf("       \e[1;33m\e[44m ********************************************************* \033[0;37m\n\n");
-    free_custom_alloc(data);
-    free_tabl(data->env);
-    exit(data->exit_code);
+	printf("exit");
+	printf("\n");
+	free_custom_alloc(data);
+	free_tabl(data->env);
+	free(data->input);
+	exit(data->exit_code);
 }

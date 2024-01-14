@@ -27,7 +27,8 @@ SRCS = token.c \
 	   parsing_utils.c \
 	   redirection.c \
 	   copy_env.c \
-	   no_gc_dups.c
+	   no_gc_dups.c \
+	   signals.c
 
 OBJ_DIR = obj
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))

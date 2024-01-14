@@ -2,9 +2,11 @@
 
 void ft_echo(char **args, int index)
 {
-	int n = 0;
-	unsigned long i = 0;
+	int n;
+	unsigned long i;
 
+	n = 0;
+	i = 0;
 	while (args[index] != NULL)
 	{
 		if (args[index][0] == '-')
@@ -12,7 +14,6 @@ void ft_echo(char **args, int index)
 			i = 1;
 			while (args[index][i] == 'n')
 				i++;
-
 			if (i == strlen(args[index]) && i > 1)
 			{
 				index++;
@@ -24,13 +25,11 @@ void ft_echo(char **args, int index)
 		else
 			break;
 	}
-
 	while (args[index] != NULL)
 	{
 		printf("%s ", args[index]);
 		index++;
 	}
-
 	if (n == 0)
 		printf("\n");
 }

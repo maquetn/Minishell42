@@ -59,6 +59,7 @@ void	execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *pp_fd)
 
 	if (cmd == NULL) 
 		return ;
+	g_status = 1;
 	if (pipe(pipe_fd) == -1)
 	{
 		perror("pipe");
@@ -78,6 +79,7 @@ void	execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *pp_fd)
 	else
 		parent(cmd, data, pipe_fd, child_pid);
 	close(pipe_fd[0]);
+	g_status = 0;
 }
 
 void	parent(t_simple_cmd *cmd, t_minishell *data, int *p_fd, pid_t child_pid)
@@ -93,7 +95,9 @@ void	parent(t_simple_cmd *cmd, t_minishell *data, int *p_fd, pid_t child_pid)
 	else
 	{
 		waitpid(child_pid, &status, 0);
-		if (WIFEXITED(status))
+		if (WIFSIGNALED(status))
+			data->error_trigger = 128 + WTERMSIG(status);
+		else if (WIFEXITED(status))
 			data->error_trigger = WEXITSTATUS(status);
 	}
 }

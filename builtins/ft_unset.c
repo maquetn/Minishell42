@@ -1,41 +1,55 @@
+/* ************************************************************************** */
+/*																			  */
+/*														:::	  ::::::::        */
+/*   ft_unset.c										 :+:	  :+:	:+:       */
+/*													+:+ +:+		 +:+	      */
+/*   By: mdor <marvin@42.fr>						+#+  +:+	   +#+		  */
+/*												+#+#+#+#+#+   +#+		      */
+/*   Created: 2024/01/14 14:31:58 by mdor			  #+#	#+#			      */
+/*   Updated: 2024/01/14 14:31:59 by mdor			 ###   ########.fr	      */
+/*																			  */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-unsigned long int verif_env_var(char *env_var)
+unsigned long int	verif_env_var(char *env_var)
 {
-    int i = -1;
-    while (env_var[++i] && env_var[i] != '=');
+	int	i;
 
-    if (env_var[i] == '=' && env_var[i + 1])
-    {
-        return (i);
-    }
-    else
-        return 0;
+	i = 0;
+	while (env_var[i] && env_var[i] != '=')
+		i++;
+	if (env_var[i] == '=' && env_var[i + 1])
+		return (i);
+	else
+		return (0);
 }
 
-void ft_unset(t_minishell *data, char **args)
+void	ft_unset(t_minishell *data, char **args)
 {
-    if (args[1])
-    {
-        int env_count = 0;
-        size_t arg_len = strlen(args[1]);
+	size_t	arg_len;
+	int		env_count;
 
-        while (data->env[env_count] != NULL)
-        {
-            if (strncmp(data->env[env_count], args[1], verif_env_var(data->env[env_count])) == 0 &&
-                verif_env_var(data->env[env_count]) == arg_len)
-            {
-                free(data->env[env_count]);
-                while (data->env[env_count + 1] != NULL)
-                {
-                    data->env[env_count] = data->env[env_count + 1];
-                    env_count++;
-                }
-                data->env[env_count] = NULL;
-
-                return;
-            }
-            env_count++;
-        }
-    }
+	env_count = 0;
+	if (args[1])
+	{
+		arg_len = ft_strlen(args[1]);
+		while (data->env[env_count] != NULL)
+		{
+			if (ft_strncmp(data->env[env_count], args[1],
+					verif_env_var(data->env[env_count])) == 0
+				&& verif_env_var(data->env[env_count]) == arg_len)
+			{
+				free(data->env[env_count]);
+				while (data->env[env_count + 1] != NULL)
+				{
+					data->env[env_count] = data->env[env_count + 1];
+					env_count++;
+				}
+				data->env[env_count] = NULL;
+				return ;
+			}
+			env_count++;
+		}
+	}
 }
