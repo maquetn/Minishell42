@@ -32,33 +32,12 @@ void sig_handler(int signum)
     status = 1;
 }
 
-char	**copy_env(char **env, t_minishell *data)
-{
-	(void)data;
-	int count;
-	char	**copy;
-	int	i;
-
-	count = 0;
-	i = 0;
-	while (env[count] != NULL)
-		count++;
-	copy = malloc(sizeof(char *) * (count + 1));
-	while (i < count)
-	{
-		copy[i] = strdup(env[i]);
-		i++;
-	}
-	copy[count] = NULL;
-	return (copy);
-}
-
 void	init_shell(t_minishell *data, char **env)
 {
 	data->head = NULL;
 	data->first_token = NULL;
 	data->node = NULL;
-	data->env = copy_env(env, data);
+	data->env = copy_env(env);
 	data->error_trigger = 0;
 	data->exit_code = 0;
 }
@@ -68,8 +47,6 @@ void	print_nodes(t_minishell *data)
 	while (data->node)
 	{
 		int i = 0;
-		//printf("output : %s\n", data->node->output);
-		//printf("\ninput : %s\n", data->node->input);
 		printf("path : %s\n", data->node->path_to_cmd);
 		while (data->node->args[i])
 		{
@@ -134,7 +111,7 @@ void	looping(t_minishell *data)
 			break;
 		if (status != 1)
 			input = readline(prompt);
-		if (input == NULL || strcmp(input, "exit") == 0)
+		if (input == NULL)
 		{
 			printf("\n");
 			printf("       \e[1;33m\e[44m ********************************************************* \033[0;37m\n");

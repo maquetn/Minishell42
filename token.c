@@ -35,21 +35,18 @@ char    *ft_strndup(char *str, int start, int end, t_minishell *data)
 
 void add_token(t_token **head, t_token_type type, char *content, t_minishell *data)
 {
+	if (!content)
+		return ;
 	if (content[0] == '\0')
-		return;
+		return ;
     t_token *new_token = gc_malloc(sizeof(t_token), data);
     if (new_token == NULL)
-	{
-        perror("malloc");
-		data->error_trigger = 1;
 		return ;
-    }
-
     new_token->type = type;
     new_token->content = ft_strdup(content, data);
     new_token->next = NULL;
     new_token->prev = NULL;
-
+	new_token->quoted_heredoc = 0;
     if (*head == NULL) 
         *head = new_token;
 	else 
@@ -198,13 +195,14 @@ void	token(char *str, t_minishell *data)
 	{
 		if (str[i] == ' ')
 		{
-			if (str[i - 1] == '"' || str[i - 1] == '\'')
-			{
-				add_token(&head, STR, content, data);
-				content = ft_strdup("", data);
-			}
-			i++;
-			continue;
+			if (i > 0)
+				if(str[i - 1] == '"' || str[i - 1] == '\'')
+				{
+					add_token(&head, STR, content, data);
+					content = ft_strdup("", data);
+				}
+				i++;
+				continue;
 		}
 		else if (str[i] == '>')
 		{
@@ -241,7 +239,7 @@ void	token(char *str, t_minishell *data)
 				add_token(&head, STR, content, data);
 				content = ft_strdup("", data);
 			}
-			if (str[i + 1] == '\0')
+			if (str[i + 1] == '\0' || data->error_trigger != 0)
 				break;
 		}
 	}

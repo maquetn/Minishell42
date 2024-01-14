@@ -12,57 +12,6 @@
 
 #include "minishell.h"
 
-void	redirect_input(t_simple_cmd *cmd, int *p_fd, t_minishell *data)
-{
-	int	input_fd;
-
-	input_fd = 0;
-	if (cmd->heredoc == 1 && cmd->heredoc_string)
-	{
-		input_fd = open_all(cmd);
-		if (input_fd == -1)
-			exit(EXIT_FAILURE);
-		input_fd = redirect_heredoc(cmd, data);
-		dup2(input_fd, STDIN_FILENO);
-		close(input_fd);
-	}
-	else if (cmd->input != NULL) 
-	{
-		input_fd = open_all(cmd);
-		if (input_fd == -1) 
-			exit(EXIT_FAILURE);
-		dup2(input_fd, STDIN_FILENO);
-		close(input_fd);
-	}
-	else if (cmd->prev != NULL && p_fd)
-	{
-		dup2(p_fd[0], 0);
-		close(p_fd[1]);
-	}
-}
-
-void	redirect_output(t_simple_cmd *cmd, int *p_fd)
-{
-	int	output_fd;
-
-	output_fd = 1;
-	if (cmd->output != NULL) 
-	{
-		output_fd = create_all_open_last(cmd);
-		if (output_fd == -1) 
-		{
-			exit(EXIT_FAILURE);
-		}
-		dup2(output_fd, STDOUT_FILENO);
-		close(output_fd);
-	}
-	else if (cmd->next != NULL && p_fd)
-	{
-		dup2(p_fd[1], 1);
-		close(p_fd[0]);
-	}
-}
-
 int	execute_builtins(t_simple_cmd *cmd, t_minishell *data)
 {
 	if (strcmp(cmd->args[0], "echo") == 0)
@@ -80,11 +29,6 @@ int	execute_builtins(t_simple_cmd *cmd, t_minishell *data)
 		ft_env(data);
 		return (1);
 	}
-	else if (strcmp(cmd->args[0], "exit") == 0)
-	{
-		ft_exit();
-		return (1);
-	}
 	else
 		return (0);
 }
@@ -97,9 +41,9 @@ void	execute_command(t_simple_cmd *cmd, t_minishell *data)
 	}
 	else if (execve(cmd->path_to_cmd, cmd->args, data->env) == -1)
 	{
-		if (ft_strcmp(cmd->args[0], "unset") == 0
-			|| ft_strcmp(cmd->args[0], "export") == 0
-			|| ft_strcmp(cmd->args[0], "cd") == 0)
+		if (ft_strcmp(cmd->args[0], "unset", data) == 0
+			|| ft_strcmp(cmd->args[0], "export", data) == 0
+			|| ft_strcmp(cmd->args[0], "cd", data) == 0)
 			exit(0);
 		fprintf(stderr, "minishell: %s: command not found\n", cmd->args[0]);
 		exit(127);

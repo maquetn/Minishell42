@@ -24,13 +24,16 @@ int	ft_isalnum(int c)
 		return (0);
 }
 
-int	ft_strcmp(char *s1, char *s2)
+int	ft_strcmp(char *s1, char *s2, t_minishell *data)
 {
 	size_t	i;
 
 	i = 0;
-	if (!s1)
-		return (1);
+	if (!s1 || !s2)
+	{
+		data->error_trigger = 1;
+		return (-42000);
+	}
 	while (s1[i] || s2[i])
 	{
 		if (s1[i] != s2[i])

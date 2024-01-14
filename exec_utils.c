@@ -24,6 +24,8 @@ int	redirect_heredoc(t_simple_cmd *cmd, t_minishell *data)
 		exit(EXIT_FAILURE);
 	}
 	input = ft_strdup(cmd->heredoc_string, data);
+	if (input == NULL)
+		exit(EXIT_FAILURE);
 	ft_putstr_fd(input, fd[STDOUT_FILENO]);
 	close (fd[STDOUT_FILENO]);
 	return (fd[STDIN_FILENO]);
@@ -68,10 +70,11 @@ int	create_all_open_last(t_simple_cmd *cmd)
 					O_WRONLY | O_CREAT | O_APPEND, 0666);
 		if (output_fd == -1)
 		{
-			ft_putstr_fd("minishell :", 2);
+			ft_putstr_fd("minishell: ", 2);
 			ft_putstr_fd(cmd->output->name, 2);
-			ft_putstr_fd(":", 2);
+			ft_putstr_fd(": ", 2);
 			perror("");
+			return (output_fd);
 		}
 		if (cmd->output->next == NULL)
 			break ;
@@ -91,6 +94,8 @@ void	handle_builtin(t_simple_cmd *cmd, t_minishell *data, int *pp_fd)
 			ft_unset(data, cmd->args);
 		else if (strcmp(cmd->args[0], "cd") == 0 && pp_fd == 0)
 			ft_cd(data, cmd->args[1]);
+		else if (ft_strcmp(cmd->args[0], "exit", data) == 0)
+			ft_exit(data);
 	}
 }
 
