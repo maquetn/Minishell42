@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+//malloc protected
+
 #include "minishell.h"
 
 int	add_file(char *name, t_minishell *data, t_files_list **head)

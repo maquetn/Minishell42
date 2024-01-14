@@ -10,6 +10,8 @@
 /*																			  */
 /* ************************************************************************** */
 
+//protected
+
 #include "minishell.h"	
 
 int	dollar(char *str, int i, char **expanded, t_minishell *data, int quoted)

@@ -10,6 +10,8 @@
 /*																			  */
 /* ************************************************************************** */
 
+//protected
+
 #include "minishell.h"
 
 int	redirect_heredoc(t_simple_cmd *cmd, t_minishell *data)
