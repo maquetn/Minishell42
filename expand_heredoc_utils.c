@@ -36,8 +36,7 @@ char	*build_translated_string(char **str, int len, t_minishell *data)
 			i++;
 			continue ;
 		}
-		translated[j++] = str[i];
-		i++;
+		translated[j++] = str[i++];
 	}
 	translated[j] = '\0';
 	return (translated);

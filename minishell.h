@@ -93,6 +93,14 @@ typedef struct s_minishell
 	struct termios	original_term;
 }	t_minishell;
 
+typedef struct
+{
+    char **content;
+    t_token **head;
+    t_minishell *data;
+}	TokenArgs;
+
+
 int				ft_strlen(const char *str);
 void			token(char *input, t_minishell *data);
 void			restore_terminal(struct termios *original_termios);
@@ -199,5 +207,28 @@ void			ft_env(t_minishell *data);
 int				ft_isdigit(int c);
 int				ft_atoi(const char *str);
 void			routine(t_minishell *data);
-
+char			**oldpwd(t_minishell *data);
+int				get_next_token(char *str, int start);
+int				get_spc_chr(char *str, int start);
+int				manage_output_append(char *str, int i,
+					t_token **head, t_minishell *data);
+int				manage_input_heredoc(char *str, int i,
+					t_token **head, t_minishell *data);
+int				manage_pipe(int i,
+					t_token **head, t_minishell *data);
+int				manage_double_quotes(char *str,
+					int i, char **content, t_minishell *data);
+int				manage_single_quotes(char *str, int i,
+					char **content, t_minishell *data);
+void			print_error(int	type, t_minishell *data);
+void			add_after_space(char **c,
+					t_token **head, t_minishell *data);
+int				inp_out_pipe(char *str,
+					int i, t_token **head, t_minishell *data);
+int				quotes(char *str, int i,
+					char **content, t_minishell *data);
+int				add_normal_str(char	*str, int i,
+					char **content, t_minishell *data);
+void			add_token_str(t_token **head,
+					char **content, t_minishell *data);
 #endif

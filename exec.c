@@ -62,19 +62,11 @@ void	execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *pp_fd)
 		return ;
 	g_status = 1;
 	if (pipe(pipe_fd) == -1)
-	{
-		perror("pipe");
-		data->error_trigger = 1;
-		return ;
-	}
+		return (print_error(1, data));
 	handle_builtin(cmd, data, pp_fd);
 	child_pid = fork();
 	if (child_pid == -1)
-	{
-		perror("fork");
-		data->error_trigger = 1;
-		return ;
-	}
+		return (print_error(2, data));
 	if (child_pid == 0)
 		child(cmd, data, pipe_fd, pp_fd);
 	else

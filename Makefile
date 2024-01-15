@@ -31,7 +31,11 @@ SRCS = token.c \
 	   no_gc_dups.c \
 	   signals.c \
 	   libft.c \
-	   main_routine.c
+	   main_routine.c \
+	   print_token_nodes.c \
+	   token_utils.c \
+	   token_adder.c \
+	   token_handler.c
 
 OBJ_DIR = obj
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))

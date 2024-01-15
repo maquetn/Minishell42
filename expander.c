@@ -63,17 +63,17 @@ void	fine_touch(t_token *t, t_minishell *data)
 	int		i;
 	char	*expanded;
 
-	i = -1;
+	i = 0;
 	expanded = ft_strdup("", data);
-	while (t->content[++i] != '\0' || i < ft_strlen(t->content))
+	while (t->content[i] != '\0' || i < ft_strlen(t->content))
 	{
 		if (t->content[i] == '\'')
-			i = remove_single(t->content, i, &expanded, data) - 1;
+			i = remove_single(t->content, i, &expanded, data);
 		else if (t->content[i] == '"')
-			i = remove_double(t->content, i, &expanded, data) - 1;
+			i = remove_double(t->content, i, &expanded, data);
 		else if (t->content[i] == '$')
 		{
-			i = dollar(t->content, i, &expanded, data, 0) - 1;
+			i = dollar(t->content, i, &expanded, data, 0);
 			if (i >= 2 && (t->content[i] == '\'' || (t->content[i - 1] == '$'
 						&& t->content[i - 2] == '$')))
 					continue ;
@@ -82,9 +82,10 @@ void	fine_touch(t_token *t, t_minishell *data)
 		{
 			expanded = ft_strjoin(expanded, ft_strndup(t->content,
 						i, get_cancer(t->content, i) - 1, data), data);
-			i = get_cancer(t->content, i) - 1;
+			i = get_cancer(t->content, i);
 			continue ;
 		}
+		i++;
 	}
 	t->content = ft_strdup(expanded, data);
 }

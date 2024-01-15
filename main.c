@@ -23,23 +23,6 @@ void	init_shell(t_minishell *data, char **env)
 	data->code = 0;
 }
 
-void	print_nodes(t_minishell *data)
-{
-	int	i;
-
-	i = 0;
-	while (data->node)
-	{
-		printf("path : %s\n", data->node->path_to_cmd);
-		while (data->node->args[i])
-		{
-			printf("args %d : %s\n", i, data->node->args[i]);
-			i++;
-		}
-		data->node = data->node->next;
-	}
-}
-
 int	is_only_space(char *str)
 {
 	int	i;
