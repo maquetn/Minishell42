@@ -107,29 +107,31 @@ void ft_export(t_minishell *data, char **args)
                             biggest = substringLength;
                         else if (strlen(removed_plus) > 0)
                             biggest = strlen(removed_plus) - strlen(strchr(removed_plus, '='));
-/*
+
                         if (strncmp(substring, removed_plus, biggest) == 0)
                         {
-                            // Variable with the same name found
                             variableExists = 1;
                             strcat(new_env[i], strchr(removed_plus, '=') + 1);
-                        }*/
+                        }
                         free(substring);
                     }
                     i++;
                 }
 
-                // If the variable doesn't exist, add it
                 if (!variableExists)
                 {
-                    new_env[i] = strdup(current_arg);
+                    char *charPosition = strchr(current_arg, '+');
+                    size_t removed_plus_length = charPosition - current_arg;
+                    strncpy(removed_plus, current_arg, removed_plus_length);
+                    removed_plus[removed_plus_length] = '\0';
+                    strcat(removed_plus, charPosition + 1);
+                    new_env[i] = strdup(removed_plus);
                     new_env[i + 1] = NULL;
                 }
             }
 
             else if(syntax_env_var(current_arg) != -1)
             {
-                printf("\n\n\nTEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEST\n");
                 new_env[env_count] = strdup(current_arg);
                 new_env[env_count + 1] = NULL;
             }
