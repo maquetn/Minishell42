@@ -41,10 +41,11 @@ char	*manage_heredoc(char *delim, t_minishell *data, int quoted)
 	char	*input;
 
 	file = ft_strdup("", data);
+	g_status = 2;
 	while (1)
 	{
 		input = readline("> ");
-		if (ft_strcmp(delim, heredoc_delim(input, data), data) == 0 
+		if (!input || ft_strcmp(delim, heredoc_delim(input, data), data) == 0
 			|| ft_strcmp(delim, heredoc_delim(input, data), data) == -42000)
 			break ;
 		else if (quoted)
@@ -57,5 +58,6 @@ char	*manage_heredoc(char *delim, t_minishell *data, int quoted)
 		free(input);
 	}
 	free(input);
+	g_status = 0;
 	return (file);
 }

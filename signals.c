@@ -15,7 +15,7 @@
 void	sig_handler(int signum)
 {
 	(void)signum;
-	if (g_status)
+	if (g_status == 1)
 	{
 		ft_putstr_fd("\n", 1);
 		g_status = 0;

@@ -100,6 +100,7 @@ int	change_to_custom_dir(char *token, t_minishell *data)
 int	ft_cd(t_minishell *data, char *token)
 {
 	char	**oldpwd_toexport;
+	char	**new_pwd;
 	int		error;
 
 	oldpwd_toexport = oldpwd(data);
@@ -113,6 +114,8 @@ int	ft_cd(t_minishell *data, char *token)
 	else
 		error = change_to_custom_dir(token, data);
 	ft_export(data, oldpwd_toexport);
+	new_pwd = newpwd(data);
+	ft_export(data, new_pwd);
 	data->error_trigger = error;
 	return (0);
 }

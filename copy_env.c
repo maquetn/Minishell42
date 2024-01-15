@@ -85,7 +85,7 @@ char	**malloc_new_env_size(char **env)
 	return (copy = malloc(sizeof(char *) * (count + 1)));
 }
 
-void	process_env_var(EnvProcessArgs *args, int j)
+void	process_env_var(t_env_args *args, int j)
 {
 	if (ft_strncmp(args->env[j], "OLDPWD=", 7) == 0)
 		return ;
@@ -106,7 +106,7 @@ char	**copy_env(char **env)
 	int				j;
 	int				i;
 	int				sh_lvl;
-	EnvProcessArgs	args;
+	t_env_args		args;
 
 	i = -1;
 	j = -1;

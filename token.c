@@ -92,4 +92,3 @@ void	add_token_str(t_token **head, char **content, t_minishell *data)
 // 	}
 // 	data->first_token = head;
 // }
-	//print_tokens(head);

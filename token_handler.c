@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	handle_space(char *str, int *i, TokenArgs *args)
+void	handle_space(char *str, int *i, t_t_args *args)
 {
 	if (*i > 0 && (str[*i - 1] == '"' || str[*i - 1] == '\''))
 	{
@@ -21,7 +21,7 @@ void	handle_space(char *str, int *i, TokenArgs *args)
 	*i += 1;
 }
 
-void	handle_special_chars(char *str, int *i, TokenArgs *args)
+void	handle_special_chars(char *str, int *i, t_t_args *args)
 {
 	if (str[*i] == '>' || str[*i] == '<' || str[*i] == '|')
 	{
@@ -29,7 +29,7 @@ void	handle_special_chars(char *str, int *i, TokenArgs *args)
 	}
 }
 
-void	handle_quotes(char *str, int *i, TokenArgs *args)
+void	handle_quotes(char *str, int *i, t_t_args *args)
 {
 	if (str[*i] == '\'' || str[*i] == '"')
 	{
@@ -37,7 +37,7 @@ void	handle_quotes(char *str, int *i, TokenArgs *args)
 	}
 }
 
-void	process_string(char *str, int *i, TokenArgs *args)
+void	process_string(char *str, int *i, t_t_args *args)
 {
 	while (str[*i] && args->data->error_trigger == 0 && *i < ft_strlen(str))
 	{
@@ -69,7 +69,7 @@ void	token(char *str, t_minishell *data)
 	int			i;
 	char		*content;
 	t_token		*head;
-	TokenArgs	args;
+	t_t_args	args;
 
 	i = 0;
 	head = NULL;
@@ -80,3 +80,4 @@ void	token(char *str, t_minishell *data)
 	process_string(str, &i, &args);
 	data->first_token = head;
 }
+	//print_tokens(head);

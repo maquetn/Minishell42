@@ -46,12 +46,14 @@ int	remove_double(char *str, int i, char **exp, t_minishell *data)
 		else if (str[i] == '$')
 		{
 			*exp = ft_strjoin(*exp, ft_strndup(str, start, i - 1, data), data);
-			i = dollar(str, i, exp, data, 1);
+			data->quoted = 1;
+			i = dollar(str, i, exp, data);
 			start = i;
 			continue ;
 		}
 		i++;
 	}
+	data->quoted = 0;
 	*exp = ft_strjoin(*exp, ft_strndup(str, start, i - 1, data), data);
 	return (i);
 }

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mdor <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/12 19:24:58 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/12 19:25:00 by mdor             ###   ########.fr       */
+/*   Created: 2024/01/15 08:10:33 by mdor              #+#    #+#             */
+/*   Updated: 2024/01/15 08:10:36 by mdor             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@
 # include <dirent.h>
 # include <stdbool.h>
 
-volatile sig_atomic_t	g_status;
+volatile sig_atomic_t		g_status;
 
 typedef struct s_imple_cmd	t_simple_cmd;
 typedef struct s_malloc		t_malloc;
 typedef struct s_files_list	t_files_list;
 
-typedef enum	s_tokens
+typedef enum s_tokens
 {
 	INPUT,
 	OUTPUT,
@@ -91,24 +91,23 @@ typedef struct s_minishell
 	int				code;
 	int				error_trigger;
 	struct termios	original_term;
+	int				quoted;
 }	t_minishell;
 
-typedef struct
+typedef struct s_token_arg
 {
-    char **content;
-    t_token **head;
-    t_minishell *data;
-}	TokenArgs;
+	char			**content;
+	t_token			**head;
+	t_minishell		*data;
+}	t_t_args;
 
-typedef struct
+typedef struct s_env_args
 {
-    char ***copy;
-    int *i;
-    int *sh_lvl;
-    char **env;
-}	EnvProcessArgs;
-
-
+	char		***copy;
+	int			*i;
+	int			*sh_lvl;
+	char		**env;
+}	t_env_args;
 
 int				ft_strlen(const char *str);
 void			token(char *input, t_minishell *data);
@@ -147,11 +146,11 @@ char			*process_other_chars(char *str, char *translated,
 void			process_pipe_token(t_minishell *data, t_token **token);
 void			process_heredoc(t_minishell *data,
 					t_token **token, t_simple_cmd *cmd);
-void				process_append(t_minishell *data,
+void			process_append(t_minishell *data,
 					t_token **token, t_simple_cmd *cmd);
-void				process_input(t_minishell *data,
+void			process_input(t_minishell *data,
 					t_token **token, t_simple_cmd *cmd);
-void				process_output(t_minishell *data,
+void			process_output(t_minishell *data,
 					t_token **token, t_simple_cmd *cmd);
 t_simple_cmd	*get_cmd(t_token *token, t_minishell *data);
 t_simple_cmd	*recursive_parsing(t_minishell *data);
@@ -192,7 +191,7 @@ char			*manage_heredoc(char *delim, t_minishell *data, int quoted);
 char			*heredoc_dollar(char *str, t_minishell *data, int j);
 int				print_syntax_error(t_token *token);
 int				dollar(char *str, int i,
-					char **expanded, t_minishell *data, int quoted);
+					char **expanded, t_minishell *data);
 int				calculate_translated_length(const char *str);
 char			*build_translated_string(char *str, int len, t_minishell *data);
 bool			is_quote_char(char c);
@@ -229,7 +228,7 @@ int				manage_double_quotes(char *str,
 					int i, char **content, t_minishell *data);
 int				manage_single_quotes(char *str, int i,
 					char **content, t_minishell *data);
-void			print_error(int	type, t_minishell *data);
+void			print_error(int type, t_minishell *data);
 void			add_after_space(char **c,
 					t_token **head, t_minishell *data);
 int				inp_out_pipe(char *str,
@@ -241,4 +240,11 @@ int				add_normal_str(char	*str, int i,
 void			add_token_str(t_token **head,
 					char **content, t_minishell *data);
 char			**print_alloc_error(void);
+int				doldol_dolmark(char **expanded,
+					char nextchr, t_minishell *data, int i);
+int				expand_env(char *str, int i,
+					char **expanded, t_minishell *data);
+int				check_quotes(char *str, int i,
+					char **expanded, t_minishell *data);
+char			**newpwd(t_minishell *data);
 #endif

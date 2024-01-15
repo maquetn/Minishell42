@@ -12,49 +12,32 @@
 
 #include "minishell.h"
 
-int	dollar(char *str, int i, char **expanded, t_minishell *data, int quoted)
+int	dollar(char *str, int i, char **expanded, t_minishell *data)
 {
-	char	*translated = NULL;
-
+	data->quoted = 0;
 	while (str[i] && str[i] == '$')
 	{
-		if (str[i] == '$' && str[i + 1] == '$')
-		{
-			*expanded = ft_strjoin(*expanded, "$$", data);
-			i += 2;
-		}
-		else if (str[i] == '$' && str[i + 1] == '?')
-		{
-			*expanded = ft_strjoin(*expanded, ft_itoa(data->code, data), data);
-			i += 2;
-		}
+		if (str[i] == '$' && (str[i + 1] == '$' || str[i + 1] == '?'))
+			i = doldol_dolmark(expanded, str[i + 1], data, i);
 		else if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
-		{
-			translated = get_env(ft_strndup(str, i + 1,
-						_next(str, i + 1) - 1, data), data->env, data);
-			if (translated == NULL)
-				translated = ft_strdup("", data);
-			*expanded = ft_strjoin(*expanded, translated, data);
-			i = _next(str, i + 1);
-		}
-		else if (quoted == 0)
-		{
-			if (str[i] == '$' && str[i + 1] == '"' && str[i - 1] != '"')
-				i = remove_double(str, i + 1, expanded, data);
-			else if (str[i] == '$' && str[i + 1] == '\'' && str[i - 1] != '\'')
-				i = remove_single(str, i + 1, expanded, data) + 1;
-			else if (str[i] == '$')
-			{
-				*expanded = ft_strjoin(*expanded, "$", data);
-				i++;
-			}
-		}
+			i = expand_env(str, i, expanded, data);
+		else if (data->quoted == 0)
+			i = check_quotes(str, i, expanded, data);
 		else if (str[i] == '$')
 		{
 			*expanded = ft_strjoin(*expanded, "$", data);
 			i++;
 		}
 	}
+	return (i);
+}
+
+int	sing_double(t_token *token, int i, char **expanded, t_minishell *data)
+{
+	if (token->content[i] == '\'')
+		return (remove_single(token->content, i, expanded, data));
+	else if (token->content[i] == '"')
+		return (remove_double(token->content, i, expanded, data));
 	return (i);
 }
 
@@ -65,25 +48,22 @@ void	fine_touch(t_token *t, t_minishell *data)
 
 	i = 0;
 	expanded = ft_strdup("", data);
-	while (t->content[i] != '\0' || i < ft_strlen(t->content))
+	while ((i - 1) < ft_strlen(t->content) && t->content[i] != '\0')
 	{
-		if (t->content[i] == '\'')
-			i = remove_single(t->content, i, &expanded, data);
-		else if (t->content[i] == '"')
-			i = remove_double(t->content, i, &expanded, data);
+		if (t->content[i] == '\'' || t->content[i] == '"')
+			i = sing_double(t, i, &expanded, data);
 		else if (t->content[i] == '$')
 		{
-			i = dollar(t->content, i, &expanded, data, 0);
+			i = dollar(t->content, i, &expanded, data);
 			if (i >= 2 && (t->content[i] == '\'' || (t->content[i - 1] == '$'
 						&& t->content[i - 2] == '$')))
-					continue ;
+				continue ;
 		}
 		else
 		{
 			expanded = ft_strjoin(expanded, ft_strndup(t->content,
 						i, get_cancer(t->content, i) - 1, data), data);
-			i = get_cancer(t->content, i);
-			continue ;
+			i = get_cancer(t->content, i) - 1;
 		}
 		i++;
 	}

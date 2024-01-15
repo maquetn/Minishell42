@@ -27,3 +27,19 @@ char	**oldpwd(t_minishell *data)
 	tab[2] = NULL;
 	return (tab);
 }
+
+char	**newpwd(t_minishell *data)
+{
+	char	*new_pwd;
+	char	**tab;
+	char	*cwd;
+
+	cwd = getcwd(NULL, 0);
+	new_pwd = ft_strjoin("PWD=", cwd, data);
+	free(cwd);
+	tab = gc_malloc(sizeof(char *) * 3, data);
+	tab[0] = ft_strdup("export", data);
+	tab[1] = ft_strdup(new_pwd, data);
+	tab[2] = NULL;
+	return (tab);
+}
