@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   copy_env.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mdor <marvin@42.fr>                        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/13 10:55:53 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/13 10:55:55 by mdor             ###   ########.fr       */
-/*                                                                            */
+/*																			  */
+/*														:::	  ::::::::        */
+/*   copy_env.c										 :+:	  :+:	:+:       */
+/*													+:+ +:+		 +:+	      */
+/*   By: mdor <marvin@42.fr>						+#+  +:+	   +#+		  */
+/*												+#+#+#+#+#+   +#+		      */
+/*   Created: 2024/01/13 10:55:53 by mdor			  #+#	#+#			      */
+/*   Updated: 2024/01/13 10:55:55 by mdor			 ###   ########.fr	      */
+/*																			  */
 /* ************************************************************************** */
 
 //malloc protectd
@@ -85,36 +85,74 @@ char	**malloc_new_env_size(char **env)
 	return (copy = malloc(sizeof(char *) * (count + 1)));
 }
 
+void	process_env_var(EnvProcessArgs *args, int j)
+{
+	if (ft_strncmp(args->env[j], "OLDPWD=", 7) == 0)
+		return ;
+	if (ft_strncmp(args->env[j], "SHLVL=", 6) == 0)
+	{
+		*(args->sh_lvl) = 1;
+		(*(args->copy))[++(*(args->i))] = shlvl_copy(args->env[j]);
+	}
+	else
+	{
+		(*(args->copy))[++(*(args->i))] = no_gc_strdup(args->env[j]);
+	}
+}
+
 char	**copy_env(char **env)
 {
-	char	**copy;
-	int		j;
-	int		i;
-	int		sh_lvl;
+	char			**copy;
+	int				j;
+	int				i;
+	int				sh_lvl;
+	EnvProcessArgs	args;
 
 	i = -1;
 	j = -1;
 	sh_lvl = 0;
 	copy = malloc_new_env_size(env);
 	if (!copy)
-	{
-		ft_putstr_fd("minishell : malloc failure\n", 2);
-		return (NULL);
-	}
+		return (print_alloc_error());
+	args.copy = &copy;
+	args.i = &i;
+	args.sh_lvl = &sh_lvl;
+	args.env = env;
 	while (env[++j] != NULL)
-	{
-		if (ft_strncmp(env[j], "OLDPWD=", 7) == 0)
-			continue ;
-		if (ft_strncmp(env[j], "SHLVL=", 6) == 0)
-		{
-			sh_lvl = 1;
-			copy[++i] = shlvl_copy(env[j]);
-		}
-		else
-			copy[++i] = no_gc_strdup(env[j]);
-	}
+		process_env_var(&args, j);
 	if (sh_lvl == 0)
 		copy[++i] = no_gc_strdup("SHLVL=1");
 	copy[++i] = NULL;
 	return (copy);
 }
+
+// char	**copy_env(char **env)
+// {
+// 	char	**copy;
+// 	int		j;
+// 	int		i;
+// 	int		sh_lvl;
+
+// 	i = -1;
+// 	j = -1;
+// 	sh_lvl = 0;
+// 	copy = malloc_new_env_size(env);
+// 	if (!copy)
+// 		return (print_alloc_error());
+// 	while (env[++j] != NULL)
+// 	{
+// 		if (ft_strncmp(env[j], "OLDPWD=", 7) == 0)
+// 			continue ;
+// 		if (ft_strncmp(env[j], "SHLVL=", 6) == 0)
+// 		{
+// 			sh_lvl = 1;
+// 			copy[++i] = shlvl_copy(env[j]);
+// 		}
+// 		else
+// 			copy[++i] = no_gc_strdup(env[j]);
+// 	}
+// 	if (sh_lvl == 0)
+// 		copy[++i] = no_gc_strdup("SHLVL=1");
+// 	copy[++i] = NULL;
+// 	return (copy);
+// }

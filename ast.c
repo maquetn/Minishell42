@@ -53,7 +53,7 @@ t_simple_cmd	*init_simple_cmd_wrapper(t_minishell *data, t_token *token)
 	return (cmd);
 }
 
-int	other(t_minishell *data, t_token **token, t_simple_cmd *cmd, int *i)
+void	other(t_minishell *data, t_token **token, t_simple_cmd *cmd, int *i)
 {
 	if (*i == 0)
 		cmd->path_to_cmd = get_path((*token)->content, data->env, data);
@@ -61,11 +61,27 @@ int	other(t_minishell *data, t_token **token, t_simple_cmd *cmd, int *i)
 		cmd->args[*i] = ft_strdup((*token)->content, data);
 	if (cmd->args[*i] == NULL || cmd->path_to_cmd == NULL)
 	{
-		return (1);
+		data->error_trigger = 1;
+		return ;
 	}
 	(*i)++;
 	*token = (*token)->next;
-	return (0);
+	return ;
+}
+
+void	process_all(t_token **token, t_minishell *data,
+	t_simple_cmd *cmd, int *i)
+{
+	if ((*token)->type == HEREDOC)
+		process_heredoc(data, token, cmd);
+	else if ((*token)->type == APPEND)
+		process_append(data, token, cmd);
+	else if ((*token)->type == INPUT)
+		process_input(data, token, cmd);
+	else if ((*token)->type == OUTPUT)
+		process_output(data, token, cmd);
+	else
+		other(data, token, cmd, i);
 }
 
 t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
@@ -84,28 +100,8 @@ t_simple_cmd	*create_simple_cmd(t_minishell *data, t_token *token)
 			process_pipe_token(data, &token);
 			break ;
 		}
-		else if (token->type == HEREDOC)
-			process_heredoc(data, &token, cmd);
-		else if (token->type == APPEND)
-		{
-			if (process_append(data, &token, cmd))
-				break ;
-		}
-		else if (token->type == INPUT)
-		{
-			if (process_input(data, &token, cmd))
-				break ;
-		}
-		else if (token->type == OUTPUT)
-		{
-			if (process_output(data, &token, cmd))
-				break ;
-		}
 		else
-		{
-			if (other(data, &token, cmd, &i))
-				break ;
-		}
+			process_all(&token, data, cmd, &i);
 		if (data->error_trigger != 0)
 			break ;
 	}

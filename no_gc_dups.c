@@ -73,13 +73,10 @@ char	*no_gc_strjoin(char *s1, char const *s2)
 		ft_putstr_fd("minishell : malloc failure\n", 2);
 		return (NULL);
 	}
-	i = 0;
+	i = -1;
 	j = 0;
-	while (s1[i])
-	{
+	while (s1[++i])
 		new[j++] = s1[i];
-		i++;
-	}
 	i = 0;
 	while (s2[i])
 		new[j++] = s2[i++];

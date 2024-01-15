@@ -35,7 +35,8 @@ SRCS = token.c \
 	   print_token_nodes.c \
 	   token_utils.c \
 	   token_adder.c \
-	   token_handler.c
+	   token_handler.c \
+	   expand_heredoc_utils.c
 
 OBJ_DIR = obj
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))

@@ -39,7 +39,7 @@ void	process_heredoc(t_minishell *data, t_token **token, t_simple_cmd *cmd)
 	cmd->heredoc = 1;
 }
 
-int	process_append(t_minishell *data, t_token **token, t_simple_cmd *cmd)
+void	process_append(t_minishell *data, t_token **token, t_simple_cmd *cmd)
 {
 	if ((*token)->next == NULL || 
 		(*token)->next->type == PIPE || (*token)->next->type == HEREDOC
@@ -51,16 +51,19 @@ int	process_append(t_minishell *data, t_token **token, t_simple_cmd *cmd)
 			*token = (*token)->next->next;
 		else
 			*token = (*token)->next;
-		return (1);
+		return ;
 	}
 	if (add_file((*token)->next->content, data, &cmd->output))
-		return (1);
+	{
+		data->error_trigger = 1;
+		return ;
+	}
 	*token = (*token)->next->next;
 	cmd->append_mode = 1;
-	return (0);
+	return ;
 }
 
-int	process_input(t_minishell *data, t_token **token, t_simple_cmd *cmd)
+void	process_input(t_minishell *data, t_token **token, t_simple_cmd *cmd)
 {
 	if ((*token)->next == NULL || 
 		(*token)->next->type == PIPE || (*token)->next->type == APPEND
@@ -71,16 +74,19 @@ int	process_input(t_minishell *data, t_token **token, t_simple_cmd *cmd)
 			*token = (*token)->next->next;
 		else
 			*token = (*token)->next;
-		return (1);
+		return ;
 	}
 	if (add_file((*token)->next->content, data, &cmd->input))
-		return (1);
+	{
+		data->error_trigger = 1;
+		return ;
+	}
 	*token = (*token)->next->next;
 	cmd->heredoc = 0;
-	return (0);
+	return ;
 }
 
-int	process_output(t_minishell *data, t_token **token, t_simple_cmd *cmd)
+void	process_output(t_minishell *data, t_token **token, t_simple_cmd *cmd)
 {
 	if ((*token)->next == NULL || 
 		(*token)->next->type == PIPE || (*token)->next->type == INPUT
@@ -91,11 +97,14 @@ int	process_output(t_minishell *data, t_token **token, t_simple_cmd *cmd)
 			*token = (*token)->next->next;
 		else
 			*token = (*token)->next;
-		return (1);
+		return ;
 	}
 	if (add_file((*token)->next->content, data, &cmd->output))
-		return (1);
+	{
+		data->error_trigger = 1;
+		return ;
+	}
 	*token = (*token)->next->next;
 	cmd->append_mode = 0;
-	return (0);
+	return ;
 }

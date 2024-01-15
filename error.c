@@ -23,11 +23,17 @@ int	print_syntax_error(t_token *token)
 	return (258);
 }
 
-void	print_error(int	type, t_minishell *data)
+void	print_error(int type, t_minishell *data)
 {
 	if (type == 1)
 		ft_putstr_fd("failed to pipe\n", 2);
 	if (type == 2)
 		ft_putstr_fd("failed to fork\n", 2);
 	data->error_trigger = 1;
+}
+
+char	**print_alloc_error(void)
+{
+	ft_putstr_fd("minishell : malloc failure\n", 2);
+	return (NULL);
 }

@@ -100,6 +100,15 @@ typedef struct
     t_minishell *data;
 }	TokenArgs;
 
+typedef struct
+{
+    char ***copy;
+    int *i;
+    int *sh_lvl;
+    char **env;
+}	EnvProcessArgs;
+
+
 
 int				ft_strlen(const char *str);
 void			token(char *input, t_minishell *data);
@@ -138,11 +147,11 @@ char			*process_other_chars(char *str, char *translated,
 void			process_pipe_token(t_minishell *data, t_token **token);
 void			process_heredoc(t_minishell *data,
 					t_token **token, t_simple_cmd *cmd);
-int				process_append(t_minishell *data,
+void				process_append(t_minishell *data,
 					t_token **token, t_simple_cmd *cmd);
-int				process_input(t_minishell *data,
+void				process_input(t_minishell *data,
 					t_token **token, t_simple_cmd *cmd);
-int				process_output(t_minishell *data,
+void				process_output(t_minishell *data,
 					t_token **token, t_simple_cmd *cmd);
 t_simple_cmd	*get_cmd(t_token *token, t_minishell *data);
 t_simple_cmd	*recursive_parsing(t_minishell *data);
@@ -231,4 +240,5 @@ int				add_normal_str(char	*str, int i,
 					char **content, t_minishell *data);
 void			add_token_str(t_token **head,
 					char **content, t_minishell *data);
+char			**print_alloc_error(void);
 #endif

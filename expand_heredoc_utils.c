@@ -12,50 +12,46 @@
 
 #include "minishell.h"
 
-char	*build_translated_string(char **str, int len, t_minishell *data)
+int	need_refine(char *str)
 {
-	char	*translated;
-	int		i;
-	int		j;
-	bool	in_quote;
+	int	i;
 
-	init_vars(translated, &i, &j, &in_quote);
-	translated = gc_malloc(len + 1, data); 
-	if (translated == NULL)
-		return (NULL);
+	i = 0;
 	while (str[i] != '\0')
 	{
-		if (is_escape_sequence(str, i) && !in_quote)
-		{
-			i += 2;
-			continue ;
-		}
-		if (is_quote_char(str[i]))
-		{
-			in_quote = !in_quote;
-			i++;
-			continue ;
-		}
-		translated[j++] = str[i++];
+		if (str[i] == '\'' || str[i] == '"' || str[i] == '$')
+			return (1);
+		i++;
 	}
-	translated[j] = '\0';
-	return (translated);
+	return (0);
 }
 
-bool	is_quote_char(char c)
+void	expand_heredoc(t_token *token, t_minishell *data)
 {
-	return (c == '\'' || c == '\"');
+	if (quoted(token->content))
+		token->quoted_heredoc = 1;
+	token->content = heredoc_delim(token->content, data);
 }
 
-bool	is_escape_sequence(const char *str, int index)
+int	remove_double(char *str, int i, char **exp, t_minishell *data)
 {
-	return (str[index] == '$' && is_quote_char(str[index + 1]));
-}
+	int	start;
 
-char	*heredoc_delim(char *str, t_minishell *data)
-{
-	int	len; 
-
-	len = calculate_translated_length(str);
-	return (build_translated_string(str, len, data));
+	i++;
+	start = i;
+	while (str[i])
+	{
+		if (str[i] == '"')
+			break ;
+		else if (str[i] == '$')
+		{
+			*exp = ft_strjoin(*exp, ft_strndup(str, start, i - 1, data), data);
+			i = dollar(str, i, exp, data, 1);
+			start = i;
+			continue ;
+		}
+		i++;
+	}
+	*exp = ft_strjoin(*exp, ft_strndup(str, start, i - 1, data), data);
+	return (i);
 }
