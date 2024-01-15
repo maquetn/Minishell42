@@ -19,5 +19,5 @@ int	ft_exit(t_minishell *data)
 	free_custom_alloc(data);
 	free_tabl(data->env);
 	free(data->input);
-	exit(data->exit_code);
+	exit(data->code);
 }

@@ -12,6 +12,7 @@ SRCS = token.c \
 	   builtins/ft_pwd.c \
 	   builtins/ft_export.c \
 	   builtins/ft_unset.c \
+	   builtins/piece_of_cd.c \
 	   expander.c \
 	   custom_malloc.c \
 	   heredoc.c \
@@ -28,7 +29,9 @@ SRCS = token.c \
 	   redirection.c \
 	   copy_env.c \
 	   no_gc_dups.c \
-	   signals.c
+	   signals.c \
+	   libft.c \
+	   main_routine.c
 
 OBJ_DIR = obj
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))

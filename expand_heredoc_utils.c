@@ -55,7 +55,7 @@ bool	is_escape_sequence(const char *str, int index)
 
 char	*heredoc_delim(char *str, t_minishell *data)
 {
-	int len; 
+	int	len; 
 
 	len = calculate_translated_length(str);
 	return (build_translated_string(str, len, data));

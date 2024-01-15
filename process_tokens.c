@@ -33,7 +33,8 @@ void	process_heredoc(t_minishell *data, t_token **token, t_simple_cmd *cmd)
 			*token = (*token)->next;
 		return ;
 	}
-	cmd->heredoc_string = manage_heredoc((*token)->next->content, data, (*token)->next->quoted_heredoc);
+	cmd->heredoc_string = manage_heredoc((*token)->next->content,
+			data, (*token)->next->quoted_heredoc);
 	*token = (*token)->next->next;
 	cmd->heredoc = 1;
 }

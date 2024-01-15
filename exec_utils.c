@@ -88,14 +88,16 @@ int	create_all_open_last(t_simple_cmd *cmd)
 
 void	handle_builtin(t_simple_cmd *cmd, t_minishell *data, int *pp_fd)
 {
-	if (cmd->args != NULL)
+	if (cmd->args != NULL && cmd->next == NULL)
 	{
 		if (strcmp(cmd->args[0], "export") == 0 && pp_fd == 0)
 			ft_export(data, cmd->args);
 		else if (strcmp(cmd->args[0], "unset") == 0 && pp_fd == 0)
 			ft_unset(data, cmd->args);
 		else if (strcmp(cmd->args[0], "cd") == 0 && pp_fd == 0)
+		{
 			ft_cd(data, cmd->args[1]);
+		}
 		else if (ft_strcmp(cmd->args[0], "exit", data) == 0)
 			ft_exit(data);
 	}

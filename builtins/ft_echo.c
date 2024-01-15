@@ -1,35 +1,61 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mdor <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/14 23:21:14 by mdor              #+#    #+#             */
+/*   Updated: 2024/01/14 23:21:16 by mdor             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-void ft_echo(char **args, int index)
+void	process_flags(char **args, int *index, int *n)
 {
-	int n;
-	unsigned long i;
+	unsigned long	i;
 
-	n = 0;
-	i = 0;
-	while (args[index] != NULL)
+	*n = 0;
+	while (args[*index] != NULL)
 	{
-		if (args[index][0] == '-')
+		if (args[*index][0] == '-')
 		{
 			i = 1;
-			while (args[index][i] == 'n')
-				i++;
-			if (i == strlen(args[index]) && i > 1)
+			while (args[*index][i] == 'n')
 			{
-				index++;
-				n = 1;
+				i++;
+			}
+			if (i == strlen(args[*index]) && i > 1)
+			{
+				(*index)++;
+				*n = 1;
 			}
 			else
-				break;
+				break ;
 		}
 		else
-			break;
+			break ;
 	}
+}
+
+void	print_echo(char **args, int index, int n)
+{
 	while (args[index] != NULL)
 	{
 		printf("%s ", args[index]);
 		index++;
 	}
 	if (n == 0)
+	{
 		printf("\n");
+	}
+}
+
+void	ft_echo(char **args, int index)
+{
+	int	n;
+
+	process_flags(args, &index, &n);
+	print_echo(args, index, n);
 }

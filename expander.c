@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*																			  */
-/*														:::	  ::::::::	      */
-/*   expander.c										 :+:	  :+:	:+:	      */
+/*														:::	  ::::::::		  */
+/*   expander.c										 :+:	  :+:	:+:		  */
 /*													+:+ +:+		 +:+		  */
 /*   By: mdor <marvin@42.fr>						+#+  +:+	   +#+		  */
 /*												+#+#+#+#+#+   +#+			  */
@@ -10,36 +10,28 @@
 /*																			  */
 /* ************************************************************************** */
 
-//protected
-
-#include "minishell.h"	
+#include "minishell.h"
 
 int	dollar(char *str, int i, char **expanded, t_minishell *data, int quoted)
 {
 	char	*translated = NULL;
-	int		code;
-	char	*placeholder = NULL;
 
-	code = 0;
 	while (str[i] && str[i] == '$')
 	{
 		if (str[i] == '$' && str[i + 1] == '$')
 		{
-			translated = ft_strdup("$$", data);
-			*expanded = ft_strjoin(*expanded, translated, data);
+			*expanded = ft_strjoin(*expanded, "$$", data);
 			i += 2;
 		}
 		else if (str[i] == '$' && str[i + 1] == '?')
 		{
-			code = data->exit_code;
-			translated = ft_itoa(code, data);
-			*expanded = ft_strjoin(*expanded, translated, data);
+			*expanded = ft_strjoin(*expanded, ft_itoa(data->code, data), data);
 			i += 2;
 		}
 		else if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
 		{
-			placeholder = ft_strndup(str, i + 1, _next(str, i + 1) - 1, data);
-			translated = get_env(placeholder, data->env, data);
+			translated = get_env(ft_strndup(str, i + 1,
+						_next(str, i + 1) - 1, data), data->env, data);
 			if (translated == NULL)
 				translated = ft_strdup("", data);
 			*expanded = ft_strjoin(*expanded, translated, data);
@@ -66,39 +58,35 @@ int	dollar(char *str, int i, char **expanded, t_minishell *data, int quoted)
 	return (i);
 }
 
-void	fine_touch(t_token *token, t_minishell *data)
+void	fine_touch(t_token *t, t_minishell *data)
 {
-	char	*translated = NULL;
 	int		i;
-	char	*expanded = NULL;
+	char	*expanded;
 
-	translated = ft_strdup(token->content, data);
-	i = 0;
+	i = -1;
 	expanded = ft_strdup("", data);
-	while (translated[i] != '\0')
+	while (t->content[++i] != '\0' || i < ft_strlen(t->content))
 	{
-		if (translated[i] == '\'')
-			i = remove_single(translated, i, &expanded, data);
-		else if (translated[i] == '"')
-			i = remove_double(translated, i, &expanded, data);
-		else if (translated[i] == '$')
+		if (t->content[i] == '\'')
+			i = remove_single(t->content, i, &expanded, data) - 1;
+		else if (t->content[i] == '"')
+			i = remove_double(t->content, i, &expanded, data) - 1;
+		else if (t->content[i] == '$')
 		{
-			i = dollar(translated, i, &expanded, data, 0);
-			if (i >= 2)
-				if (translated[i] == '\'' || (translated[i - 1] == '$' && translated[i - 2] == '$'))
+			i = dollar(t->content, i, &expanded, data, 0) - 1;
+			if (i >= 2 && (t->content[i] == '\'' || (t->content[i - 1] == '$'
+						&& t->content[i - 2] == '$')))
 					continue ;
 		}
 		else
 		{
-			expanded = ft_strjoin(expanded, ft_strndup(translated, i, get_cancer(translated, i) - 1, data), data);
-			i = get_cancer(translated, i);
+			expanded = ft_strjoin(expanded, ft_strndup(t->content,
+						i, get_cancer(t->content, i) - 1, data), data);
+			i = get_cancer(t->content, i) - 1;
 			continue ;
 		}
-		if (i >= ft_strlen(translated))
-			break ;
-		i++;
 	}
-	token->content = ft_strdup(expanded, data);
+	t->content = ft_strdup(expanded, data);
 }
 
 void	expander(t_minishell *data)

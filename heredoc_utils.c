@@ -31,7 +31,7 @@ char	*heredoc_dollar(char *str, t_minishell *data, int j)
 		if (str[i] == '$' && str[i + 1] == '$')
 			translated = process_double_dollar(translated, &i, data);
 		else if (str[i] == '$' && str[i + 1] == '?')
-			translated = process_exit_code(translated, &i, data);
+			translated = process_code(translated, &i, data);
 		else if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
 			translated = process_env_variable(str, translated, &i, data);
 		else if (str[i] == '$')
@@ -53,12 +53,12 @@ char	*process_double_dollar(char *translated, int *i, t_minishell *data)
 	return (ft_strjoin(translated, placeholder, data));
 }
 
-char	*process_exit_code(char *translated, int *i, t_minishell *data)
+char	*process_code(char *translated, int *i, t_minishell *data)
 {
 	int		code;
 	char	*placeholder;
 
-	code = data->exit_code;
+	code = data->code;
 	placeholder = ft_itoa(code, data);
 	*i += 2;
 	return (ft_strjoin(translated, placeholder, data));

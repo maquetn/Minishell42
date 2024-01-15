@@ -12,10 +12,9 @@
 
 #include "minishell.h"
 
-void sig_handler(int signum)
+void	sig_handler(int signum)
 {
-	//cat + ctrl+C
-    (void)signum; // To avoid the unused parameter warning
+	(void)signum;
 	if (g_status)
 	{
 		ft_putstr_fd("\n", 1);
