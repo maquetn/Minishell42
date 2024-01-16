@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:41:15 by nmaquet           #+#    #+#             */
-/*   Updated: 2024/01/16 13:43:52 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/16 15:53:14 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,27 +66,37 @@ void	update_existing(t_minishell *data, char *current_arg, int env_count)
 
 char	*handle_removed(char *current_arg)
 {
-	char	*char_position;
-	size_t	removed_plus_length;
-	char	*temp;
+	char		*char_position = strchr(current_arg, '+');
+	size_t		removed_plus_length;
+	char		*temp;
 
-	temp = strdup("");
-	char_position = strchr(current_arg, '+');
 	if (char_position != NULL)
 	{
 		removed_plus_length = char_position - current_arg;
+		temp = malloc(sizeof(char) * (removed_plus_length + strlen(char_position + 1) + 1));
+
+		// Copy the part before '+'
 		strncpy(temp, current_arg, removed_plus_length);
 		temp[removed_plus_length] = '\0';
-		strcat(temp, char_position + 1);
+
+		// Concatenate the part after '+'
+		strncat(temp, char_position + 1, strlen(char_position + 1));
 	}
 	else
 	{
-		temp = malloc((sizeof (char)) * PATH_MAX);
-		strncpy(temp, current_arg, PATH_MAX);
+		printf("TEST\n\n");
+		temp = malloc(sizeof(char) * PATH_MAX);
+
+		// Avoid buffer overflow, use PATH_MAX - 1 for strncpy
+		strncpy(temp, current_arg, PATH_MAX - 1);
 		temp[PATH_MAX - 1] = '\0';
+
+		printf("%s\n", temp);
 	}
+
 	return (temp);
 }
+
 
 void	ft_declare(t_minishell *data, char **args)
 {

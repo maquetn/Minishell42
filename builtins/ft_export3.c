@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:36:13 by nmaquet           #+#    #+#             */
-/*   Updated: 2024/01/16 13:49:31 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/16 14:17:13 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,15 @@
 
 int	syntax_loop(char *arg, int i)
 {
+	if (arg[i] == '=')
+		return (-1);
 	while (arg[i] && arg[i] != '=')
 	{
 		if (isalnum(arg[i]) == 0 && arg[i] != '_')
 		{
-			if (arg[i] == '+' && arg[i + 1] != '=')
-			{
-				printf("Minishell: export: `%s': \
-                    not a valid identifier\n", arg);
+			if ((isalnum(arg[i]) == 0 && arg[i] != '+') || \
+				(arg[i] == '+' && arg[i + 1] != '='))
 				return (-1);
-			}
 		}
 		i++;
 	}
