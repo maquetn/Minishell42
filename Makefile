@@ -11,6 +11,8 @@ SRCS = token.c \
 	   builtins/ft_env.c \
 	   builtins/ft_pwd.c \
 	   builtins/ft_export.c \
+	   builtins/ft_export2.c \
+	   builtins/ft_export3.c \
 	   builtins/ft_unset.c \
 	   builtins/piece_of_cd.c \
 	   expander.c \

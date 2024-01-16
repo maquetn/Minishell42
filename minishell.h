@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdor <marvin@42.fr>                        +#+  +:+       +#+        */
+/*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 08:10:33 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/15 08:10:36 by mdor             ###   ########.fr       */
+/*   Updated: 2024/01/16 13:52:37 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,4 +247,14 @@ int				expand_env(char *str, int i,
 int				check_quotes(char *str, int i,
 					char **expanded, t_minishell *data);
 char			**newpwd(t_minishell *data);
+
+int				syntax_env_var(char *arg);
+int				simple_equal(t_minishell *data, int env_count, 
+					char *current_arg);
+void			plus_equal(t_minishell *data, int env_count, char *removed_plus,
+					char *current_arg);
+void			add_variable(t_minishell *data, char *removed_plus);
+void			update_existing(t_minishell *data, 
+					char *current_arg, int env_count);
+
 #endif
