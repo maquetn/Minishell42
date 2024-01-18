@@ -14,7 +14,6 @@
 
 int	dollar(char *str, int i, char **expanded, t_minishell *data)
 {
-	data->quoted = 0;
 	while (str[i] && str[i] == '$')
 	{
 		if (str[i] == '$' && (str[i + 1] == '$' || str[i + 1] == '?'))
@@ -96,5 +95,5 @@ void	expander(t_minishell *data)
 		heredoc = 0;
 	}
 	rewind_tokens(data);
-	print_tokens(data->first_token);
 }
+	//print_tokens(data->first_token);

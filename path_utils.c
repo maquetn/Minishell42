@@ -27,7 +27,7 @@ char	*get_env(char *name, char **env, t_minishell *data)
 		path = ft_substr(env[i], 0, j, data);
 		if (ft_strcmp(path, name, data) == 0)
 		{
-			return (env[i] + j + 1);
+			return (ft_strndup (env[i], j + 1, ft_strlen(env[i]), data));
 		}
 		i++;
 	}

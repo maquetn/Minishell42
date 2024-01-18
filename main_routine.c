@@ -31,8 +31,8 @@ void	routine(t_minishell *data)
 	if (data->first_token && data->error_trigger == 0)
 		planting(data);
 	signal(SIGQUIT, sigquit);
-	//print_nodes(data);
 	if (data->node && data->error_trigger == 0)
 		execute_simple_cmd(data->node, data, NULL);
+	//print_nodes(data);
 	reset_data(data);
 }

@@ -34,7 +34,6 @@ int		ft_exit_atoi(const char *str, bool *error)
 	if (ft_isdigit(str[i]) == 0)
 	{
  		error = (bool*)true;
-		printf("helo\n");
 		return (255);
 	}
 	return (num * neg);

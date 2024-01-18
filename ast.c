@@ -55,9 +55,14 @@ t_simple_cmd	*init_simple_cmd_wrapper(t_minishell *data, t_token *token)
 
 void	other(t_minishell *data, t_token **token, t_simple_cmd *cmd, int *i)
 {
+	if ((*token)->content[0] == '\0')
+	{
+		*token = (*token)->next;
+		return ;
+	}
 	if (*i == 0)
 		cmd->path_to_cmd = get_path((*token)->content, data->env, data);
-	if (cmd->args || cmd->args[0][0] != '\0')
+	if (cmd->args)
 		cmd->args[*i] = ft_strdup((*token)->content, data);
 	if (cmd->args[*i] == NULL || cmd->path_to_cmd == NULL)
 	{
