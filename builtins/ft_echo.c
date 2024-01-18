@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdor <marvin@42.fr>                        +#+  +:+       +#+        */
+/*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 23:21:14 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/14 23:21:16 by mdor             ###   ########.fr       */
+/*   Updated: 2024/01/18 18:35:09 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,13 @@ void	process_flags(char **args, int *index, int *n)
 
 void	print_echo(char **args, int index, int n)
 {
-	while (args[index] != NULL)
+	while (args[index + 1] != NULL)
 	{
 		printf("%s ", args[index]);
 		index++;
 	}
+
+	printf("%s", args[index]);
 	if (n == 0)
 	{
 		printf("\n");
