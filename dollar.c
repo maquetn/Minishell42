@@ -54,7 +54,6 @@ int	expand_env(char *str, int i, char **expanded, t_minishell *data)
 
 	trans = get_env(ft_strndup(str, i + 1,
 				_next(str, i + 1) - 1, data), data->env, data);
-	printf("trans : %s\n", trans);
 	if (data->quoted == 0)
 		remove_spaces(trans);
 	if (trans == NULL)

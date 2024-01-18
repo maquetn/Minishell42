@@ -95,7 +95,13 @@ void	parent(t_simple_cmd *cmd, t_minishell *data, int *p_fd, pid_t child_pid)
 		else if (WIFEXITED(status))
 		{
 			if (ft_strcmp(data->node->args[0], "cd", data) != 0)
+			{
+				while (data->node->next != NULL)
+					data->node = data->node->next;
+				if (ft_strcmp(data->node->args[0], "exit", data) == 0)
+					return ;
 				data->error_trigger = WEXITSTATUS(status);
+			}
 		}
 	}
 }
