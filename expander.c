@@ -54,7 +54,7 @@ void	fine_touch(t_token *t, t_minishell *data)
 		else if (t->content[i] == '$')
 		{
 			i = dollar(t->content, i, &expanded, data);
-			if (i >= 2 && (t->content[i] == '\'' || (t->content[i - 1] == '$'
+			if (i >= 2 && (t->content[i] == '\'' || ((t->content[i - 1] == '$' || t->content[i - 1] == '?')
 						&& t->content[i - 2] == '$')))
 				continue ;
 		}
