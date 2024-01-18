@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:41:15 by nmaquet           #+#    #+#             */
-/*   Updated: 2024/01/18 13:35:52 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/18 13:57:15 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,14 +100,17 @@ char	*handle_removed(char *current_arg, t_minishell *data)
 
 void	ft_declare(t_minishell *data, char **args)
 {
-	int	i;
+	int		i;
+	char	*equal_sign;
 
 	i = 0;
 	if (data && data->env && !args[1])
 	{
 		while (data->env[i] != NULL)
 		{
-			printf("declare -x %s\n", data->env[i]);
+			equal_sign = strchr(data->env[i], '=');
+			write(1, data->env[i],  (equal_sign + 1) - data->env[i]);
+			printf("\"%s\"\n", equal_sign + 1);
 			++i;
 		}
 	}
