@@ -26,7 +26,7 @@ int	execute_builtins(t_simple_cmd *cmd, t_minishell *data)
 		ft_pwd(data);
 		return (1);
 	}
-	else if (ft_strcmp(cmd->args[0], "env, data", data) == 0)
+	else if (ft_strcmp(cmd->args[0], "env", data) == 0)
 	{
 		ft_env(data);
 		return (1);
