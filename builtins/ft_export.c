@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:41:15 by nmaquet           #+#    #+#             */
-/*   Updated: 2024/01/18 14:05:07 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/18 17:43:53 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,8 @@ void	ft_export(t_minishell *data, char **args)
 	char	removed_plus[PATH_MAX];
 
 	exp = 1;
+	if (args == NULL)
+		return ;
 	while (args[exp])
 	{
 		current_arg = args[exp];

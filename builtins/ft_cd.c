@@ -31,11 +31,15 @@ int	change_to_home_dir(t_minishell *data)
 	}
 }
 
-int	change_to_parent_dir(void)
+int	change_to_parent_dir(t_minishell *data)
 {
 	char	cwd[PATH_MAX];
 
-	getcwd(cwd, sizeof(cwd));
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
+	{
+		printf("Error : Trying to reach an unknown directory, going to Home instead\n");
+		return (change_to_home_dir(data));
+	}
 	if (strcmp(cwd, "/Users") == 0)
 	{
 		if (chdir("/") == 0)
@@ -108,7 +112,7 @@ int	ft_cd(t_minishell *data, char *token)
 		|| (ft_strcmp(&token[0], "~", data) == 0))
 		error = change_to_home_dir(data);
 	else if (strcmp(token, "..") == 0)
-		error = change_to_parent_dir();
+		error = change_to_parent_dir(data);
 	else if (strcmp(token, "-") == 0)
 		error = change_to_oldpwd(data);
 	else
