@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:36:13 by nmaquet           #+#    #+#             */
-/*   Updated: 2024/01/16 14:17:13 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/18 18:54:51 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,13 @@ int	syntax_env_var(char *arg)
 		return (i);
 	else
 	{
-		printf("Minishell: export: `%s': not a valid identifier\n", arg);
+		i = 0;
+		while (arg[i] && arg[i] != '=')
+		{
+			i++;
+		}
+		if (arg[i] == '=')
+			printf("Minishell: export: `%s': not a valid identifier\n", arg);
 		return (-1);
 	}
 }
