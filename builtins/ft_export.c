@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:41:15 by nmaquet           #+#    #+#             */
-/*   Updated: 2024/01/16 15:53:14 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/18 13:35:52 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	update_existing(t_minishell *data, char *current_arg, int env_count)
 	}
 }
 
-char	*handle_removed(char *current_arg)
+char	*handle_removed(char *current_arg, t_minishell *data)
 {
 	char		*char_position = strchr(current_arg, '+');
 	size_t		removed_plus_length;
@@ -73,7 +73,7 @@ char	*handle_removed(char *current_arg)
 	if (char_position != NULL)
 	{
 		removed_plus_length = char_position - current_arg;
-		temp = malloc(sizeof(char) * (removed_plus_length + strlen(char_position + 1) + 1));
+		temp = gc_malloc(sizeof(char) * (removed_plus_length + strlen(char_position + 1) + 1), data);
 
 		// Copy the part before '+'
 		strncpy(temp, current_arg, removed_plus_length);
@@ -85,11 +85,11 @@ char	*handle_removed(char *current_arg)
 	else
 	{
 		printf("TEST\n\n");
-		temp = malloc(sizeof(char) * PATH_MAX);
+		temp = gc_malloc(sizeof(char) * (strlen(current_arg) + 1), data);
 
 		// Avoid buffer overflow, use PATH_MAX - 1 for strncpy
-		strncpy(temp, current_arg, PATH_MAX - 1);
-		temp[PATH_MAX - 1] = '\0';
+		strcpy(temp, current_arg);
+		temp[strlen(current_arg)] = '\0';
 
 		printf("%s\n", temp);
 	}
@@ -128,7 +128,7 @@ void	ft_export(t_minishell *data, char **args)
 		env_count = simple_equal(data, env_count, current_arg);
 		if (data->env[env_count] == NULL && syntax_env_var(current_arg) != -1)
 		{
-			strcpy(removed_plus, handle_removed(current_arg));
+			strcpy(removed_plus, handle_removed(current_arg, data));
 			plus_equal(data, 0, removed_plus, current_arg);
 		}
 		exp++;
