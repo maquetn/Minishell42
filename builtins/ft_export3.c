@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:36:13 by nmaquet           #+#    #+#             */
-/*   Updated: 2024/01/18 18:54:51 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/18 19:31:48 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,10 @@ int	syntax_env_var(char *arg)
 char	**ft_existence(int i, char **new_env, char *removed_plus, int j)
 {
 	if (j == 0)
-		strcat(new_env[i], strchr(removed_plus, '=') + 1);
+		ft_strcat(new_env[i], ft_strchr(removed_plus, '=') + 1);
 	else if (j == 1)
 	{
-		new_env[i] = strdup(removed_plus);
+		new_env[i] = no_gc_strdup(removed_plus);
 		new_env[i + 1] = NULL;
 	}
 	return (new_env);

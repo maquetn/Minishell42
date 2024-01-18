@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:34:05 by nmaquet           #+#    #+#             */
-/*   Updated: 2024/01/16 13:41:04 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/18 19:39:15 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	simple_equal(t_minishell *data, int env_count, char *current_arg)
 	{
 		if (syntax_env_var(current_arg) == -1)
 			break ;
-		if (strncmp(data->env[env_count], current_arg,
+		if (ft_strncmp(data->env[env_count], current_arg,
 				syntax_env_var(current_arg)) == 0
 			&& data->env[env_count][syntax_env_var(current_arg)] == '=')
 		{
@@ -40,7 +40,7 @@ void	plus_equal(t_minishell *data, int env_count, char *removed_plus,
 	{
 		if (syntax_env_var(removed_plus) == -1)
 			break ;
-		if (strncmp(data->env[env_count], removed_plus,
+		if (ft_strncmp(data->env[env_count], removed_plus,
 				syntax_env_var(removed_plus)) == 0
 			&& data->env[env_count]
 			[syntax_env_var(removed_plus)] == '=')

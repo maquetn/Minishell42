@@ -16,17 +16,17 @@
 
 int	execute_builtins(t_simple_cmd *cmd, t_minishell *data)
 {
-	if (strcmp(cmd->args[0], "echo") == 0)
+	if (ft_strcmp(cmd->args[0], "echo", data) == 0)
 	{
 		ft_echo(cmd->args, 1);
 		return (1);
 	}
-	else if (strcmp(cmd->args[0], "pwd") == 0)
+	else if (ft_strcmp(cmd->args[0], "pwd", data) == 0)
 	{
 		ft_pwd(data);
 		return (1);
 	}
-	else if (strcmp(cmd->args[0], "env") == 0)
+	else if (ft_strcmp(cmd->args[0], "env, data", data) == 0)
 	{
 		ft_env(data);
 		return (1);
