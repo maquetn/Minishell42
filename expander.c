@@ -40,6 +40,16 @@ int	sing_double(t_token *token, int i, char **expanded, t_minishell *data)
 	return (i);
 }
 
+int	continue_condition(int i, t_token *t)
+{
+	if (i >= 2 && (t->content[i] == '\'' || ((t->content[i - 1] == '$'
+					|| t->content[i - 1] == '?')
+				&& t->content[i - 2] == '$')))
+		return (1);
+	else
+		return (0);
+}
+
 void	fine_touch(t_token *t, t_minishell *data)
 {
 	int		i;
@@ -54,8 +64,7 @@ void	fine_touch(t_token *t, t_minishell *data)
 		else if (t->content[i] == '$')
 		{
 			i = dollar(t->content, i, &expanded, data);
-			if (i >= 2 && (t->content[i] == '\'' || ((t->content[i - 1] == '$' || t->content[i - 1] == '?')
-						&& t->content[i - 2] == '$')))
+			if (continue_condition(i, t) == 1)
 				continue ;
 		}
 		else
@@ -95,5 +104,5 @@ void	expander(t_minishell *data)
 		heredoc = 0;
 	}
 	rewind_tokens(data);
-	//print_tokens(data->first_token);
 }
+	//print_tokens(data->first_token);

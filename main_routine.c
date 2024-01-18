@@ -33,6 +33,6 @@ void	routine(t_minishell *data)
 	signal(SIGQUIT, sigquit);
 	if (data->node && data->error_trigger == 0)
 		execute_simple_cmd(data->node, data, NULL);
-	//print_nodes(data);
 	reset_data(data);
 }
+	//print_nodes(data);

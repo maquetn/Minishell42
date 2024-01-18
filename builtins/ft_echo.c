@@ -41,8 +41,10 @@ void	process_flags(char **args, int *index, int *n)
 
 void	print_echo(char **args, int index, int n)
 {
-	while (args[index + 1] != NULL)
+	while (args[index] != NULL)
 	{
+		if (!args[index + 1])
+			break ;
 		printf("%s ", args[index]);
 		index++;
 	}
