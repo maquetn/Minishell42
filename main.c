@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdor <marvin@42.fr>                        +#+  +:+       +#+        */
+/*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 02:15:03 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/15 02:15:05 by mdor             ###   ########.fr       */
+/*   Updated: 2024/01/18 19:56:46 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,13 @@ void	looping(t_minishell *data)
 		data->input = readline(prompt);
 		if (data->input == NULL)
 			ft_exit(data, NULL, 1);
-		if (data->input != NULL)
-			add_history(data->input);
 		if (data->input[0] == '\0' || is_only_space(data->input) == 1)
 		{
 			free(data->input);
 			continue ;
 		}
+		if (data->input != NULL)
+			add_history(data->input);
 		routine(data);
 		g_status = 0;
 	}
