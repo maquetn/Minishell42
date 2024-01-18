@@ -46,8 +46,8 @@ void	print_echo(char **args, int index, int n)
 		printf("%s ", args[index]);
 		index++;
 	}
-
-	printf("%s", args[index]);
+	if (args[index] != NULL)
+		printf("%s", args[index]);
 	if (n == 0)
 	{
 		printf("\n");
