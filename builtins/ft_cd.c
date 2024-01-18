@@ -40,7 +40,7 @@ int	change_to_parent_dir(t_minishell *data)
 		printf("Error : Trying to reach an unknown directory, going to Home instead\n");
 		return (change_to_home_dir(data));
 	}
-	if (strcmp(cwd, "/Users") == 0)
+	if (ft_strcmp(cwd, "/Users", data) == 0)
 	{
 		if (chdir("/") == 0)
 			return (1);
@@ -111,9 +111,9 @@ int	ft_cd(t_minishell *data, char *token)
 	if (token == NULL || token[0] == '\0'
 		|| (ft_strcmp(&token[0], "~", data) == 0))
 		error = change_to_home_dir(data);
-	else if (strcmp(token, "..") == 0)
+	else if (ft_strcmp(token, "..", data) == 0)
 		error = change_to_parent_dir(data);
-	else if (strcmp(token, "-") == 0)
+	else if (ft_strcmp(token, "-", data) == 0)
 		error = change_to_oldpwd(data);
 	else
 		error = change_to_custom_dir(token, data);

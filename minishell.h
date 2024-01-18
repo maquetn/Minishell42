@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 08:10:33 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/18 18:03:19 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/18 19:34:21 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,11 @@ typedef struct s_env_args
 	char		**env;
 }	t_env_args;
 
+char			*ft_strchr(const char *s, int c);
+char			*ft_strcpy(char *dest, char *src);
+char			*ft_strncpy(char *dst, const char *src, size_t n);
+char			*ft_strcat(char *dest, char *src);
+char			*ft_strncat(char *dest, char *src, int nb);
 int				ft_strlen(const char *str);
 void			token(char *input, t_minishell *data);
 void			restore_terminal(struct termios *original_termios);

@@ -27,6 +27,7 @@ SRCS = token.c \
 	   exec_utils.c \
 	   libft_functions.c \
 	   utils2.c \
+	   utils3.c \
 	   parsing_utils.c \
 	   redirection.c \
 	   copy_env.c \
