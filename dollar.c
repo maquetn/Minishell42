@@ -21,12 +21,45 @@ int	doldol_dolmark(char **expanded, char nextchr, t_minishell *data, int i)
 	return (i + 2);
 }
 
+void removeExtraSpaces(char *inputStr) {
+    int readIndex = 0, writeIndex = 0;
+    int length = strlen(inputStr);
+
+    if (!inputStr)
+		return ;
+    while (inputStr[readIndex] == ' ') {
+        readIndex++;
+    }
+
+    while (readIndex < length) {
+        // Copy the current character to the writeIndex and increment both indices
+        inputStr[writeIndex++] = inputStr[readIndex++];
+
+        // If the current character is a space, skip all subsequent spaces
+        if (inputStr[readIndex - 1] == ' ') {
+            while (inputStr[readIndex] == ' ' && readIndex < length) {
+                readIndex++;
+            }
+        }
+    }
+
+    // Trimming trailing spaces
+    if (writeIndex > 0 && inputStr[writeIndex - 1] == ' ') {
+        writeIndex--;
+    }
+
+    // Null terminate the modified string
+    inputStr[writeIndex] = '\0';
+}
+
 int	expand_env(char *str, int i, char **expanded, t_minishell *data)
 {
 	char	*trans;
 
 	trans = get_env(ft_strndup(str, i + 1,
 				_next(str, i + 1) - 1, data), data->env, data);
+	if (str[i - 1] == '"')
+		removeExtraSpaces(trans);
 	if (trans == NULL)
 		trans = ft_strdup("", data);
 	*expanded = ft_strjoin(*expanded, trans, data);

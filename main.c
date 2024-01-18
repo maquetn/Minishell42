@@ -49,7 +49,7 @@ void	looping(t_minishell *data)
 		start_signals(data);
 		data->input = readline(prompt);
 		if (data->input == NULL)
-			ft_exit(data);
+			ft_exit(data, NULL, 1);
 		if (data->input != NULL)
 			add_history(data->input);
 		if (data->input[0] == '\0' || is_only_space(data->input) == 1)

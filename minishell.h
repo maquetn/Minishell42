@@ -206,7 +206,7 @@ void			start_signals(t_minishell *data);
 void			sigquit(int num);
 void			sig_handler(int signum);
 void			ft_echo(char **args, int index);
-int				ft_exit(t_minishell *data);
+void			ft_exit(t_minishell *data, t_simple_cmd *cmd, int i);
 int				ft_cd(t_minishell *data, char *token);
 char			*ft_pwd(void);
 void			ft_export(t_minishell *data, char **args);
