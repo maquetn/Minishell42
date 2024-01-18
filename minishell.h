@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 08:10:33 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/18 17:37:45 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/18 18:03:19 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,7 +208,7 @@ void			sig_handler(int signum);
 void			ft_echo(char **args, int index);
 void			ft_exit(t_minishell *data, t_simple_cmd *cmd, int i);
 int				ft_cd(t_minishell *data, char *token);
-char			*ft_pwd(void);
+void			ft_pwd(t_minishell *data);
 void			ft_export(t_minishell *data, char **args);
 void			ft_unset(t_minishell *data, char **args);
 void			ft_env(t_minishell *data);

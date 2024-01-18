@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-char	*ft_pwd(void)
+void	ft_pwd(t_minishell *data)
 {
 	char	*cwd;
 
@@ -20,6 +20,7 @@ char	*ft_pwd(void)
 	if (cwd == NULL)
 	{
 		perror("malloc");
+		free(cwd);
 		exit(EXIT_FAILURE);
 	}
 	if (getcwd(cwd, PATH_MAX) == NULL)
@@ -28,10 +29,11 @@ char	*ft_pwd(void)
 		free(cwd);
 		exit(EXIT_FAILURE);
 	}
-	if (strcmp(cwd, "/") == 0)
+	if (ft_strcmp(cwd, "/", data) == 0)
 	{
 		free(cwd);
-		return (strdup("/"));
+		printf("/\n");
 	}
-	return (cwd);
+	printf("%s\n", cwd);
+	free(cwd);
 }

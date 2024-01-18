@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:41:15 by nmaquet           #+#    #+#             */
-/*   Updated: 2024/01/18 17:43:53 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/18 18:10:48 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,32 +66,25 @@ void	update_existing(t_minishell *data, char *current_arg, int env_count)
 
 char	*handle_removed(char *current_arg, t_minishell *data)
 {
-	char		*char_position = strchr(current_arg, '+');
+	char		*char_position;
 	size_t		removed_plus_length;
 	char		*temp;
 
+	char_position = strchr(current_arg, '+');
 	if (char_position != NULL)
 	{
 		removed_plus_length = char_position - current_arg;
-		temp = gc_malloc(sizeof(char) * (removed_plus_length + strlen(char_position + 1) + 1), data);
-
-		// Copy the part before '+'
+		temp = gc_malloc(sizeof(char) * 
+				(removed_plus_length + strlen(char_position + 1) + 1), data);
 		strncpy(temp, current_arg, removed_plus_length);
 		temp[removed_plus_length] = '\0';
-
-		// Concatenate the part after '+'
 		strncat(temp, char_position + 1, strlen(char_position + 1));
 	}
 	else
 	{
-		printf("TEST\n\n");
 		temp = gc_malloc(sizeof(char) * (strlen(current_arg) + 1), data);
-
-		// Avoid buffer overflow, use PATH_MAX - 1 for strncpy
 		strcpy(temp, current_arg);
 		temp[strlen(current_arg)] = '\0';
-
-		printf("%s\n", temp);
 	}
 
 	return (temp);

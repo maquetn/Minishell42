@@ -23,7 +23,7 @@ int	execute_builtins(t_simple_cmd *cmd, t_minishell *data)
 	}
 	else if (strcmp(cmd->args[0], "pwd") == 0)
 	{
-		printf("%s\n", ft_pwd());
+		ft_pwd(data);
 		return (1);
 	}
 	else if (strcmp(cmd->args[0], "env") == 0)
