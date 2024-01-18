@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   dollar.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mdor <marvin@42.fr>                        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/15 09:36:01 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/15 09:36:07 by mdor             ###   ########.fr       */
-/*                                                                            */
+/*																			  */
+/*														:::	  ::::::::        */
+/*   dollar.c										   :+:	  :+:	:+:       */
+/*													+:+ +:+		 +:+	      */
+/*   By: mdor <marvin@42.fr>						+#+  +:+	   +#+		  */
+/*												+#+#+#+#+#+   +#+		      */
+/*   Created: 2024/01/15 09:36:01 by mdor			  #+#	#+#			      */
+/*   Updated: 2024/01/15 09:36:07 by mdor			 ###   ########.fr	      */
+/*																			  */
 /* ************************************************************************** */
 
 #include "minishell.h"
@@ -21,12 +21,42 @@ int	doldol_dolmark(char **expanded, char nextchr, t_minishell *data, int i)
 	return (i + 2);
 }
 
+void	remove_spaces(char *input_str)
+{
+	int	read_index;
+	int	write_index;
+	int	length;
+
+	read_index = 0;
+	write_index = 0;
+	length = ft_strlen(input_str);
+	if (!input_str)
+		return ;
+	while (input_str[read_index] == ' ')
+		read_index++;
+	while (read_index < length)
+	{
+		input_str[write_index++] = input_str[read_index++];
+		if (input_str[read_index - 1] == ' ')
+		{
+			while (input_str[read_index] == ' ' && read_index < length)
+				read_index++;
+		}
+	}
+	if (write_index > 0 && input_str[write_index - 1] == ' ')
+		write_index--;
+	input_str[write_index] = '\0';
+}
+
 int	expand_env(char *str, int i, char **expanded, t_minishell *data)
 {
 	char	*trans;
 
 	trans = get_env(ft_strndup(str, i + 1,
 				_next(str, i + 1) - 1, data), data->env, data);
+	printf("trans : %s\n", trans);
+	if (data->quoted == 0)
+		remove_spaces(trans);
 	if (trans == NULL)
 		trans = ft_strdup("", data);
 	*expanded = ft_strjoin(*expanded, trans, data);

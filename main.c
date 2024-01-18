@@ -21,6 +21,7 @@ void	init_shell(t_minishell *data, char **env)
 	data->env = copy_env(env);
 	data->error_trigger = 0;
 	data->code = 0;
+	data->quoted = 0;
 }
 
 int	is_only_space(char *str)
@@ -28,7 +29,7 @@ int	is_only_space(char *str)
 	int	i;
 
 	i = 0;
-	while (str[i] && str[i] == ' ')
+	while (str[i] && (str[i] == 32 || (str[i] >= 9 && str[i] <= 13)))
 	{
 		if (str[i] != ' ' && str[i] != '\0')
 			return (0);
@@ -49,7 +50,7 @@ void	looping(t_minishell *data)
 		start_signals(data);
 		data->input = readline(prompt);
 		if (data->input == NULL)
-			ft_exit(data);
+			ft_exit(data, NULL, 1);
 		if (data->input != NULL)
 			add_history(data->input);
 		if (data->input[0] == '\0' || is_only_space(data->input) == 1)

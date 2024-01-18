@@ -58,7 +58,9 @@ void	execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *pp_fd)
 	int		pipe_fd[2];
 	pid_t	child_pid;
 
-	if (cmd == NULL) 
+	if (cmd == NULL)
+		return ;
+	if (cmd->args[0] == NULL)
 		return ;
 	g_status = 1;
 	if (pipe(pipe_fd) == -1)
