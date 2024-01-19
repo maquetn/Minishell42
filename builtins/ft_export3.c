@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:36:13 by nmaquet           #+#    #+#             */
-/*   Updated: 2024/01/19 13:23:23 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/19 13:45:19 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ int	syntax_loop(char *arg, int i)
 		return (-1);
 	while (arg[i] && arg[i] != '=')
 	{
-		if (isalnum(arg[i]) == 0 && arg[i] != '_')
+		if (ft_isalnum(arg[i]) == 0 && arg[i] != '_')
 		{
-			if ((isalnum(arg[i]) == 0 && arg[i] != '+') || \
+			if ((ft_isalnum(arg[i]) == 0 && arg[i] != '+') || \
 				(arg[i] == '+' && arg[i + 1] != '='))
 				return (-1);
 		}
@@ -50,7 +50,7 @@ int	syntax_env_var(char *arg, t_minishell *data)
 	int	i;
 
 	i = 0;
-	if (isdigit(arg[0]) != 0)
+	if (ft_isdigit(arg[0]) != 0)
 	{
 		printf("Minishell: export: `%s': not a valid identifier\n", arg);
 		data->error_trigger = 1;

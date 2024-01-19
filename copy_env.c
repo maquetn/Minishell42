@@ -125,34 +125,3 @@ char	**copy_env(char **env)
 	copy[++i] = NULL;
 	return (copy);
 }
-
-// char	**copy_env(char **env)
-// {
-// 	char	**copy;
-// 	int		j;
-// 	int		i;
-// 	int		sh_lvl;
-
-// 	i = -1;
-// 	j = -1;
-// 	sh_lvl = 0;
-// 	copy = malloc_new_env_size(env);
-// 	if (!copy)
-// 		return (print_alloc_error());
-// 	while (env[++j] != NULL)
-// 	{
-// 		if (ft_strncmp(env[j], "OLDPWD=", 7) == 0)
-// 			continue ;
-// 		if (ft_strncmp(env[j], "SHLVL=", 6) == 0)
-// 		{
-// 			sh_lvl = 1;
-// 			copy[++i] = shlvl_copy(env[j]);
-// 		}
-// 		else
-// 			copy[++i] = no_gc_strdup(env[j]);
-// 	}
-// 	if (sh_lvl == 0)
-// 		copy[++i] = no_gc_strdup("SHLVL=1");
-// 	copy[++i] = NULL;
-// 	return (copy);
-// }

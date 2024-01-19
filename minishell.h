@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 08:10:33 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/19 13:34:25 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/19 14:02:30 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,7 +190,7 @@ int				remove_single(char *str, int i,
 void			*gc_malloc(size_t required_memory, t_minishell *data);
 void			free_custom_alloc(t_minishell *data);
 int				ft_strcmp(char *s1, char *s2, t_minishell *data);
-int				get_cancer(char *str, int i);
+int				quotes_dollar_gtr(char *str, int i);
 void			ft_putstr_fd(char *s, int fd);
 char			*manage_heredoc(char *delim, t_minishell *data, int quoted);
 char			*heredoc_dollar(char *str, t_minishell *data, int j);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_routine.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdor <marvin@42.fr>                        +#+  +:+       +#+        */
+/*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 02:41:27 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/15 02:41:28 by mdor             ###   ########.fr       */
+/*   Updated: 2024/01/19 13:54:39 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,3 @@ void	routine(t_minishell *data)
 		execute_simple_cmd(data->node, data, NULL);
 	reset_data(data);
 }
-	//print_nodes(data);

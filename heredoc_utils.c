@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdor <marvin@42.fr>                        +#+  +:+       +#+        */
+/*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 19:34:35 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/11 19:34:36 by mdor             ###   ########.fr       */
+/*   Updated: 2024/01/19 14:04:15 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,11 @@ char	*process_env_variable(char *str, char *trans, int *i, t_minishell *data)
 	char	*placeholder2;
 	char	*placeholder;
 
-	placeholder2 = ft_strndup(str, *i + 1, get_cancer(str, *i + 1) - 1, data);
+	placeholder2 = ft_strndup(str, *i + 1, 
+			quotes_dollar_gtr(str, *i + 1) - 1, data);
 	placeholder = get_env(placeholder2, data->env, data);
 	if (placeholder == NULL)
 		placeholder = ft_strdup("", data);
-	*i = get_cancer(str, *i + 1);
+	*i = quotes_dollar_gtr(str, *i + 1);
 	return (ft_strjoin(trans, placeholder, data));
 }

@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:41:15 by nmaquet           #+#    #+#             */
-/*   Updated: 2024/01/19 12:35:48 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/19 13:44:23 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ void	update_existing(t_minishell *data, char *current_arg, int env_count)
 	if ((ft_strchr(current_arg, '+') != NULL 
 			&& syntax_env_var(current_arg, data) != -1))
 	{
-		current_length = strlen(data->env[env_count]);
-		append_length = strlen(current_arg
+		current_length = ft_strlen(data->env[env_count]);
+		append_length = ft_strlen(current_arg
 				+ syntax_env_var(current_arg, data) + 1);
 		new_buffer = malloc(current_length + append_length + 1);
 		ft_strcpy(new_buffer, data->env[env_count]);
@@ -78,16 +78,16 @@ char	*handle_removed(char *current_arg, t_minishell *data)
 	{
 		removed_plus_length = char_position - current_arg;
 		temp = gc_malloc(sizeof(char) * 
-				(removed_plus_length + strlen(char_position + 1) + 1), data);
+				(removed_plus_length + ft_strlen(char_position + 1) + 1), data);
 		ft_strncpy(temp, current_arg, removed_plus_length);
 		temp[removed_plus_length] = '\0';
-		ft_strncat(temp, char_position + 1, strlen(char_position + 1));
+		ft_strncat(temp, char_position + 1, ft_strlen(char_position + 1));
 	}
 	else
 	{
-		temp = gc_malloc(sizeof(char) * (strlen(current_arg) + 1), data);
+		temp = gc_malloc(sizeof(char) * (ft_strlen(current_arg) + 1), data);
 		ft_strcpy(temp, current_arg);
-		temp[strlen(current_arg)] = '\0';
+		temp[ft_strlen(current_arg)] = '\0';
 	}
 	return (temp);
 }

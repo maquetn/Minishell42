@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdor <marvin@42.fr>                        +#+  +:+       +#+        */
+/*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:28:41 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/11 17:28:44 by mdor             ###   ########.fr       */
+/*   Updated: 2024/01/19 14:02:30 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	_next(char *str, int i)
 	return (i);
 }
 
-int	get_cancer(char *str, int i)
+int	quotes_dollar_gtr(char *str, int i)
 {
 	while (str[i] != '"' && str[i] != '\'' && str[i] != '$' && str[i] != '\0' )
 		i++;

@@ -70,8 +70,8 @@ void	fine_touch(t_token *t, t_minishell *data)
 		else
 		{
 			expanded = ft_strjoin(expanded, ft_strndup(t->content,
-						i, get_cancer(t->content, i) - 1, data), data);
-			i = get_cancer(t->content, i) - 1;
+						i, quotes_dollar_gtr(t->content, i) - 1, data), data);
+			i = quotes_dollar_gtr(t->content, i) - 1;
 		}
 		i++;
 	}

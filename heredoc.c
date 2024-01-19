@@ -41,7 +41,6 @@ char	*manage_heredoc(char *delim, t_minishell *data, int quoted)
 	char	*input;
 
 	file = ft_strdup("", data);
-	g_status = 2;
 	while (1)
 	{
 		input = readline("> ");
@@ -58,6 +57,5 @@ char	*manage_heredoc(char *delim, t_minishell *data, int quoted)
 		free(input);
 	}
 	free(input);
-	g_status = 0;
 	return (file);
 }
