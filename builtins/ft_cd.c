@@ -19,7 +19,7 @@ int	change_to_home_dir(t_minishell *data)
 	home_dir = get_env("HOME", data->env, data);
 	if (home_dir == NULL)
 	{
-		fprintf(stderr, "minishell: cd: HOME not set\n");
+		ft_putstr_fd("minishell: cd: HOME not set\n", 2);
 		return (1);
 	}
 	if (chdir(home_dir) == 0)
@@ -72,7 +72,7 @@ int	change_to_oldpwd(t_minishell *data)
 	}
 	else
 	{
-		fprintf(stderr, "minishell: cd: OLDPWD not set\n");
+		ft_putstr_fd("minishell: cd: OLDPWD not set\n", 2);
 		return (1);
 	}
 }

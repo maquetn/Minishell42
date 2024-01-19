@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 08:10:33 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/19 13:23:40 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/19 13:34:25 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,5 +263,6 @@ void			add_variable(t_minishell *data, char *removed_plus);
 void			update_existing(t_minishell *data, 
 					char *current_arg, int env_count);
 void			handle_export(t_minishell *data, t_simple_cmd *cmd, int *pp_fd);
+void			cmd_not_found(t_simple_cmd *cmd);
 
 #endif

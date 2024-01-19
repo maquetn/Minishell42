@@ -48,7 +48,7 @@ void	execute_command(t_simple_cmd *cmd, t_minishell *data)
 			|| ft_strcmp(cmd->args[0], "export", data) == 0
 			|| ft_strcmp(cmd->args[0], "exit", data) == 0)
 			exit(0);
-		fprintf(stderr, "minishell: %s: command not found\n", cmd->args[0]);
+		cmd_not_found(cmd);
 		exit(127);
 	}
 }

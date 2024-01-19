@@ -56,6 +56,8 @@ int	process_code_ex(char *str, t_minishell *data)
 	}
 	if (i != 255)
 		i = i % 256;
+	if (i < 0)
+		i = 256 + i;
 	data->error_trigger = i;
 	return (0);
 }

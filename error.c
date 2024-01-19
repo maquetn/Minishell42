@@ -37,3 +37,10 @@ char	**print_alloc_error(void)
 	ft_putstr_fd("minishell : malloc failure\n", 2);
 	return (NULL);
 }
+
+void	cmd_not_found(t_simple_cmd *cmd)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(cmd->args[0], 2);
+	ft_putstr_fd(": command not found\n", 2);
+}

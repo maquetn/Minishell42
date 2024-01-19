@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 23:21:14 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/18 18:35:09 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/19 13:41:32 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	process_flags(char **args, int *index, int *n)
 {
-	unsigned long	i;
+	int	i;
 
 	*n = 0;
 	while (args[*index] != NULL)
@@ -26,7 +26,7 @@ void	process_flags(char **args, int *index, int *n)
 			{
 				i++;
 			}
-			if (i == strlen(args[*index]) && i > 1)
+			if (i == (ft_strlen(args[*index])) && i > 1)
 			{
 				(*index)++;
 				*n = 1;
