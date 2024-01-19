@@ -63,6 +63,8 @@ void	execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *pp_fd)
 	if (cmd->args[0] == NULL)
 		return ;
 	g_status = 1;
+	if (ft_strcmp(cmd->args[0], "./minishell", data) == 0)
+		g_status = 2;
 	if (pipe(pipe_fd) == -1)
 		return (print_error(1, data));
 	handle_builtin(cmd, data, pp_fd);
@@ -75,6 +77,14 @@ void	execute_simple_cmd(t_simple_cmd *cmd, t_minishell *data, int *pp_fd)
 		parent(cmd, data, pipe_fd, child_pid);
 	close(pipe_fd[0]);
 	g_status = 0;
+}
+
+int	export_condition(t_minishell *data, t_simple_cmd *cmd)
+{
+	if ((ft_strcmp(data->node->args[0], "cd", data) != 0
+			&& ft_strcmp(cmd->args[0], "export", data) != 0))
+		return (1);
+	return (0);
 }
 
 void	parent(t_simple_cmd *cmd, t_minishell *data, int *p_fd, pid_t child_pid)
@@ -94,7 +104,7 @@ void	parent(t_simple_cmd *cmd, t_minishell *data, int *p_fd, pid_t child_pid)
 			data->error_trigger = 128 + WTERMSIG(status);
 		else if (WIFEXITED(status))
 		{
-			if (ft_strcmp(data->node->args[0], "cd", data) != 0)
+			if (export_condition(data, cmd) == 1)
 			{
 				while (data->node->next != NULL)
 					data->node = data->node->next;

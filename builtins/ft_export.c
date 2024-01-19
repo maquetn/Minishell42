@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:41:15 by nmaquet           #+#    #+#             */
-/*   Updated: 2024/01/19 10:31:34 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/19 12:35:48 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,8 @@ void	ft_export(t_minishell *data, char **args)
 		current_arg = args[exp];
 		env_count = 0;
 		env_count = simple_equal(data, env_count, current_arg);
-		if (data->env[env_count] == NULL && syntax_env_var(current_arg, data) != -1)
+		if (data->env[env_count] == NULL
+			&& syntax_env_var(current_arg, data) != -1)
 		{
 			ft_strcpy(removed_plus, handle_removed(current_arg, data));
 			plus_equal(data, 0, removed_plus, current_arg);

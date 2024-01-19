@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 08:10:33 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/19 10:32:18 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/19 13:23:40 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,7 +215,8 @@ void			ft_exit(t_minishell *data, t_simple_cmd *cmd, int i);
 int				ft_cd(t_minishell *data, char *token);
 void			ft_pwd(t_minishell *data);
 void			ft_export(t_minishell *data, char **args);
-void			ft_unset(t_minishell *data, char **args);
+void			ft_unset(t_minishell *data, char *args);
+void			ft_unset_loop(t_minishell *data, char **args);
 void			ft_env(t_minishell *data);
 int				ft_isdigit(int c);
 int				ft_atoi(const char *str);
@@ -261,5 +262,6 @@ void			plus_equal(t_minishell *data, int env_count, char *removed_plus,
 void			add_variable(t_minishell *data, char *removed_plus);
 void			update_existing(t_minishell *data, 
 					char *current_arg, int env_count);
+void			handle_export(t_minishell *data, t_simple_cmd *cmd, int *pp_fd);
 
 #endif

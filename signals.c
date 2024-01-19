@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdor <marvin@42.fr>                        +#+  +:+       +#+        */
+/*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 16:33:49 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/14 16:33:50 by mdor             ###   ########.fr       */
+/*   Updated: 2024/01/19 12:33:27 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,25 @@ void	sig_handler(int signum)
 	if (g_status == 1)
 	{
 		ft_putstr_fd("\n", 1);
-		g_status = 0;
 	}
 	else
 	{
-		ft_putstr_fd("\n", 1);
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
+		if (g_status != 2)
+		{
+			if (g_status == 0)
+				ft_putstr_fd("\n", 1);
+			rl_on_new_line();
+			rl_replace_line("", 0);
+			rl_redisplay();
+		}
 	}
 }
 
 void	sigquit(int num)
 {
 	(void)num;
-	ft_putstr_fd("Quit: 3\n", 1);
+	if (g_status != 2)
+		ft_putstr_fd("Quit: 3\n", 1);
 }
 
 void	start_signals(t_minishell *data)

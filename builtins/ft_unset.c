@@ -25,18 +25,30 @@ unsigned long int	verif_env_var(char *env_var)
 		return (0);
 }
 
-void	ft_unset(t_minishell *data, char **args)
+void	ft_unset_loop(t_minishell *data, char **args)
+{
+	int	i;
+
+	i = 1;
+	while (args[i])
+	{
+		ft_unset(data, args[i]);
+		i++;
+	}
+}
+
+void	ft_unset(t_minishell *data, char *args)
 {
 	size_t	arg_len;
 	int		env_count;
 
 	env_count = 0;
-	if (args[1])
+	if (args)
 	{
-		arg_len = ft_strlen(args[1]);
+		arg_len = ft_strlen(args);
 		while (data->env[env_count] != NULL)
 		{
-			if (ft_strncmp(data->env[env_count], args[1],
+			if (ft_strncmp(data->env[env_count], args,
 					verif_env_var(data->env[env_count])) == 0
 				&& verif_env_var(data->env[env_count]) == arg_len)
 			{

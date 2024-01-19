@@ -6,11 +6,27 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:36:13 by nmaquet           #+#    #+#             */
-/*   Updated: 2024/01/19 10:55:26 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/19 13:23:23 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	handle_export(t_minishell *data, t_simple_cmd *cmd, int *pp_fd)
+{
+	char	**temp;
+
+	temp = NULL;
+	temp = copy_env(data->env);
+	ft_export(data, cmd->args);
+	if (pp_fd != 0)
+	{
+		free_tabl(data->env);
+		data->env = NULL;
+		data->env = copy_env(temp);
+	}
+	free_tabl(temp);
+}
 
 int	syntax_loop(char *arg, int i)
 {
