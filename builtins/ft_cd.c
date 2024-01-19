@@ -37,7 +37,8 @@ int	change_to_parent_dir(t_minishell *data)
 
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
-		printf("Error : Trying to reach an unknown directory, going to Home instead\n");
+		printf("Error : Trying to reach an unknown \
+		directory, going to Home instead\n");
 		return (change_to_home_dir(data));
 	}
 	if (ft_strcmp(cwd, "/Users", data) == 0)

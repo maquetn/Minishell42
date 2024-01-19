@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:41:15 by nmaquet           #+#    #+#             */
-/*   Updated: 2024/01/18 19:32:01 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/19 09:29:41 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ void	update_existing(t_minishell *data, char *current_arg, int env_count)
 	char	*new_buffer;
 
 	new_buffer = NULL;
-	if ((ft_strchr(current_arg, '+') != NULL && syntax_env_var(current_arg) != -1))
+	if ((ft_strchr(current_arg, '+') != NULL 
+			&& syntax_env_var(current_arg) != -1))
 	{
 		current_length = strlen(data->env[env_count]);
 		append_length = strlen(current_arg + syntax_env_var(current_arg) + 1);
@@ -86,10 +87,8 @@ char	*handle_removed(char *current_arg, t_minishell *data)
 		ft_strcpy(temp, current_arg);
 		temp[strlen(current_arg)] = '\0';
 	}
-
 	return (temp);
 }
-
 
 void	ft_declare(t_minishell *data, char **args)
 {
@@ -103,7 +102,7 @@ void	ft_declare(t_minishell *data, char **args)
 		{
 			equal_sign = ft_strchr(data->env[i], '=');
 			write(1, "declare -x ", 11);
-			write(1, data->env[i],  (equal_sign + 1) - data->env[i]);
+			write(1, data->env[i], (equal_sign + 1) - data->env[i]);
 			printf("\"%s\"\n", equal_sign + 1);
 			++i;
 		}
