@@ -6,7 +6,7 @@
 /*   By: nmaquet <nmaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 08:10:33 by mdor              #+#    #+#             */
-/*   Updated: 2024/01/18 19:34:21 by nmaquet          ###   ########.fr       */
+/*   Updated: 2024/01/19 10:32:18 by nmaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,7 +253,7 @@ int				check_quotes(char *str, int i,
 					char **expanded, t_minishell *data);
 char			**newpwd(t_minishell *data);
 
-int				syntax_env_var(char *arg);
+int				syntax_env_var(char *arg, t_minishell *data);
 int				simple_equal(t_minishell *data, int env_count, 
 					char *current_arg);
 void			plus_equal(t_minishell *data, int env_count, char *removed_plus,

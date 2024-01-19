@@ -90,9 +90,9 @@ void	handle_builtin(t_simple_cmd *cmd, t_minishell *data, int *pp_fd)
 {
 	if (cmd->args != NULL && cmd->next == NULL)
 	{
-		if (ft_strcmp(cmd->args[0], "export", data) == 0 && pp_fd == 0)
+		if (ft_strcmp(cmd->args[0], "export", data) == 0)
 			ft_export(data, cmd->args);
-		else if (ft_strcmp(cmd->args[0], "unset", data) == 0 && pp_fd == 0)
+		if (ft_strcmp(cmd->args[0], "unset", data) == 0 && pp_fd == 0)
 			ft_unset(data, cmd->args);
 		else if (ft_strcmp(cmd->args[0], "cd", data) == 0 && pp_fd == 0)
 		{
